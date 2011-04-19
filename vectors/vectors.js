@@ -85,18 +85,30 @@ var vectors = {
             		var path = [];
             		for (var i = 0; i < feature.geometry.paths.length; i++){
             			for (var i2 = 0; i2 < feature.geometry.paths[i].length; i2++){
-            				path.push(new google.maps.LatLng(feature.geometry.paths[i][i2].y feature.geometry.paths[i][i2].x));
+            				path.push(new google.maps.LatLng(feature.geometry.paths[i][i2].y, feature.geometry.paths[i][i2].x));
             			}
             		}
             		vector = new google.maps.Polyline({
             			path: path
             		});
             	}else if(feature.geometry.rings){
-            		
+            		var paths = [];
+            		for (var i = 0; i < feature.geometry.rings.length; i++){
+            			var path = [];
+            			for (var i2 = 0; i2 < feature.geometry.rings[i].length; i2++){
+            				path.push(new google.maps.LatLng(feature.geometry.rings[i][i2].y, feature.geometry.rings[i][i2].x));
+            			}
+            			paths.push(path);
+            		}
+            		vector = new google.maps.Polygon({
+            			paths: paths
+            		});
             	}
             	return vector;
             }
         };
+        
+        return layer;
     }
 
 };
