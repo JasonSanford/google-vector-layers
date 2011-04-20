@@ -2,18 +2,18 @@ var map;
 
 var layers = [
 	{
-		id: 82,
-		name: "Parcels",
-		url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/82",
+		id: 79,
+		name: "Subidivisions",
+		url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/79",
 		fields: "*",
-		uniqueField: "PARCEL_ID",
+		uniqueField: "CODE",
 		scale_range: []
 	},{
 		id: 93,
 		name: "Trails",
 		url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/93",
-		fields: "*",
-		uniqueField: "Shape_Length",
+		/*fields: "*",
+		uniqueField: "Shape_Length",*/
 		scale_range: []
 	},{
 		id: 2,
@@ -35,11 +35,12 @@ $(document).ready(function(){
     
     var layersHtml = '';
     $.each(layers, function(i, o){
-    	o.layer = new vectors.AGS({
-    		url: o.url,
-    		fields: o.fields,
-    		uniqueField: o.uniqueField
-    	});
+    	var opts = {
+    		url: o.url
+    	};
+    	if (o.fields) opts.fields = o.fields;
+    	if (o.uniqueField) opts.uniqueField = o.uniqueField;
+    	o.layer = new vectors.AGS(opts);
     	layersHtml += '<div><input type="checkbox" id="layer-' + o.id + '" class="layer" /> <label for="layer-' + o.id + '">' + o.name + '</label></div>';
     });
     $("#layers").html(layersHtml);

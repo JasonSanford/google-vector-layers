@@ -30,8 +30,8 @@ var vectors = {
                 dynamic: opts.dynamic || false,
                 where: opts.where || "1=1",
                 map: opts.map || null,
-                url: opts.url,
-                uniqueField: opts.uniqueField
+                uniqueField: opts.uniqueField || null,
+                url: opts.url
             },
             
             _show: function(){
@@ -41,10 +41,14 @@ var vectors = {
             
             _hide: function(){
                 if (this._listener) google.maps.event.removeListener(this._listener);
-                for (var i = 0; i < this._vectors.length; i++){
-                	this._vectors[i].vector.setMap(null);
-                }
-                this._vectors = [];
+                this._clearFeatures();
+            },
+            
+            _clearFeatures: function(){
+            	for (var i = 0; i < this._vectors.length; i++){
+            		this._vectors[i].vector.setMap(null);
+            	}
+            	this._vectors = [];
             },
             
             _addListener: function(){
@@ -55,6 +59,7 @@ var vectors = {
             },
             
             _getFeatures: function(){
+            	if (!this._options.uniqueField) this._clearFeatures();
             	var bounds = this._options.map.getBounds();
             	var xMin = bounds.getSouthWest().lng();
             	var yMin = bounds.getSouthWest().lat();
@@ -66,11 +71,13 @@ var vectors = {
             	jQuery.getJSON(url, function(data){
             		if (data.features && data.features.length){
             			for (var i = 0; i < data.features.length; i++){
-            				var onMap = false;
-            				for (var i2 = 0; i2 < me._vectors.length; i2++){
-            					if (data.features[i].attributes[me._options.uniqueField] == me._vectors[i2].attributes[me._options.uniqueField]) onMap = true;
-            				}
-            				if (!onMap){
+            				if (me._options.uniqueField){
+	            				var onMap = false;
+	            				for (var i2 = 0; i2 < me._vectors.length; i2++){
+	            					if (data.features[i].attributes[me._options.uniqueField] == me._vectors[i2].attributes[me._options.uniqueField]) onMap = true;
+	            				}
+	            			}
+            				if (!onMap || !me._options.uniqueField){
             					me._esriJsonToGoogle(data.features[i]);
             					data.features[i].vector.setMap(me._options.map);
             					me._vectors.push(data.features[i]);
