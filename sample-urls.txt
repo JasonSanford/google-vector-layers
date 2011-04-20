@@ -6,3 +6,13 @@ http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleLabels/MapSer
 
 Polygon
 http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleLabels/MapServer/25
+
+
+Point - Sex Offenders
+http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/2
+
+Line - Snow Plow Routes
+http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/101
+
+Polygon - Parcels
+http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/82
