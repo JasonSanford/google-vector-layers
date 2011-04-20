@@ -59,31 +59,78 @@ var vectors = {
             },
             
             _getFeatures: function(){
+            	// If we don't have a uniqueField value
+            	// it's hard to tell if new features are
+            	//duplicates so clear them all
             	if (!this._options.uniqueField) this._clearFeatures();
+            	
+            	// Get coordinates for SoutWest and NorthEast corners of current map extent,
+            	// will use later when building "esriGeometryEnvelope"
             	var bounds = this._options.map.getBounds();
             	var xMin = bounds.getSouthWest().lng();
             	var yMin = bounds.getSouthWest().lat();
             	var xMax = bounds.getNorthEast().lng();
             	var yMax = bounds.getNorthEast().lat();
-            	var url = this._options.url + "query?returnGeometry=true&inSR=4326&outSR=4326&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&f=json&outFields=" + this._options.fields + "&where=" + this._options.where + "&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + "&callback=?";
-            	// Assuming you're using jQuery. You can replace this with your choice of XMLHTTPRequest
+            	
+            	// Build URL
+            	var url = this._options.url + "query" + /* Query this layer */
+            	"?returnGeometry=true" + /* Of course we want geometry */
+				"&inSR=4326&outSR=4326" + /* request/receive geometry in WGS 84 Lat/Lng. Esri got this right.*/
+				"&spatialRel=esriSpatialRelIntersects" + /* Find stuff that intersects this envelope */
+				"&f=json" + /* Wish it were GeoJSON, but we'll take it */
+				"&outFields=" + this._options.fields + /* Please return the following fields */
+				"&where=" + this._options.where + /* By default return all (1=1) but could pass SQL statement (value<90) */
+				"&geometryType=esriGeometryEnvelope" + /* Our "geometry" url param will be an envelope */
+				"&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + /* Build envelope geometry */
+				"&callback=?"; /* Need this for jQuery JSONP */
+				
+            	// "this" means something different inside "jQuery.getJSON" so assignt it to "me"
             	var me = this;
+            	
+            	// Assuming you're using jQuery. You can replace this with your choice of XMLHTTPRequest
             	jQuery.getJSON(url, function(data){
+            		
+            		// If "data.features" exists and there's more than one feature in the array
             		if (data.features && data.features.length){
+            			
+            			// Loop through the return features
             			for (var i = 0; i < data.features.length; i++){
+            			
+            				// If we have a "uniqueField" for this layer
             				if (me._options.uniqueField){
+            					
+            					// All objects are assumed to be false until proven true (remember COPS?)
 	            				var onMap = false;
+	            				
+	            				// Loop through all of the features currently on the map
 	            				for (var i2 = 0; i2 < me._vectors.length; i2++){
-	            					if (data.features[i].attributes[me._options.uniqueField] == me._vectors[i2].attributes[me._options.uniqueField]) onMap = true;
+	            				
+	            					// Does the "uniqueField" attribute for this feature match the feature on the map
+	            					if (data.features[i].attributes[me._options.uniqueField] == me._vectors[i2].attributes[me._options.uniqueField]){
+	            						// The feature is already on the map
+	            						onMap = true;
+	            					}
 	            				}
 	            			}
+	            			
+	            			// If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
             				if (!onMap || !me._options.uniqueField){
+            					
+            					// Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
             					me._esriJsonToGoogle(data.features[i]);
+            					
+            					// Show this vector on the map
             					data.features[i].vector.setMap(me._options.map);
+            					
+            					// Store the vector in an array so we can remove it later
             					me._vectors.push(data.features[i]);
+            				
             				}
+            				
             			}
+            			
             		}
+            		
             	});
             },
             
