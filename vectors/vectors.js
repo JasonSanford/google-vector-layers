@@ -3,6 +3,7 @@ var vectors = {
     AGS: function(opts){
         
         // TODO - Error out if we don't have url or uniqeField members
+        // TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
         //if (!opts.url) Error out!
         // if(!opts.uniqueField) Error out!
         if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
@@ -34,13 +35,11 @@ var vectors = {
             },
             
             _show: function(){
-                console.log("I'm going to show this layer!");
                 this._addListener();
                 google.maps.event.trigger(this._options.map, "idle");
             },
             
             _hide: function(){
-                console.log("I'm going to hide this layer!");
                 if (this._listener) google.maps.event.removeListener(this._listener);
                 for (var i = 0; i < this._vectors.length; i++){
                 	this._vectors[i].vector.setMap(null);
@@ -49,17 +48,14 @@ var vectors = {
             },
             
             _addListener: function(){
-            	console.log("Added listener");
             	var me = this;
             	this._listener = google.maps.event.addListener(this._options.map, "idle", function(){
             		me._getFeatures();
-            		console.log("idling " + Math.random());
             	});
             },
             
             _getFeatures: function(){
             	var bounds = this._options.map.getBounds();
-            	console.log("Getting Features");
             	var xMin = bounds.getSouthWest().lng();
             	var yMin = bounds.getSouthWest().lat();
             	var xMax = bounds.getNorthEast().lng();
