@@ -1,1 +1,3 @@
 http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleLabels/MapServer/11/query?text=&geometry=-104.98984821003421,39.74025003083555,-104.97233874958499,39.74694866081185&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&where=1%3D1&returnGeometry=true&outSR=4326&outFields=&f=pjson
+
+http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleLabels/MapServer/24
