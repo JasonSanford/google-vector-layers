@@ -52,7 +52,12 @@ var vectors = {
             },
             
             _addListener: function(){
+            
+            	// "this" means something different inside "google.maps.event.addListener"
+            	// assign it to "me"
             	var me = this;
+            	
+            	// Whenever the map idles (pan or zoom). Get the features in the current map extent.
             	this._listener = google.maps.event.addListener(this._options.map, "idle", function(){
             		me._getFeatures();
             	});
