@@ -1,6 +1,6 @@
 This library will add Google Maps vector (Point, Polyline, Polygon) layers from multiple geo web services including ArcGIS Server, GeoIQ, Arc2Earth, etc.
 
     var myAgsLayer = new vectors.AGS({
-        url: "http://my-arcgis-server.com/arcgis/rest/services/MyMapService/MapServer/11"
+        url: &quot;http://my-arcgis-server.com/arcgis/rest/services/MyMapService/MapServer/11&quot;
     });
     myAgsLayer.setMap(myMap);

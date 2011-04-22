@@ -1,6 +1,6 @@
 var map;
 
-var layers = [
+var agsLayers = [
 	{
 		id: 79,
 		name: "Subidivisions",
@@ -25,6 +25,15 @@ var layers = [
 	}
 ];
 
+var geocommonsLayers = [
+	{
+		id: 1,
+		name: "Real Estate",
+		dataset: 68302,
+		uniqueField: "name"
+	}
+];
+
 $(document).ready(function(){
     
     map = new google.maps.Map(document.getElementById("map"), {
@@ -33,25 +42,45 @@ $(document).ready(function(){
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
     
-    var layersHtml = '';
-    $.each(layers, function(i, o){
+    var agsLayersHtml = '';
+    $.each(agsLayers, function(i, o){
     	var opts = {
     		url: o.url
     	};
     	if (o.fields) opts.fields = o.fields;
     	if (o.uniqueField) opts.uniqueField = o.uniqueField;
     	o.layer = new vectors.AGS(opts);
-    	layersHtml += '<div><input type="checkbox" id="layer-' + o.id + '" class="layer" /> <label for="layer-' + o.id + '">' + o.name + '</label></div>';
+    	agsLayersHtml += '<div><input type="checkbox" id="layer-ags-' + o.id + '" class="layer ags" /> <label for="layer-ags-' + o.id + '">' + o.name + '</label></div>';
     });
-    $("#layers").html(layersHtml);
+    $("#ags-layers").html(agsLayersHtml);
+    
+    var geocommonsLayersHtml = '';
+    $.each(geocommonsLayers, function(i, o){
+    	var opts = {
+    		dataset: o.dataset
+    	};
+    	if (o.fields) opts.fields = o.fields;
+    	if (o.uniqueField) opts.uniqueField = o.uniqueField;
+    	o.layer = new vectors.Geocommons(opts);
+    	geocommonsLayersHtml += '<div><input type="checkbox" id="layer-geocommons-' + o.id + '" class="layer geocommons" /> <label for="layer-geocommons-' + o.id + '">' + o.name + '</label></div>';
+    });
+    $("#geocommons-layers").html(geocommonsLayersHtml);
     
     $(".layer").click(function(){
     	var theLayer;
-    	for (var i = 0; i < layers.length; i++){
-    		var o = layers[i];
-    		var layerId = $(this).attr("id").split("-")[1];
-    		if (layerId == o.id) theLayer = o;
-    	}
+    	if ($(this).hasClass("ags")){
+	    	for (var i = 0; i < agsLayers.length; i++){
+	    		var o = agsLayers[i];
+	    		var layerId = $(this).attr("id").split("-")[2];
+	    		if (layerId == o.id) theLayer = o;
+	    	}
+	    }else if ($(this).hasClass("geocommons")){
+	    	for (var i = 0; i < geocommonsLayers.length; i++){
+	    		var o = geocommonsLayers[i];
+	    		var layerId = $(this).attr("id").split("-")[2];
+	    		if (layerId == o.id) theLayer = o;
+	    	}
+	    }
     	theLayer.layer.setMap($(this).attr("checked") ? map : null);
     });
 });
