@@ -40,9 +40,13 @@ var arcToEarthLayers = [
 		name: "Sewer Lines",
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/swr_gravity"
 	},{
-		id: 2,
+		id: 3,
 		name: "Sewer Man Holes",
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/swr_mh"
+	},{
+		id: 4,
+		name: "Parcels",
+		url: "http://jeesanford.appspot.com/a2e/data/datasources/parcels"
 	}
 ];
 

@@ -5,7 +5,7 @@ var vectors = {
 		
 		// TODO - Error out if we don't have url or uniqeField members
 		// TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
-		//if (!opts.url) Error out!
+		// if (!opts.url) Error out!
 		// if(!opts.uniqueField) Error out!
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
@@ -81,16 +81,16 @@ var vectors = {
 				var yMax = bounds.getNorthEast().lat();
 				
 				// Build URL
-				var url = this._options.url + "query" + /* Query this layer */
-				"?returnGeometry=true" + /* Of course we want geometry */
-				"&inSR=4326&outSR=4326" + /* request/receive geometry in WGS 84 Lat/Lng. Esri got this right.*/
-				"&spatialRel=esriSpatialRelIntersects" + /* Find stuff that intersects this envelope */
-				"&f=json" + /* Wish it were GeoJSON, but we'll take it */
-				"&outFields=" + this._options.fields + /* Please return the following fields */
-				"&where=" + this._options.where + /* By default return all (1=1) but could pass SQL statement (value<90) */
-				"&geometryType=esriGeometryEnvelope" + /* Our "geometry" url param will be an envelope */
-				"&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + /* Build envelope geometry */
-				"&callback=?"; /* Need this for jQuery JSONP */
+				var url = this._options.url + "query" + // Query this layer
+				"?returnGeometry=true" + // Of course we want geometry
+				"&inSR=4326&outSR=4326" + // request/receive geometry in WGS 84 Lat/Lng. Esri got this right.
+				"&spatialRel=esriSpatialRelIntersects" + // Find stuff that intersects this envelope
+				"&f=json" + // Wish it were GeoJSON, but we'll take it
+				"&outFields=" + this._options.fields + // Please return the following fields
+				"&where=" + this._options.where + // By default return all (1=1) but could pass SQL statement (value<90)
+				"&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
+				"&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build envelope geometry
+				"&callback=?"; // Need this for jQuery JSONP 
 				
 				// "this" means something different inside "jQuery.getJSON" so assignt it to "me"
 				var me = this;
@@ -179,13 +179,10 @@ var vectors = {
 	},
 	
 	// An Arc2Earth Datasource
-	// http://offshorewind34.appspot.com/a2e/data/datasources/SubmergedWrecks/search?q=&lat=41.06278606873302&lon=-70.9661865234375&d=100000&f=gjson
 	ArcToEarth: function(opts){
 		
-		// TODO - Error out if we don't have url or uniqeField members
-		// TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
-		//if (!opts.url) Error out!
-		// if(!opts.uniqueField) Error out!
+		// TODO - Error out if we don't have a url memberparamter
+		// if (!opts.url) Error out!
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
@@ -244,7 +241,7 @@ var vectors = {
 				// If we don't have a uniqueField value
 				// it's hard to tell if new features are
 				//duplicates so clear them all
-				if (!this._options.uniqueField) this._clearFeatures();
+				//if (!this._options.uniqueField) this._clearFeatures();
 				
 				// Get coordinates for SoutWest and NorthEast corners of current map extent,
 				// will use later when building "esriGeometryEnvelope"
@@ -255,9 +252,7 @@ var vectors = {
 				var yMax = bounds.getNorthEast().lat();
 				
 				// Build URL
-				
-				// http://offshorewind34.appspot.com/a2e/data/datasources/SubmergedWrecks/search?q=&lat=41.06278606873302&lon=-70.9661865234375&d=100000&f=gjson
-				var url = this._options.url + "search" + // Geocommons dataset ID
+				var url = this._options.url + "search" + // Arc2Earth datasource url + search service
 				"?f=gjson" + // Return GeoJSON formatted data
 				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
 				"&callback=?"; // Need this for jQuery JSONP
@@ -277,22 +272,26 @@ var vectors = {
 							// All objects are assumed to be false until proven true (remember COPS?)
 							var onMap = false;
 						
-							// If we have a "uniqueField" for this layer
-							if (me._options.uniqueField){
+							// If we have an "id" member for this GeoJSON object
+							if (data.features[i].id){
 								
 								// Loop through all of the features currently on the map
 								for (var i2 = 0; i2 < me._vectors.length; i2++){
 								
-									// Does the "uniqueField" property for this feature match the feature on the map
-									if (data.features[i].properties[me._options.uniqueField] == me._vectors[i2].properties[me._options.uniqueField]){
+									// Does the "id" member for this feature match the feature on the map
+									if (me._vectors[i2].id && data.features[i].id == me._vectors[i2].id){
+									
 										// The feature is already on the map
 										onMap = true;
+										
 									}
+									
 								}
+								
 							}
 							
-							// If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
-							if (!onMap || !me._options.uniqueField){
+							// If the feature isn't already or the map
+							if (!onMap){
 								
 								// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
 								me._geojsonFeatureToGoogle(data.features[i]);
