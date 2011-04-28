@@ -178,6 +178,14 @@ var vectors = {
         return layer;
     },
     
+    // An Arc2Earth Datasource
+    // http://offshorewind34.appspot.com/a2e/data/datasources/SubmergedWrecks/search?q=&lat=41.06278606873302&lon=-70.9661865234375&d=100000&f=gjson
+    A2E: function(opts){
+    
+    	
+    
+    },
+    
     // A Geocommons dataset
     Geocommons: function(opts){
     	
@@ -256,8 +264,10 @@ var vectors = {
     	    	var yMax = bounds.getNorthEast().lat();
     	    	
     	    	// Build URL
+    	    	
+    	    	//http://geocommons.com/overlays/110106.json?include_attributes=1&include_geometry=1&include_features=1&hex_geometry=1&include_style=1
     	    	var url = "http://geocommons.com/datasets/" + this._options.dataset + /* Geocommons dataset ID */
-    	    	"/features.json?geojson=1" + /* Return GeoJSON formatted data */
+    	    	"/features.json?" + /* Return GeoJSON formatted data */
     			"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + /* Build bbox geometry */
     			"&callback=?"; /* Need this for jQuery JSONP */
     			
