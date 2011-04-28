@@ -366,7 +366,7 @@ var vectors = {
 		//     http://getsatisfaction.com/geocommons/topics/features_api_doesnt_honor_url_parameters_when_requesting_geojson
 		// TODO - Error out if we don't have a dataset id
 		// TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
-		//if (!opts.dataset) Error out!
+		// if (!opts.dataset) Error out!
 		
 		var layer = {
 			
@@ -437,8 +437,9 @@ var vectors = {
 				
 				// Build URL
 				var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
-				"/features.json?" + // Return GeoJSON formatted data
+				"/features.json?" + // JSON please
 				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+				"&geojson=1" + // Return GeoJSON formatted data
 				"&callback=?"; // Need this for jQuery JSONP
 				
 				// "this" means something different inside "jQuery.getJSON" so assignt it to "me"
