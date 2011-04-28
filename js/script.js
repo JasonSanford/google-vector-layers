@@ -34,6 +34,18 @@ var geocommonsLayers = [
 	}
 ];
 
+var arcToEarthLayers = [
+	{
+		id: 2,
+		name: "Sewer Lines",
+		url: "http://jeesanford.appspot.com/a2e/data/datasources/swr_gravity"
+	},{
+		id: 2,
+		name: "Sewer Man Holes",
+		url: "http://jeesanford.appspot.com/a2e/data/datasources/swr_mh"
+	}
+];
+
 $(document).ready(function(){
     
     map = new google.maps.Map(document.getElementById("map"), {
@@ -66,6 +78,16 @@ $(document).ready(function(){
     });
     $("#geocommons-layers").html(geocommonsLayersHtml);
     
+    var arcToEarthLayersHtml = '';
+    $.each(arcToEarthLayers, function(i, o){
+    	var opts = {
+    		url: o.url
+    	};
+    	o.layer = new vectors.ArcToEarth(opts);
+    	arcToEarthLayersHtml += '<div><input type="checkbox" id="layer-a2e-' + o.id + '" class="layer a2e" /> <label for="layer-a2e-' + o.id + '">' + o.name + '</label></div>';
+    });
+    $("#a2e-layers").html(arcToEarthLayersHtml);
+    
     $(".layer").click(function(){
     	var theLayer;
     	if ($(this).hasClass("ags")){
@@ -77,6 +99,12 @@ $(document).ready(function(){
 	    }else if ($(this).hasClass("geocommons")){
 	    	for (var i = 0; i < geocommonsLayers.length; i++){
 	    		var o = geocommonsLayers[i];
+	    		var layerId = $(this).attr("id").split("-")[2];
+	    		if (layerId == o.id) theLayer = o;
+	    	}
+	    }else if ($(this).hasClass("a2e")){
+	    	for (var i = 0; i < arcToEarthLayers.length; i++){
+	    		var o = arcToEarthLayers[i];
 	    		var layerId = $(this).attr("id").split("-")[2];
 	    		if (layerId == o.id) theLayer = o;
 	    	}
