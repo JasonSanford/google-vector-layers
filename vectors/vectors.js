@@ -208,6 +208,7 @@ var vectors = {
 			_options: {
 				map: opts.map || null,
 				dynamic: opts.dynamic || false,
+				vectorOptions: opts.vectorOptions || {},
 				url: opts.url
 			},
 			
@@ -297,7 +298,7 @@ var vectors = {
 							if (!onMap){
 								
 								// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-								me._geojsonFeatureToGoogle(data.features[i]);
+								me._geojsonFeatureToGoogle(data.features[i], me._options.vectorOptions);
 								
 								// Show this vector on the map
 								data.features[i].vector.setMap(me._options.map);
@@ -315,14 +316,13 @@ var vectors = {
 			},
 			
 			// Using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
-			_geojsonFeatureToGoogle: function(feature){
+			_geojsonFeatureToGoogle: function(feature, opts){
 				
 				var vector;
 				switch ( feature.geometry.type ){
 					case "Point":
-						vector = new google.maps.Marker({
-							position: new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0])
-						});
+						opts.position = new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+						vector = new google.maps.Marker(opts);
 						break;
 								
 					case "LineString":
@@ -331,9 +331,8 @@ var vectors = {
 							var ll = new google.maps.LatLng(feature.geometry.coordinates[i][1], feature.geometry.coordinates[i][0]);
 							path.push(ll);
 						}
-						vector = new google.maps.Polyline({
-							path: path
-						});
+						opts.path = path;
+						vector = new google.maps.Polyline(opts);
 						break;
 						
 					case "Polygon":
@@ -346,9 +345,8 @@ var vectors = {
 							}
 							paths.push(path);
 						}
-						vector = new google.maps.Polygon({
-							paths: paths
-						});
+						opts.paths = paths;
+						vector = new google.maps.Polygon(opts);
 						break;
 				}
 				feature.vector = vector;

@@ -1,7 +1,7 @@
 var map;
 
 var agsLayers = [
-	{
+	/*{
 		id: 79,
 		name: "Subidivisions",
 		url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/79",
@@ -13,7 +13,7 @@ var agsLayers = [
 			fillColor: "#004a00",
 			fillOpacity: 0.5
 		}
-	},{
+	},*/{
 		id: 10,
 		name: "Sewer Mains",
 		url: "http://gisapps.co.union.nc.us/ArcGIS/rest/services/PWSWR/MapServer/10",
@@ -31,32 +31,38 @@ var agsLayers = [
 		url: "http://gisapps.co.union.nc.us/ArcGIS/rest/services/PWSWR/MapServer/0",
 		fields: "OBJECTID,MH_DIA,MH_DEPTH,GROUND_ELEV",
 		uniqueField: "OBJECTID",
-		scaleRange: []
+		scaleRange: [16, 21],
+		vectorOptions: {
+			icon: new google.maps.MarkerImage('img/markers/manhole.png',new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
+		}
 	}
 ];
 
 var geocommonsLayers = [
 	{
 		id: 1,
-		name: "Real Estate",
-		dataset: 68302,
-		uniqueField: "name"
+		name: "Parcels",
+		dataset: 111601,
+		uniqueField: "OBJECTID"
 	}
 ];
 
 var arcToEarthLayers = [
 	{
 		id: 2,
-		name: "Sewer Lines",
-		url: "http://jeesanford.appspot.com/a2e/data/datasources/swr_gravity"
+		name: "Water Mains",
+		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_main",
+		vectorOptions: {
+			strokeColor: "#2f2ff0",
+			strokeWeight: 1.5
+		}
 	},{
 		id: 3,
-		name: "Sewer Man Holes",
-		url: "http://jeesanford.appspot.com/a2e/data/datasources/swr_mh"
-	},{
-		id: 4,
-		name: "Parcels",
-		url: "http://jeesanford.appspot.com/a2e/data/datasources/parcels"
+		name: "Hydrants",
+		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_hydrant",
+		vectorOptions: {
+			icon: new google.maps.MarkerImage('img/markers/hydrant.png',new google.maps.Size(17, 28), new google.maps.Point(0, 0), new google.maps.Point(7, 8))
+		}
 	}
 ];
 
@@ -64,7 +70,7 @@ $(function(){
 	
 	map = new google.maps.Map(document.getElementById("map_container"), {
 		center: new google.maps.LatLng(35.05399, -80.66651),
-		zoom: 15,
+		zoom: 17,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
@@ -99,6 +105,8 @@ $(function(){
 		var opts = {
 			url: o.url
 		};
+		if (o.scaleRange) opts.scaleRange = o.scaleRange;
+		if (o.vectorOptions) opts.vectorOptions = o.vectorOptions;
 		o.layer = new vectors.ArcToEarth(opts);
 		arcToEarthLayersHtml += '<div><input type="checkbox" id="layer-a2e-' + o.id + '" class="layer a2e" /> <label for="layer-a2e-' + o.id + '">' + o.name + '</label></div>';
 	});
