@@ -24,9 +24,20 @@
 	</div>-->
 	<div class="sidebar">
 		<h2>Data Sources</h2>
-		<div id="ags-layers"><h3>ArcGIS Server</h3></div>
-		<div id="geocommons-layers"><h3>Geocommons</h3></div>
-		<div id="a2e-layers"><h3>Arc2Earth</h3></div>
+		<div id="ags-layers">
+			<h3>ArcGIS Server</h3>
+			<div><input type="checkbox" id="ags_swr_main" class="layer"> <label for="layer-ags-10">Sewer Mains</label></div>
+			<div><input type="checkbox" id="ags_swr_mh" class="layer"> <label for="layer-ags-2">Sewer Manholes</label></div>
+		</div>
+		<div id="geocommons-layers">
+			<h3>Geocommons</h3>
+			<div><input type="checkbox" id="geocommons_parcels" class="layer"> <label for="layer-geocommons-1">Parcels</label></div>
+		</div>
+			<div id="a2e-layers">
+			<h3>Arc2Earth</h3>
+			<div><input type="checkbox" id="a2e_wtr_main" class="layer"> <label for="layer-a2e-2">Water Mains</label></div>
+			<div><input type="checkbox" id="a2e_hydrants" class="layer"> <label for="layer-a2e-3">Hydrants</label></div>
+		</div>
 	</div>
 </body>
 </html>

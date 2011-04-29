@@ -42,7 +42,7 @@ var vectors = {
 			_show: function(){
 				this._addIdleListener();
 				if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2){
-					console.log("this will work");
+					// TODO - Add zoom changed listener to set layer visibility
 				}
 				google.maps.event.trigger(this._options.map, "idle");
 			},
@@ -182,7 +182,7 @@ var vectors = {
 	},
 	
 	// An Arc2Earth Datasource
-	ArcToEarth: function(opts){
+	A2E: function(opts){
 		
 		// TODO - Error out if we don't have a url memberparamter
 		// if (!opts.url) Error out!
