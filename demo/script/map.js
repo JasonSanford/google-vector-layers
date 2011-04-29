@@ -7,21 +7,31 @@ var agsLayers = [
 		url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/79",
 		fields: "*",
 		uniqueField: "CODE",
-		scale_range: []
+		scaleRange: [],
+		vectorOptions: {
+			strokeWeight: 1,
+			fillColor: "#004a00",
+			fillOpacity: 0.5
+		}
 	},{
-		id: 93,
-		name: "Trails",
-		url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/93",
-		/*fields: "*",
-		uniqueField: "Shape_Length",*/
-		scale_range: []
+		id: 10,
+		name: "Sewer Mains",
+		url: "http://gisapps.co.union.nc.us/ArcGIS/rest/services/PWSWR/MapServer/10",
+		fields: "OBJECTID,WWTP,PIPE_DIA,PIPE_MAT",
+		uniqueField: "OBJECTID",
+		scaleRange: [15, 21],
+		vectorOptions: {
+			strokeWeight: 6,
+			strokeOpacity: 0.75,
+			strokeColor: "#004a00"
+		}
 	},{
 		id: 2,
-		name: "Sex Offenders",
-		url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/ArapaMAP/MapServer/2",
-		fields: "*",
-		uniqueField: "Reg_Num",
-		scale_range: []
+		name: "Sewer Manholes",
+		url: "http://gisapps.co.union.nc.us/ArcGIS/rest/services/PWSWR/MapServer/0",
+		fields: "OBJECTID,MH_DIA,MH_DEPTH,GROUND_ELEV",
+		uniqueField: "OBJECTID",
+		scaleRange: []
 	}
 ];
 
@@ -53,8 +63,8 @@ var arcToEarthLayers = [
 $(function(){  
 	
 	map = new google.maps.Map(document.getElementById("map_container"), {
-		center: new google.maps.LatLng(39.5756, -105.0205),
-		zoom: 14,
+		center: new google.maps.LatLng(35.05399, -80.66651),
+		zoom: 15,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
@@ -65,6 +75,8 @@ $(function(){
 		};
 		if (o.fields) opts.fields = o.fields;
 		if (o.uniqueField) opts.uniqueField = o.uniqueField;
+		if (o.scaleRange) opts.scaleRange = o.scaleRange;
+		if (o.vectorOptions) opts.vectorOptions = o.vectorOptions;
 		o.layer = new vectors.AGS(opts);
 		agsLayersHtml += '<div><input type="checkbox" id="layer-ags-' + o.id + '" class="layer ags" /> <label for="layer-ags-' + o.id + '">' + o.name + '</label></div>';
 	});

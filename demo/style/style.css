@@ -36,6 +36,21 @@ h2 {
   padding: 0px 5px 90px 5px;
 }
 
+.sidebar h2{
+	font-size: 1.6em;
+	text-align: center;
+	font-family: 'Arvo', arial, serif;
+	text-shadow: 2px 2px 3px #888;
+}
+
+.sidebar h3{
+	margin-top: 10px;
+	font-size: 1.2em;
+	text-align: center;
+	font-family: 'Arvo', arial, serif;
+	
+}
+
 .map_header {
   position:absolute;
   left: 10px;

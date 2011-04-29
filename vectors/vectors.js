@@ -32,18 +32,24 @@ var vectors = {
 				//    feature geometry has changed.
 				dynamic: opts.dynamic || false,
 				where: opts.where || "1=1",
+				scaleRange: opts.scaleRange || null,
+				vectorOptions: opts.vectorOptions || {},
 				map: opts.map || null,
 				uniqueField: opts.uniqueField || null,
 				url: opts.url
 			},
 			
 			_show: function(){
-				this._addListener();
+				this._addIdleListener();
+				if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2){
+					console.log("this will work");
+				}
 				google.maps.event.trigger(this._options.map, "idle");
 			},
 			
 			_hide: function(){
-				if (this._listener) google.maps.event.removeListener(this._listener);
+				if (this._idleListener) google.maps.event.removeListener(this._idleListener);
+				if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
 				this._clearFeatures();
 			},
 			
@@ -54,14 +60,14 @@ var vectors = {
 				this._vectors = [];
 			},
 			
-			_addListener: function(){
+			_addIdleListener: function(){
 			
 				// "this" means something different inside "google.maps.event.addListener"
 				// assign it to "me"
 				var me = this;
 				
 				// Whenever the map idles (pan or zoom). Get the features in the current map extent.
-				this._listener = google.maps.event.addListener(this._options.map, "idle", function(){
+				this._idleListener = google.maps.event.addListener(this._options.map, "idle", function(){
 					me._getFeatures();
 				});
 			},
@@ -125,7 +131,7 @@ var vectors = {
 							if (!onMap || !me._options.uniqueField){
 								
 								// Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-								me._esriJsonToGoogle(data.features[i]);
+								me._esriJsonToGoogle(data.features[i], me._options.vectorOptions);
 								
 								// Show this vector on the map
 								data.features[i].vector.setMap(me._options.map);
@@ -142,12 +148,11 @@ var vectors = {
 				});
 			},
 			
-			_esriJsonToGoogle: function(feature){
+			_esriJsonToGoogle: function(feature, opts){
 				var vector;
 				if (feature.geometry.x && feature.geometry.y){
-					vector = new google.maps.Marker({
-						position: new google.maps.LatLng(feature.geometry.y, feature.geometry.x)
-					});
+					opts.position = new google.maps.LatLng(feature.geometry.y, feature.geometry.x);
+					vector = new google.maps.Marker(opts);
 				}else if(feature.geometry.paths){
 					var path = [];
 					for (var i = 0; i < feature.geometry.paths.length; i++){
@@ -155,9 +160,8 @@ var vectors = {
 							path.push(new google.maps.LatLng(feature.geometry.paths[i][i2][1], feature.geometry.paths[i][i2][0]));
 						}
 					}
-					vector = new google.maps.Polyline({
-						path: path
-					});
+					opts.path = path;
+					vector = new google.maps.Polyline(opts);
 				}else if(feature.geometry.rings){
 					var paths = [];
 					for (var i = 0; i < feature.geometry.rings.length; i++){
@@ -167,9 +171,8 @@ var vectors = {
 						}
 						paths.push(path);
 					}
-					vector = new google.maps.Polygon({
-						paths: paths
-					});
+					opts.paths = paths;
+					vector = new google.maps.Polygon(opts);
 				}
 				feature.vector = vector;
 			}
