@@ -34,7 +34,13 @@ $(function(){
 	
 	geocommons_parcels = new vectors.Geocommons({
 		dataset: 111601,
-		uniqueField: "OBJECTID"
+		uniqueField: "OBJECTID",
+		vectorOptions: {
+			fillColor: "#4D8FFF",
+			fillOpacity: 0.5,
+			strokeWeight: 2,
+			strokeColor: "#DFFF7A"
+		}
 	});
 	
 	a2e_wtr_main = new vectors.A2E({
