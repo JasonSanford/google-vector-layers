@@ -178,6 +178,8 @@ var vectors = {
 			}
 		};
 		
+		if (layer._options.map) layer._show();
+		
 		return layer;
 	},
 	
@@ -354,6 +356,8 @@ var vectors = {
 			}
 			
 		};
+		
+		if (layer._options.map) layer._show();
 		
 		return layer;
 		
@@ -536,6 +540,8 @@ var vectors = {
 				
 			}
 		};
+		
+		if (layer._options.map) layer._show();
 		
 		return layer;
 		
