@@ -53,6 +53,7 @@ var vectors = {
 				if (this._idleListener) google.maps.event.removeListener(this._idleListener);
 				if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
 				this._clearFeatures();
+				this._lastQueriedBounds = null;
 			},
 			
 			_clearFeatures: function(){
@@ -118,6 +119,14 @@ var vectors = {
 				var yMin = bounds.getSouthWest().lat();
 				var xMax = bounds.getNorthEast().lng();
 				var yMax = bounds.getNorthEast().lat();
+				
+				// Check to see if the _lastQueriedBounds is the same as the new bounds
+				// If true, don't bother querying again.
+				if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
+				
+				// Store the bounds in the _lastQueriedBounds member so we don't have
+				// to query the layer again if someone simply turns a layer on/off
+				this._lastQueriedBounds = bounds;
 				
 				// Build URL
 				var url = this._options.url + "query" + // Query this layer
@@ -262,6 +271,7 @@ var vectors = {
 				if (this._idleListener) google.maps.event.removeListener(this._idleListener);
 				if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
 				this._clearFeatures();
+				this._lastQueriedBounds = null;
 			},
 			
 			_clearFeatures: function(){
@@ -327,6 +337,14 @@ var vectors = {
 				var yMin = bounds.getSouthWest().lat();
 				var xMax = bounds.getNorthEast().lng();
 				var yMax = bounds.getNorthEast().lat();
+				
+				// Check to see if the _lastQueriedBounds is the same as the new bounds
+				// If true, don't bother querying again.
+				if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
+				
+				// Store the bounds in the _lastQueriedBounds member so we don't have
+				// to query the layer again if someone simply turns a layer on/off
+				this._lastQueriedBounds = bounds;
 				
 				// Build URL
 				var url = this._options.url + "search" + // Arc2Earth datasource url + search service
@@ -484,6 +502,7 @@ var vectors = {
 				if (this._idleListener) google.maps.event.removeListener(this._idleListener);
 				if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
 				this._clearFeatures();
+				this._lastQueriedBounds = null;
 			},
 			
 			_clearFeatures: function(){
@@ -549,6 +568,14 @@ var vectors = {
 				var yMin = bounds.getSouthWest().lat();
 				var xMax = bounds.getNorthEast().lng();
 				var yMax = bounds.getNorthEast().lat();
+				
+				// Check to see if the _lastQueriedBounds is the same as the new bounds
+				// If true, don't bother querying again.
+				if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
+				
+				// Store the bounds in the _lastQueriedBounds member so we don't have
+				// to query the layer again if someone simply turns a layer on/off
+				this._lastQueriedBounds = bounds;
 				
 				// Build URL
 				var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
