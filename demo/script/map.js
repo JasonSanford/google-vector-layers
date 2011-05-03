@@ -35,6 +35,7 @@ $(function(){
 	geocommons_parcels = new vectors.Geocommons({
 		dataset: 111601,
 		uniqueField: "OBJECTID",
+		scaleRange: [17, 21],
 		vectorOptions: {
 			fillColor: "#4D8FFF",
 			fillOpacity: 0.5,
@@ -45,6 +46,7 @@ $(function(){
 	
 	a2e_wtr_main = new vectors.A2E({
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_main",
+		scaleRange: [15, 21],
 		vectorOptions: {
 			strokeColor: "#2f2ff0",
 			strokeWeight: 1.5
@@ -53,6 +55,7 @@ $(function(){
 	
 	a2e_hydrants = new vectors.A2E({
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_hydrant",
+		scaleRange: [16, 21],
 		vectorOptions: {
 			icon: new google.maps.MarkerImage('img/markers/hydrant.png',new google.maps.Size(17, 28), new google.maps.Point(0, 0), new google.maps.Point(7, 8))
 		}
