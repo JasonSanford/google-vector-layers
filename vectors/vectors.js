@@ -36,6 +36,7 @@ var vectors = {
 				vectorOptions: opts.vectorOptions || {},
 				map: opts.map || null,
 				uniqueField: opts.uniqueField || null,
+				visibleAtScale: true,
 				url: opts.url
 			},
 			
@@ -43,7 +44,9 @@ var vectors = {
 				this._addIdleListener();
 				if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2){
 					// TODO - Add zoom changed listener to set layer visibility
+					this._addZoomChangeListener();
 				}
+				google.maps.event.trigger(this._options.map, "zoom_changed");
 				google.maps.event.trigger(this._options.map, "idle");
 			},
 			
@@ -60,6 +63,16 @@ var vectors = {
 				this._vectors = [];
 			},
 			
+			_addZoomChangeListener: function(){
+				// "this" means something different inside "google.maps.event.addListener"
+				// assign it to "me"
+				var me = this;
+				
+				this._zoomChangeListener = google.maps.event.addListener(this._options.map, "zoom_changed", function(){
+					me._checkLayerVisibility();
+				});
+			},
+			
 			_addIdleListener: function(){
 			
 				// "this" means something different inside "google.maps.event.addListener"
@@ -68,8 +81,21 @@ var vectors = {
 				
 				// Whenever the map idles (pan or zoom). Get the features in the current map extent.
 				this._idleListener = google.maps.event.addListener(this._options.map, "idle", function(){
-					me._getFeatures();
+					if (me._options.visibleAtScale) me._getFeatures();
 				});
+			},
+			
+			_checkLayerVisibility: function(){
+				var visibilityBefore = this._options.visibleAtScale;
+				var z = this._options.map.getZoom();
+				var sr = this._options.scaleRange;
+				this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+				if (visibilityBefore !== this._options.visibleAtScale){
+					// Visibility changed
+					for (var i = 0; i < this._vectors.length; i++){						this._vectors[i].vector.setMap(this._options.visibleAtScale ? this._options.map : null);
+					}
+				}
+				
 			},
 			
 			_getFeatures: function(){
