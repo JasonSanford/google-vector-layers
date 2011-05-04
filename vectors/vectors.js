@@ -1,7 +1,159 @@
-var vectors = {
+(function(){
+
+	var _vectors = {};
+
+	var _base = {
+		
+		setMap: function(map){
+			this._options.map = map;
+			this[map ? "_show" : "_hide"]();
+		},
+		
+		getMap: function(){
+			return this._options.map;
+		},
+		
+		setOptions: function(o){
+			// TODO - Merge new options (o) with current options (this._options)
+		},
+		
+		_show: function(){
+			this._addIdleListener();
+			if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2){
+				this._addZoomChangeListener();
+			}
+			google.maps.event.trigger(this._options.map, "zoom_changed");
+			google.maps.event.trigger(this._options.map, "idle");
+		},
+		
+		_hide: function(){
+			if (this._idleListener) google.maps.event.removeListener(this._idleListener);
+			if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
+			this._clearFeatures();
+			this._lastQueriedBounds = null;
+		},
+		
+		_clearFeatures: function(){
+			for (var i = 0; i < this._vectors.length; i++){
+				this._vectors[i].vector.setMap(null);
+			}
+			this._vectors = [];
+		},
+		
+		_addZoomChangeListener: function(){
+			// "this" means something different inside "google.maps.event.addListener"
+			// assign it to "me"
+			var me = this;
+			
+			// Whenever the map's zoom changes, check the layer's visibility (this._options.visibleAtScale)
+			this._zoomChangeListener = google.maps.event.addListener(this._options.map, "zoom_changed", function(){
+				me._checkLayerVisibility();
+			});
+		},
+		
+		_addIdleListener: function(){
+		
+			// "this" means something different inside "google.maps.event.addListener"
+			// assign it to "me"
+			var me = this;
+			
+			// Whenever the map idles (pan or zoom). Get the features in the current map extent.
+			this._idleListener = google.maps.event.addListener(this._options.map, "idle", function(){
+				if (me._options.visibleAtScale) me._getFeatures();
+			});
+		},
+		
+		_checkLayerVisibility: function(){
+			// Store current visibility so we can see if it changed
+			var visibilityBefore = this._options.visibleAtScale;
+			
+			// Check current map scale and see if it's in this layer's range
+			var z = this._options.map.getZoom();
+			var sr = this._options.scaleRange;
+			this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+			
+			// Check to see if the visibility has changed
+			if (visibilityBefore !== this._options.visibleAtScale){
+				// It did.
+				for (var i = 0; i < this._vectors.length; i++){
+					// Show or hide the vectors depending this._options.visibleAtScale
+					this._vectors[i].vector.setMap(this._options.visibleAtScale ? this._options.map : null);
+				}
+			}
+			
+		},
+		
+		_esriJsonToGoogle: function(feature, opts){
+			var vector;
+			if (feature.geometry.x && feature.geometry.y){
+				opts.position = new google.maps.LatLng(feature.geometry.y, feature.geometry.x);
+				vector = new google.maps.Marker(opts);
+			}else if(feature.geometry.paths){
+				var path = [];
+				for (var i = 0; i < feature.geometry.paths.length; i++){
+					for (var i2 = 0; i2 < feature.geometry.paths[i].length; i2++){
+						path.push(new google.maps.LatLng(feature.geometry.paths[i][i2][1], feature.geometry.paths[i][i2][0]));
+					}
+				}
+				opts.path = path;
+				vector = new google.maps.Polyline(opts);
+			}else if(feature.geometry.rings){
+				var paths = [];
+				for (var i = 0; i < feature.geometry.rings.length; i++){
+					var path = [];
+					for (var i2 = 0; i2 < feature.geometry.rings[i].length; i2++){
+						path.push(new google.maps.LatLng(feature.geometry.rings[i][i2][1], feature.geometry.rings[i][i2][0]));
+					}
+					paths.push(path);
+				}
+				opts.paths = paths;
+				vector = new google.maps.Polygon(opts);
+			}
+			feature.vector = vector;
+		},
+		
+		// Using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
+		_geojsonFeatureToGoogle: function(feature, opts){
+			
+			var vector;
+			switch ( feature.geometry.type ){
+				case "Point":
+					opts.position = new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+					vector = new google.maps.Marker(opts);
+					break;
+							
+				case "LineString":
+					var path = [];
+					for (var i = 0; i < feature.geometry.coordinates.length; i++){
+						var ll = new google.maps.LatLng(feature.geometry.coordinates[i][1], feature.geometry.coordinates[i][0]);
+						path.push(ll);
+					}
+					opts.path = path;
+					vector = new google.maps.Polyline(opts);
+					break;
+					
+				case "Polygon":
+					var paths = [];
+					for (var i = 0; i < feature.geometry.coordinates.length; i++){
+						var path = [];
+						for (var i2 = 0; i2 < feature.geometry.coordinates[i].length; i2++){
+								var ll = new google.maps.LatLng(feature.geometry.coordinates[i][i2][1], feature.geometry.coordinates[i][i2][0]);
+							path.push(ll);
+						}
+						paths.push(path);
+					}
+					opts.paths = paths;
+					vector = new google.maps.Polygon(opts);
+					break;
+			}
+			feature.vector = vector;
+			
+		}
+		
+	};
 	
 	// A layer in an ArcGIS Server Map Service
-	AGS: function(opts){
+	_vectors.AGS = function(opts){
 		
 		// TODO - Error out if we don't have url or uniqeField members
 		// TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
@@ -10,19 +162,6 @@ var vectors = {
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
-			
-			setMap: function(map){
-				this._options.map = map;
-				this[map ? "_show" : "_hide"]();
-			},
-			
-			getMap: function(){
-				return this._options.map;
-			},
-			
-			setOptions: function(o){
-				// TODO - Merge new options (o) with current options (this._options)
-			},
 			
 			_vectors: [],
 			
@@ -38,72 +177,6 @@ var vectors = {
 				uniqueField: opts.uniqueField || null,
 				visibleAtScale: true,
 				url: opts.url
-			},
-			
-			_show: function(){
-				this._addIdleListener();
-				if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2){
-					this._addZoomChangeListener();
-				}
-				google.maps.event.trigger(this._options.map, "zoom_changed");
-				google.maps.event.trigger(this._options.map, "idle");
-			},
-			
-			_hide: function(){
-				if (this._idleListener) google.maps.event.removeListener(this._idleListener);
-				if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
-				this._clearFeatures();
-				this._lastQueriedBounds = null;
-			},
-			
-			_clearFeatures: function(){
-				for (var i = 0; i < this._vectors.length; i++){
-					this._vectors[i].vector.setMap(null);
-				}
-				this._vectors = [];
-			},
-			
-			_addZoomChangeListener: function(){
-				// "this" means something different inside "google.maps.event.addListener"
-				// assign it to "me"
-				var me = this;
-				
-				// Whenever the map's zoom changes, check the layer's visibility (this._options.visibleAtScale)
-				this._zoomChangeListener = google.maps.event.addListener(this._options.map, "zoom_changed", function(){
-					me._checkLayerVisibility();
-				});
-			},
-			
-			_addIdleListener: function(){
-			
-				// "this" means something different inside "google.maps.event.addListener"
-				// assign it to "me"
-				var me = this;
-				
-				// Whenever the map idles (pan or zoom). Get the features in the current map extent.
-				this._idleListener = google.maps.event.addListener(this._options.map, "idle", function(){
-					if (me._options.visibleAtScale) me._getFeatures();
-				});
-			},
-			
-			_checkLayerVisibility: function(){
-				// Store current visibility so we can see if it changed
-				var visibilityBefore = this._options.visibleAtScale;
-				
-				// Check current map scale and see if it's in this layer's range
-				var z = this._options.map.getZoom();
-				var sr = this._options.scaleRange;
-				this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
-				
-				// Check to see if the visibility has changed
-				if (visibilityBefore !== this._options.visibleAtScale){
-					// It did.
-					for (var i = 0; i < this._vectors.length; i++){
-						// Show or hide the vectors depending this._options.visibleAtScale
-						this._vectors[i].vector.setMap(this._options.visibleAtScale ? this._options.map : null);
-					}
-				}
-				
 			},
 			
 			_getFeatures: function(){
@@ -188,64 +261,25 @@ var vectors = {
 					}
 					
 				});
-			},
-			
-			_esriJsonToGoogle: function(feature, opts){
-				var vector;
-				if (feature.geometry.x && feature.geometry.y){
-					opts.position = new google.maps.LatLng(feature.geometry.y, feature.geometry.x);
-					vector = new google.maps.Marker(opts);
-				}else if(feature.geometry.paths){
-					var path = [];
-					for (var i = 0; i < feature.geometry.paths.length; i++){
-						for (var i2 = 0; i2 < feature.geometry.paths[i].length; i2++){
-							path.push(new google.maps.LatLng(feature.geometry.paths[i][i2][1], feature.geometry.paths[i][i2][0]));
-						}
-					}
-					opts.path = path;
-					vector = new google.maps.Polyline(opts);
-				}else if(feature.geometry.rings){
-					var paths = [];
-					for (var i = 0; i < feature.geometry.rings.length; i++){
-						var path = [];
-						for (var i2 = 0; i2 < feature.geometry.rings[i].length; i2++){
-							path.push(new google.maps.LatLng(feature.geometry.rings[i][i2][1], feature.geometry.rings[i][i2][0]));
-						}
-						paths.push(path);
-					}
-					opts.paths = paths;
-					vector = new google.maps.Polygon(opts);
-				}
-				feature.vector = vector;
 			}
+			
 		};
+		
+		jQuery.extend(layer, _base);
 		
 		if (layer._options.map) layer._show();
 		
 		return layer;
-	},
+	};
 	
 	// An Arc2Earth Datasource
-	A2E: function(opts){
+	_vectors.A2E = function(opts){
 		
-		// TODO - Error out if we don't have a url memberparamter
+		// TODO - Error out if we don't have a url paramter
 		// if (!opts.url) Error out!
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
-			
-			setMap: function(map){
-				this._options.map = map;
-				this[map ? "_show" : "_hide"]();
-			},
-			
-			getMap: function(){
-				return this._options.map;
-			},
-			
-			setOptions: function(o){
-				// TODO - Merge new options (o) with current options (this._options)
-			},
 			
 			_vectors: [],
 			
@@ -258,77 +292,7 @@ var vectors = {
 				url: opts.url
 			},
 			
-			_show: function(){
-				this._addIdleListener();
-				if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2){
-					this._addZoomChangeListener();
-				}
-				google.maps.event.trigger(this._options.map, "zoom_changed");
-				google.maps.event.trigger(this._options.map, "idle");
-			},
-			
-			_hide: function(){
-				if (this._idleListener) google.maps.event.removeListener(this._idleListener);
-				if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
-				this._clearFeatures();
-				this._lastQueriedBounds = null;
-			},
-			
-			_clearFeatures: function(){
-				for (var i = 0; i < this._vectors.length; i++){
-					this._vectors[i].vector.setMap(null);
-				}
-				this._vectors = [];
-			},
-			
-			_addZoomChangeListener: function(){
-				// "this" means something different inside "google.maps.event.addListener"
-				// assign it to "me"
-				var me = this;
-				
-				// Whenever the map's zoom changes, check the layer's visibility (this._options.visibleAtScale)
-				this._zoomChangeListener = google.maps.event.addListener(this._options.map, "zoom_changed", function(){
-					me._checkLayerVisibility();
-				});
-			},
-			
-			_addIdleListener: function(){
-			
-				// "this" means something different inside "google.maps.event.addListener"
-				// assign it to "me"
-				var me = this;
-				
-				// Whenever the map idles (pan or zoom). Get the features in the current map extent.
-				this._idleListener = google.maps.event.addListener(this._options.map, "idle", function(){
-					if (me._options.visibleAtScale) me._getFeatures();
-				});
-			},
-			
-			_checkLayerVisibility: function(){
-				// Store current visibility so we can see if it changed
-				var visibilityBefore = this._options.visibleAtScale;
-				
-				// Check current map scale and see if it's in this layer's range
-				var z = this._options.map.getZoom();
-				var sr = this._options.scaleRange;
-				this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
-				
-				// Check to see if the visibility has changed
-				if (visibilityBefore !== this._options.visibleAtScale){
-					// It did.
-					for (var i = 0; i < this._vectors.length; i++){
-						// Show or hide the vectors depending this._options.visibleAtScale
-						this._vectors[i].vector.setMap(this._options.visibleAtScale ? this._options.map : null);
-					}
-				}
-				
-			},
-			
 			_getFeatures: function(){
-				// If we don't have a uniqueField value
-				// it's hard to tell if new features are
-				//duplicates so clear them all
-				//if (!this._options.uniqueField) this._clearFeatures();
 				
 				// Get coordinates for SoutWest and NorthEast corners of current map extent,
 				// will use later when building "esriGeometryEnvelope"
@@ -404,56 +368,20 @@ var vectors = {
 					}
 					
 				});
-			},
-			
-			// Using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
-			_geojsonFeatureToGoogle: function(feature, opts){
-				
-				var vector;
-				switch ( feature.geometry.type ){
-					case "Point":
-						opts.position = new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-						vector = new google.maps.Marker(opts);
-						break;
-								
-					case "LineString":
-						var path = [];
-						for (var i = 0; i < feature.geometry.coordinates.length; i++){
-							var ll = new google.maps.LatLng(feature.geometry.coordinates[i][1], feature.geometry.coordinates[i][0]);
-							path.push(ll);
-						}
-						opts.path = path;
-						vector = new google.maps.Polyline(opts);
-						break;
-						
-					case "Polygon":
-						var paths = [];
-						for (var i = 0; i < feature.geometry.coordinates.length; i++){
-							var path = [];
-							for (var i2 = 0; i2 < feature.geometry.coordinates[i].length; i2++){
-									var ll = new google.maps.LatLng(feature.geometry.coordinates[i][i2][1], feature.geometry.coordinates[i][i2][0]);
-								path.push(ll);
-							}
-							paths.push(path);
-						}
-						opts.paths = paths;
-						vector = new google.maps.Polygon(opts);
-						break;
-				}
-				feature.vector = vector;
-				
 			}
 			
 		};
+		
+		jQuery.extend(layer, _base);
 		
 		if (layer._options.map) layer._show();
 		
 		return layer;
 		
-	},
+	};
 	
 	// A Geocommons dataset
-	Geocommons: function(opts){
+	_vectors.Geocommons = function(opts){
 		
 		// ISSUE - This class isn't functional yet. When requesting GeoJSON from
 		//     Geocommons, url parameters are not honored (&bbox=-82,34,-80,36)
@@ -463,19 +391,6 @@ var vectors = {
 		// if (!opts.dataset) Error out!
 		
 		var layer = {
-			
-			setMap: function(map){
-				this._options.map = map;
-				this[map ? "_show" : "_hide"]();
-			},
-			
-			getMap: function(){
-				return this._options.map;
-			},
-			
-			setOptions: function(o){
-				// TODO - Merge new options (o) with current options (this._options)
-			},
 			
 			_vectors: [],
 			
@@ -487,72 +402,6 @@ var vectors = {
 				scaleRange: opts.scaleRange || null,
 				visibleAtScale: true,
 				dataset: opts.dataset
-			},
-			
-			_show: function(){
-				this._addIdleListener();
-				if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2){
-					this._addZoomChangeListener();
-				}
-				google.maps.event.trigger(this._options.map, "zoom_changed");
-				google.maps.event.trigger(this._options.map, "idle");
-			},
-			
-			_hide: function(){
-				if (this._idleListener) google.maps.event.removeListener(this._idleListener);
-				if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
-				this._clearFeatures();
-				this._lastQueriedBounds = null;
-			},
-			
-			_clearFeatures: function(){
-				for (var i = 0; i < this._vectors.length; i++){
-					this._vectors[i].vector.setMap(null);
-				}
-				this._vectors = [];
-			},
-			
-			_addZoomChangeListener: function(){
-				// "this" means something different inside "google.maps.event.addListener"
-				// assign it to "me"
-				var me = this;
-				
-				// Whenever the map's zoom changes, check the layer's visibility (this._options.visibleAtScale)
-				this._zoomChangeListener = google.maps.event.addListener(this._options.map, "zoom_changed", function(){
-					me._checkLayerVisibility();
-				});
-			},
-			
-			_addIdleListener: function(){
-			
-				// "this" means something different inside "google.maps.event.addListener"
-				// assign it to "me"
-				var me = this;
-				
-				// Whenever the map idles (pan or zoom). Get the features in the current map extent.
-				this._idleListener = google.maps.event.addListener(this._options.map, "idle", function(){
-					if (me._options.visibleAtScale) me._getFeatures();
-				});
-			},
-			
-			_checkLayerVisibility: function(){
-				// Store current visibility so we can see if it changed
-				var visibilityBefore = this._options.visibleAtScale;
-				
-				// Check current map scale and see if it's in this layer's range
-				var z = this._options.map.getZoom();
-				var sr = this._options.scaleRange;
-				this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
-				
-				// Check to see if the visibility has changed
-				if (visibilityBefore !== this._options.visibleAtScale){
-					// It did.
-					for (var i = 0; i < this._vectors.length; i++){
-						// Show or hide the vectors depending this._options.visibleAtScale
-						this._vectors[i].vector.setMap(this._options.visibleAtScale ? this._options.map : null);
-					}
-				}
-				
 			},
 			
 			_getFeatures: function(){
@@ -636,51 +485,17 @@ var vectors = {
 					}
 					
 				});
-			},
-			
-			// Using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
-			_geojsonFeatureToGoogle: function(feature, opts){
-				
-				var vector;
-				switch ( feature.geometry.type ){
-					case "Point":
-						opts.position = new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-						vector = new google.maps.Marker(opts);
-						break;
-								
-					case "LineString":
-						var path = [];
-						for (var i = 0; i < feature.geometry.coordinates.length; i++){
-							var ll = new google.maps.LatLng(feature.geometry.coordinates[i][1], feature.geometry.coordinates[i][0]);
-							path.push(ll);
-						}
-						opts.path = path;
-						vector = new google.maps.Polyline(opts);
-						break;
-						
-					case "Polygon":
-						var paths = [];
-						for (var i = 0; i < feature.geometry.coordinates.length; i++){
-							var path = [];
-							for (var i2 = 0; i2 < feature.geometry.coordinates[i].length; i2++){
-									var ll = new google.maps.LatLng(feature.geometry.coordinates[i][i2][1], feature.geometry.coordinates[i][i2][0]);
-								path.push(ll);
-							}
-							paths.push(path);
-						}
-						opts.paths = paths;
-						vector = new google.maps.Polygon(opts);
-						break;
-				}
-				feature.vector = vector;
-				
 			}
 		};
+		
+		jQuery.extend(layer, _base);
 		
 		if (layer._options.map) layer._show();
 		
 		return layer;
 		
-	}
-
-};
+	};
+	
+	window.vectors = _vectors;
+	
+})()
