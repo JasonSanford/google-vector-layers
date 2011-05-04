@@ -33,10 +33,35 @@
 			this._lastQueriedBounds = null;
 		},
 		
-		_clearFeatures: function(){
+		_hideVectors: function(){
+		
 			for (var i = 0; i < this._vectors.length; i++){
-				this._vectors[i].vector.setMap(null);
+				if (this._vectors[i].vector) this._vectors[i].vector.setMap(null);
+				if (this._vectors[i].vectors && this._vectors[i].vectors.length){
+					for (var i2 = 0; i2 < this._vectors[i].vectors.length; i2++){
+						this._vectors[i].vectors[i2].setMap(null);
+					}
+				}
 			}
+		
+		},
+		
+		_showVectors: function(){
+		
+			for (var i = 0; i < this._vectors.length; i++){
+				if (this._vectors[i].vector) this._vectors[i].vector.setMap(this._options.map);
+				if (this._vectors[i].vectors && this._vectors[i].vectors.length){
+					for (var i2 = 0; i2 < this._vectors[i].vectors.length; i2++){
+						this._vectors[i].vectors[i2].setMap(this._options.map);
+					}
+				}
+			}
+		
+		},
+		
+		_clearFeatures: function(){
+			// TODO - Check to see if we even need to hide these before we remove them from the DOM
+			this._hideVectors();
 			this._vectors = [];
 		},
 		
@@ -75,10 +100,7 @@
 			// Check to see if the visibility has changed
 			if (visibilityBefore !== this._options.visibleAtScale){
 				// It did.
-				for (var i = 0; i < this._vectors.length; i++){
-					// Show or hide the vectors depending this._options.visibleAtScale
-					this._vectors[i].vector.setMap(this._options.visibleAtScale ? this._options.map : null);
-				}
+				this[this._options.visibleAtScale ? "_showVectors" : "_hideVectors"]();
 			}
 			
 		},
@@ -113,19 +135,19 @@
 		},
 		
 		// Using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
-		_geojsonFeatureToGoogle: function(feature, opts){
+		_geojsonGeometryToGoogle: function(feature, opts){
 			
-			var vector;
-			switch ( feature.geometry.type ){
+			var vector, vectors;
+			switch ( feature.type ){
 				case "Point":
-					opts.position = new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+					opts.position = new google.maps.LatLng(feature.coordinates[1], feature.coordinates[0]);
 					vector = new google.maps.Marker(opts);
 					break;
 							
 				case "LineString":
 					var path = [];
-					for (var i = 0; i < feature.geometry.coordinates.length; i++){
-						var ll = new google.maps.LatLng(feature.geometry.coordinates[i][1], feature.geometry.coordinates[i][0]);
+					for (var i = 0; i < feature.coordinates.length; i++){
+						var ll = new google.maps.LatLng(feature.coordinates[i][1], feature.coordinates[i][0]);
 						path.push(ll);
 					}
 					opts.path = path;
@@ -134,10 +156,10 @@
 					
 				case "Polygon":
 					var paths = [];
-					for (var i = 0; i < feature.geometry.coordinates.length; i++){
+					for (var i = 0; i < feature.coordinates.length; i++){
 						var path = [];
-						for (var i2 = 0; i2 < feature.geometry.coordinates[i].length; i2++){
-								var ll = new google.maps.LatLng(feature.geometry.coordinates[i][i2][1], feature.geometry.coordinates[i][i2][0]);
+						for (var i2 = 0; i2 < feature.coordinates[i].length; i2++){
+								var ll = new google.maps.LatLng(feature.coordinates[i][i2][1], feature.coordinates[i][i2][0]);
 							path.push(ll);
 						}
 						paths.push(path);
@@ -145,9 +167,15 @@
 					opts.paths = paths;
 					vector = new google.maps.Polygon(opts);
 					break;
+					
+				case "GeometryCollection":
+					vectors = [];
+					for (var i = 0; i < feature.geometries.length; i++){
+						vectors.push(this._geojsonGeometryToGoogle(feature.geometries[i], opts));
+					}
+					break;
 			}
-			feature.vector = vector;
-			
+			return vector || vectors;
 		}
 		
 	};
@@ -158,7 +186,7 @@
 		// TODO - Error out if we don't have url or uniqeField members
 		// TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
 		// if (!opts.url) Error out!
-		// if(!opts.uniqueField) Error out!
+		// if (!opts.uniqueField) Error out!
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
@@ -353,10 +381,16 @@
 							if (!onMap){
 								
 								// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-								me._geojsonFeatureToGoogle(data.features[i], me._options.vectorOptions);
+								var vector_or_vectors = me._geojsonGeometryToGoogle(data.features[i].geometry, me._options.vectorOptions);
+								data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
 								
-								// Show this vector on the map
-								data.features[i].vector.setMap(me._options.map);
+								// Show the vector or vectors on the map
+								if (data.features[i].vector) data.features[i].vector.setMap(me._options.map);
+								if (data.features[i].vectors && data.features[i].vectors.length){
+									for (var i3 = 0; i3 < data.features[i].vectors.length; i3++){
+										data.features[i].vectors[i3].setMap(me._options.map);
+									}
+								}
 								
 								// Store the vector in an array so we can remove it later
 								me._vectors.push(data.features[i]);
@@ -470,10 +504,16 @@
 							if (!onMap || !me._options.uniqueField){
 								
 								// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-								me._geojsonFeatureToGoogle(data.features[i], me._options.vectorOptions);
+								var vector_or_vectors = me._geojsonGeometryToGoogle(data.features[i].geometry, me._options.vectorOptions);
+								data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
 								
-								// Show this vector on the map
-								data.features[i].vector.setMap(me._options.map);
+								// Show the vector or vectors on the map
+								if (data.features[i].vector) data.features[i].vector.setMap(me._options.map);
+								if (data.features[i].vectors && data.features[i].vectors.length){
+									for (var i3 = 0; i3 < data.features[i].vectors.length; i3++){
+										data.features[i].vectors[i3].setMap(me._options.map);
+									}
+								}
 								
 								// Store the vector in an array so we can remove it later
 								me._vectors.push(data.features[i]);
