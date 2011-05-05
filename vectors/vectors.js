@@ -180,6 +180,14 @@
 		
 	};
 	
+	function _extend(target, obj){
+	
+		for (mem in obj){
+			target[mem] = obj[mem];
+		}
+	
+	}
+	
 	// A layer in an ArcGIS Server Map Service
 	_vectors.AGS = function(opts){
 		
@@ -292,7 +300,7 @@
 			
 		};
 		
-		jQuery.extend(layer, _base);
+		_extend(layer, _base);
 		
 		if (layer._options.map) layer._show();
 		
@@ -405,7 +413,7 @@
 			
 		};
 		
-		jQuery.extend(layer, _base);
+		_extend(layer, _base);
 		
 		if (layer._options.map) layer._show();
 		
@@ -526,7 +534,7 @@
 			}
 		};
 		
-		jQuery.extend(layer, _base);
+		_extend(layer, _base);
 		
 		if (layer._options.map) layer._show();
 		
