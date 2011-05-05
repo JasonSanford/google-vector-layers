@@ -183,10 +183,9 @@
 	// A layer in an ArcGIS Server Map Service
 	_vectors.AGS = function(opts){
 		
-		// TODO - Error out if we don't have url or uniqeField members
 		// TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
-		// if (!opts.url) Error out!
-		// if (!opts.uniqueField) Error out!
+		if (!opts.url) return {"error": true, "message": "No \"url\" parameter provided."};
+		
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
@@ -303,8 +302,8 @@
 	// An Arc2Earth Datasource
 	_vectors.A2E = function(opts){
 		
-		// TODO - Error out if we don't have a url paramter
-		// if (!opts.url) Error out!
+		if (!opts.url) return {"error": true, "message": "No \"url\" parameter provided."};
+		
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
@@ -420,9 +419,8 @@
 		// ISSUE - This class isn't functional yet. When requesting GeoJSON from
 		//     Geocommons, url parameters are not honored (&bbox=-82,34,-80,36)
 		//     http://getsatisfaction.com/geocommons/topics/features_api_doesnt_honor_url_parameters_when_requesting_geojson
-		// TODO - Error out if we don't have a dataset id
 		// TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
-		// if (!opts.dataset) Error out!
+		if (!opts.dataset) return { "error": true, "message": "No \"dataset\" parameter provided." };
 		
 		var layer = {
 			
