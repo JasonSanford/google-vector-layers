@@ -204,9 +204,6 @@
 			
 			_options: {
 				fields: opts.fields || "",
-				// TODO - When parsing features and dynamic is true, check to see if the
-				//    feature geometry has changed.
-				dynamic: opts.dynamic || false,
 				where: opts.where || "1=1",
 				scaleRange: opts.scaleRange || null,
 				vectorOptions: opts.vectorOptions || {},
@@ -241,6 +238,8 @@
 				"&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
 				"&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build envelope geometry
 				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+				
+				// Dynamically load JSONP
 				var head = document.getElementsByTagName("head")[0];
 				var script = document.createElement("script");
 				script.type = "text/javascript";
@@ -322,12 +321,13 @@
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
+		
+			_globalPointer: "A2E_" + Math.floor(Math.random() * 100000),
 			
 			_vectors: [],
 			
 			_options: {
 				map: opts.map || null,
-				dynamic: opts.dynamic || false,
 				vectorOptions: opts.vectorOptions || {},
 				scaleRange: opts.scaleRange || null,
 				visibleAtScale: true,
@@ -344,6 +344,25 @@
 				var xMax = bounds.getNorthEast().lng();
 				var yMax = bounds.getNorthEast().lat();
 				
+				// Build URL
+				var url = this._options.url + "search" + // Arc2Earth datasource url + search service
+				"?f=gjson" + // Return GeoJSON formatted data
+				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for jQuery JSONP
+				
+				// Dynamically load JSONP
+				var head = document.getElementsByTagName("head")[0];
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				script.src = url;
+				head.appendChild(script);
+			
+			},
+			
+			_processFeatures: function(data){
+			
+				var bounds = this._options.map.getBounds();
+				
 				// Check to see if the _lastQueriedBounds is the same as the new bounds
 				// If true, don't bother querying again.
 				if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
@@ -351,76 +370,65 @@
 				// Store the bounds in the _lastQueriedBounds member so we don't have
 				// to query the layer again if someone simply turns a layer on/off
 				this._lastQueriedBounds = bounds;
-				
-				// Build URL
-				var url = this._options.url + "search" + // Arc2Earth datasource url + search service
-				"?f=gjson" + // Return GeoJSON formatted data
-				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-				"&callback=?"; // Need this for jQuery JSONP
-				
-				// "this" means something different inside "jQuery.getJSON" so assignt it to "me"
-				var me = this;
-				
-				// Assuming you're using jQuery. You can replace this with your choice of XMLHTTPRequest
-				jQuery.getJSON(url, function(data){
+			
+				// If "data.features" exists and there's more than one feature in the array
+				if (data && data.features && data.features.length){
 					
-					// If "data.features" exists and there's more than one feature in the array
-					if (data.features && data.features.length){
-						
-						// Loop through the return features
-						for (var i = 0; i < data.features.length; i++){
-						
-							// All objects are assumed to be false until proven true (remember COPS?)
-							var onMap = false;
-						
-							// If we have an "id" member for this GeoJSON object
-							if (data.features[i].id){
+					// Loop through the return features
+					for (var i = 0; i < data.features.length; i++){
+					
+						// All objects are assumed to be false until proven true (remember COPS?)
+						var onMap = false;
+					
+						// If we have an "id" member for this GeoJSON object
+						if (data.features[i].id){
+							
+							// Loop through all of the features currently on the map
+							for (var i2 = 0; i2 < this._vectors.length; i2++){
+							
+								// Does the "id" member for this feature match the feature on the map
+								if (this._vectors[i2].id && data.features[i].id == this._vectors[i2].id){
 								
-								// Loop through all of the features currently on the map
-								for (var i2 = 0; i2 < me._vectors.length; i2++){
-								
-									// Does the "id" member for this feature match the feature on the map
-									if (me._vectors[i2].id && data.features[i].id == me._vectors[i2].id){
-									
-										// The feature is already on the map
-										onMap = true;
-										
-									}
+									// The feature is already on the map
+									onMap = true;
 									
 								}
 								
-							}
-							
-							// If the feature isn't already or the map
-							if (!onMap){
-								
-								// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-								var vector_or_vectors = me._geojsonGeometryToGoogle(data.features[i].geometry, me._options.vectorOptions);
-								data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
-								
-								// Show the vector or vectors on the map
-								if (data.features[i].vector) data.features[i].vector.setMap(me._options.map);
-								if (data.features[i].vectors && data.features[i].vectors.length){
-									for (var i3 = 0; i3 < data.features[i].vectors.length; i3++){
-										data.features[i].vectors[i3].setMap(me._options.map);
-									}
-								}
-								
-								// Store the vector in an array so we can remove it later
-								me._vectors.push(data.features[i]);
-							
 							}
 							
 						}
 						
+						// If the feature isn't already or the map
+						if (!onMap){
+							
+							// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
+							var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._options.vectorOptions);
+							data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
+							
+							// Show the vector or vectors on the map
+							if (data.features[i].vector) data.features[i].vector.setMap(this._options.map);
+							if (data.features[i].vectors && data.features[i].vectors.length){
+								for (var i3 = 0; i3 < data.features[i].vectors.length; i3++){
+									data.features[i].vectors[i3].setMap(this._options.map);
+								}
+							}
+							
+							// Store the vector in an array so we can remove it later
+							this._vectors.push(data.features[i]);
+						
+						}
+						
 					}
 					
-				});
+				}
+			
 			}
 			
 		};
 		
 		_extend(layer, _base);
+		
+		window[layer._globalPointer] = layer;
 		
 		if (layer._options.map) layer._show();
 		
