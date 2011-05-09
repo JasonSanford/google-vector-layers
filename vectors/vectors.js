@@ -348,7 +348,7 @@
 				var url = this._options.url + "search" + // Arc2Earth datasource url + search service
 				"?f=gjson" + // Return GeoJSON formatted data
 				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for jQuery JSONP
+				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
 				
 				// Dynamically load JSONP
 				var head = document.getElementsByTagName("head")[0];
@@ -446,6 +446,8 @@
 		if (!opts.dataset) return { "error": true, "message": "No \"dataset\" parameter provided." };
 		
 		var layer = {
+		
+			_globalPointer: "Geocommons_" + Math.floor(Math.random() * 100000),
 			
 			_vectors: [],
 			
@@ -473,6 +475,26 @@
 				var xMax = bounds.getNorthEast().lng();
 				var yMax = bounds.getNorthEast().lat();
 				
+				// Build URL
+				var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
+				"/features.json?" + // JSON please
+				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+				"&geojson=1" + // Return GeoJSON formatted data
+				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+				
+				// Dynamically load JSONP
+				var head = document.getElementsByTagName("head")[0];
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				script.src = url;
+				head.appendChild(script);
+				
+			},
+			
+			_processFeatures: function(data){
+			
+				var bounds = this._options.map.getBounds();
+				
 				// Check to see if the _lastQueriedBounds is the same as the new bounds
 				// If true, don't bother querying again.
 				if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
@@ -480,76 +502,64 @@
 				// Store the bounds in the _lastQueriedBounds member so we don't have
 				// to query the layer again if someone simply turns a layer on/off
 				this._lastQueriedBounds = bounds;
-				
-				// Build URL
-				var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
-				"/features.json?" + // JSON please
-				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-				"&geojson=1" + // Return GeoJSON formatted data
-				"&callback=?"; // Need this for jQuery JSONP
-				
-				// "this" means something different inside "jQuery.getJSON" so assignt it to "me"
-				var me = this;
-				
-				// Assuming you're using jQuery. You can replace this with your choice of XMLHTTPRequest
-				jQuery.getJSON(url, function(data){
+			
+				// If "data.features" exists and there's more than one feature in the array
+				if (data && data.features && data.features.length){
 					
-					// If "data.features" exists and there's more than one feature in the array
-					if (data.features && data.features.length){
-						
-						// Loop through the return features
-						for (var i = 0; i < data.features.length; i++){
-						
-							// All objects are assumed to be false until proven true (remember COPS?)
-							var onMap = false;
-						
-							// If we have a "uniqueField" for this layer
-							if (me._options.uniqueField){
-								
-								// Loop through all of the features currently on the map
-								for (var i2 = 0; i2 < me._vectors.length; i2++){
-								
-									// Does the "uniqueField" property for this feature match the feature on the map
-									if (data.features[i].properties[me._options.uniqueField] == me._vectors[i2].properties[me._options.uniqueField]){
-										
-										// The feature is already on the map
-										onMap = true;
-										
-									}
+					// Loop through the return features
+					for (var i = 0; i < data.features.length; i++){
+					
+						// All objects are assumed to be false until proven true (remember COPS?)
+						var onMap = false;
+					
+						// If we have a "uniqueField" for this layer
+						if (this._options.uniqueField){
+							
+							// Loop through all of the features currently on the map
+							for (var i2 = 0; i2 < this._vectors.length; i2++){
+							
+								// Does the "uniqueField" property for this feature match the feature on the map
+								if (data.features[i].properties[this._options.uniqueField] == this._vectors[i2].properties[this._options.uniqueField]){
+									
+									// The feature is already on the map
+									onMap = true;
 									
 								}
 								
 							}
 							
-							// If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
-							if (!onMap || !me._options.uniqueField){
-								
-								// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-								var vector_or_vectors = me._geojsonGeometryToGoogle(data.features[i].geometry, me._options.vectorOptions);
-								data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
-								
-								// Show the vector or vectors on the map
-								if (data.features[i].vector) data.features[i].vector.setMap(me._options.map);
-								if (data.features[i].vectors && data.features[i].vectors.length){
-									for (var i3 = 0; i3 < data.features[i].vectors.length; i3++){
-										data.features[i].vectors[i3].setMap(me._options.map);
-									}
-								}
-								
-								// Store the vector in an array so we can remove it later
-								me._vectors.push(data.features[i]);
+						}
+						
+						// If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
+						if (!onMap || !this._options.uniqueField){
 							
+							// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
+							var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._options.vectorOptions);
+							data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
+							
+							// Show the vector or vectors on the map
+							if (data.features[i].vector) data.features[i].vector.setMap(this._options.map);
+							if (data.features[i].vectors && data.features[i].vectors.length){
+								for (var i3 = 0; i3 < data.features[i].vectors.length; i3++){
+									data.features[i].vectors[i3].setMap(this._options.map);
+								}
 							}
 							
+							// Store the vector in an array so we can remove it later
+							this._vectors.push(data.features[i]);
+						
 						}
 						
 					}
 					
-				});
+				}
+			
 			}
 		};
 		
 		_extend(layer, _base);
+		
+		window[layer._globalPointer] = layer;
 		
 		if (layer._options.map) layer._show();
 		
