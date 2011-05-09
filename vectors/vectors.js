@@ -197,6 +197,8 @@
 		if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
 		
 		var layer = {
+		
+			_globalPointer: "AGS_" + Math.floor(Math.random() * 100000),
 			
 			_vectors: [],
 			
@@ -228,14 +230,6 @@
 				var xMax = bounds.getNorthEast().lng();
 				var yMax = bounds.getNorthEast().lat();
 				
-				// Check to see if the _lastQueriedBounds is the same as the new bounds
-				// If true, don't bother querying again.
-				if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
-				
-				// Store the bounds in the _lastQueriedBounds member so we don't have
-				// to query the layer again if someone simply turns a layer on/off
-				this._lastQueriedBounds = bounds;
-				
 				// Build URL
 				var url = this._options.url + "query" + // Query this layer
 				"?returnGeometry=true" + // Of course we want geometry
@@ -246,61 +240,74 @@
 				"&where=" + this._options.where + // By default return all (1=1) but could pass SQL statement (value<90)
 				"&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
 				"&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build envelope geometry
-				"&callback=?"; // Need this for jQuery JSONP 
+				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+				var head = document.getElementsByTagName("head")[0];
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				script.src = url;
+				head.appendChild(script);
+			},
+			
+			_processFeatures: function(data){
 				
-				// "this" means something different inside "jQuery.getJSON" so assignt it to "me"
-				var me = this;
+				var bounds = this._options.map.getBounds();
 				
-				// Assuming you're using jQuery. You can replace this with your choice of XMLHTTPRequest
-				jQuery.getJSON(url, function(data){
+				// Check to see if the _lastQueriedBounds is the same as the new bounds
+				// If true, don't bother querying again.
+				if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
+				
+				// Store the bounds in the _lastQueriedBounds member so we don't have
+				// to query the layer again if someone simply turns a layer on/off
+				this._lastQueriedBounds = bounds;
+				
+				// If "data.features" exists and there's more than one feature in the array
+				if (data && data.features && data.features.length){
 					
-					// If "data.features" exists and there's more than one feature in the array
-					if (data.features && data.features.length){
-						
-						// Loop through the return features
-						for (var i = 0; i < data.features.length; i++){
-						
-						// All objects are assumed to be false until proven true (remember COPS?)
-						var onMap = false;
-						
-							// If we have a "uniqueField" for this layer
-							if (me._options.uniqueField){
-								
-								// Loop through all of the features currently on the map
-								for (var i2 = 0; i2 < me._vectors.length; i2++){
-								
-									// Does the "uniqueField" attribute for this feature match the feature on the map
-									if (data.features[i].attributes[me._options.uniqueField] == me._vectors[i2].attributes[me._options.uniqueField]){
-										// The feature is already on the map
-										onMap = true;
-									}
+					// Loop through the return features
+					for (var i = 0; i < data.features.length; i++){
+					
+					// All objects are assumed to be false until proven true (remember COPS?)
+					var onMap = false;
+					
+						// If we have a "uniqueField" for this layer
+						if (this._options.uniqueField){
+							
+							// Loop through all of the features currently on the map
+							for (var i2 = 0; i2 < this._vectors.length; i2++){
+							
+								// Does the "uniqueField" attribute for this feature match the feature on the map
+								if (data.features[i].attributes[this._options.uniqueField] == this._vectors[i2].attributes[this._options.uniqueField]){
+									// The feature is already on the map
+									onMap = true;
 								}
 							}
+						}
+						
+						// If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
+						if (!onMap || !this._options.uniqueField){
 							
-							// If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
-							if (!onMap || !me._options.uniqueField){
-								
-								// Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-								me._esriJsonToGoogle(data.features[i], me._options.vectorOptions);
-								
-								// Show this vector on the map
-								data.features[i].vector.setMap(me._options.map);
-								
-								// Store the vector in an array so we can remove it later
-								me._vectors.push(data.features[i]);
+							// Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
+							this._esriJsonToGoogle(data.features[i], this._options.vectorOptions);
 							
-							}
+							// Show this vector on the map
+							data.features[i].vector.setMap(this._options.map);
 							
+							// Store the vector in an array so we can remove it later
+							this._vectors.push(data.features[i]);
+						
 						}
 						
 					}
 					
-				});
+				}
+			
 			}
 			
 		};
 		
 		_extend(layer, _base);
+		
+		window[layer._globalPointer] = layer;
 		
 		if (layer._options.map) layer._show();
 		
