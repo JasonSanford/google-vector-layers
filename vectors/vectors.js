@@ -337,7 +337,7 @@
 			_getFeatures: function(){
 				
 				// Get coordinates for SoutWest and NorthEast corners of current map extent,
-				// will use later when building "esriGeometryEnvelope"
+				// will use later when building "bbox" url parameter
 				var bounds = this._options.map.getBounds();
 				var xMin = bounds.getSouthWest().lng();
 				var yMin = bounds.getSouthWest().lat();
@@ -468,7 +468,7 @@
 				if (!this._options.uniqueField) this._clearFeatures();
 				
 				// Get coordinates for SoutWest and NorthEast corners of current map extent,
-				// will use later when building "esriGeometryEnvelope"
+				// will use later when building "bbox" url parameter
 				var bounds = this._options.map.getBounds();
 				var xMin = bounds.getSouthWest().lng();
 				var yMin = bounds.getSouthWest().lat();
