@@ -13,8 +13,8 @@ I suggest also adding a uniqueField option. You can most likely use your OBJECTI
     
 Some other optional parameters for ArcGIS Server layers:
 
-+   fields (string) - comma separated fields you want returned, returns all fields by default
-+   where (string) - additional SQL where clause to filter features, return all features by default - ex. "road_type = 'paved'"
+* fields (string) - comma separated fields you want returned, returns all fields by default
+* where (string) - additional SQL where clause to filter features, return all features by default - ex. "road_type = 'paved'"
 * scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
 * vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
 * map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)
@@ -28,6 +28,7 @@ Arc2Earth layers have one mandatory option, a url.
     });
 
 Some other optional parameters for Arc2Earth layers:
+
 * where (string) - additional SQL where clause to filter features, return all features by default - ex. "PROJECT_NAME='Stoney Creek'"
 * scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
 * vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
@@ -44,6 +45,7 @@ myGeocommonsLayer = new vectors.Geocommons({
 });
 
 Some other optional parameters for Geocommons layers:
+
 * scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
 * vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
 * map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)
