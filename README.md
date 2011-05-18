@@ -12,7 +12,7 @@ I suggest also adding a uniqueField option. You can most likely use your OBJECTI
     myAgsLayer.setMap(myMap);
     
 Some other optional parameters for ArcGIS Server layers:
-*   fields (string) - comma separated fields you want returned, returns all fields by default
+ *   fields (string) - comma separated fields you want returned, returns all fields by default
 *   where (string) - additional SQL where clause to filter features, return all features by default - ex. "road_type = 'paved'"
 * scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
 * vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
