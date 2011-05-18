@@ -40,9 +40,9 @@ Geocommons layers have one mandatory option, a dataset. All datasets in Geocommo
 
 There is currently an issue requesting GeoJSON features from Geocommons where other URL parameters aren't honored. For now, all features are pull with each map pan/zoom. (not ideal!) For details see http://getsatisfaction.com/geocommons/topics/features_api_doesnt_honor_url_parameters_when_requesting_geojson
 
-myGeocommonsLayer = new vectors.Geocommons({
-	dataset: 111601
-});
+    myGeocommonsLayer = new vectors.Geocommons({
+        dataset: 111601
+    });
 
 Some other optional parameters for Geocommons layers:
 
