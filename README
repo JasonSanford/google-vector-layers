@@ -1,6 +1,6 @@
 This library will add Google Maps vector (Point, Polyline, Polygon) layers from multiple geo web services including ArcGIS Server, GeoIQ, Arc2Earth, etc.
 
-==ArcGIS Server (vectors.AGS)==
+## ArcGIS Server (vectors.AGS)
 
 ArcGIS Server layers have one mandatory option, a url.
 
@@ -12,13 +12,13 @@ I suggest also adding a uniqueField option. You can most likely use your OBJECTI
     myAgsLayer.setMap(myMap);
     
 Some other optional parameters for ArcGIS Server layers:
-fields (string) - comma separated fields you want returned, returns all fields by default
-where (string) - additional SQL where clause to filter features, return all features by default - ex. "road_type = 'paved'"
-scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
-vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
-map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)
+* fields (string) - comma separated fields you want returned, returns all fields by default
+* where (string) - additional SQL where clause to filter features, return all features by default - ex. "road_type = 'paved'"
+* scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
+* vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
+* map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)
     
-==Arc2Earth (vectors.A2E)==
+## Arc2Earth (vectors.A2E)
 
 Arc2Earth layers have one mandatory option, a url.
 
@@ -27,12 +27,12 @@ Arc2Earth layers have one mandatory option, a url.
     });
 
 Some other optional parameters for Arc2Earth layers:
-where (string) - additional SQL where clause to filter features, return all features by default - ex. "PROJECT_NAME='Stoney Creek'"
-scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
-vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
-map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)
+* where (string) - additional SQL where clause to filter features, return all features by default - ex. "PROJECT_NAME='Stoney Creek'"
+* scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
+* vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
+* map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)https://github.com/JasonSanford/google-vector-layers/blob/master/README
 
-==Geocommons (vectors.Geocommons)==
+## Geocommons (vectors.Geocommons)
 
 Geocommons layers have one mandatory option, a dataset. All datasets in Geocommons have a unique dataset id.
 
@@ -43,6 +43,6 @@ myGeocommonsLayer = new vectors.Geocommons({
 });
 
 Some other optional parameters for Geocommons layers:
-scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
-vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
-map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)
+* scaleRange (array) - min and max Google Maps scales to draw this feature - ex. [13, 21]
+* vectorOptions (object) - Google Maps vector options specific to feature type - ex. {strokeWeight: 3, strokeColor: "#ff0099"}
+* map (google.maps.Map object) - if you pass this in initially, there's no need to call setMap(my_map)
