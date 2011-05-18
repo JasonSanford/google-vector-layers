@@ -234,7 +234,7 @@
 				"&spatialRel=esriSpatialRelIntersects" + // Find stuff that intersects this envelope
 				"&f=json" + // Wish it were GeoJSON, but we'll take it
 				"&outFields=" + this._options.fields + // Please return the following fields
-				"&where=" + this._options.where + // By default return all (1=1) but could pass SQL statement (value<90)
+				"&where=" + this._options.where + // By default return all feature (1=1) but could pass SQL statement (value<90)
 				"&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
 				"&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build envelope geometry
 				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
@@ -328,6 +328,7 @@
 			
 			_options: {
 				map: opts.map || null,
+				where: opts.where || "",
 				vectorOptions: opts.vectorOptions || {},
 				scaleRange: opts.scaleRange || null,
 				visibleAtScale: true,
@@ -348,6 +349,7 @@
 				var url = this._options.url + "search" + // Arc2Earth datasource url + search service
 				"?f=gjson" + // Return GeoJSON formatted data
 				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+				"&q=" + this._options.where + // By default return all features but could pass SQL statement (value<90)
 				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
 				
 				// Dynamically load JSONP
@@ -452,7 +454,6 @@
 			_vectors: [],
 			
 			_options: {
-				fields: opts.fields || "",
 				map: opts.map || null,
 				uniqueField: opts.uniqueField || null,
 				vectorOptions: opts.vectorOptions || {},
