@@ -480,7 +480,7 @@
 				var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
 				"/features.json?" + // JSON please
 				"&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-				"&geojson=1" + // Return GeoJSON formatted data
+				/*"&geojson=1" + // Return GeoJSON formatted data*/
 				"&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
 				
 				// Dynamically load JSONP
@@ -505,10 +505,10 @@
 				this._lastQueriedBounds = bounds;
 			
 				// If "data.features" exists and there's more than one feature in the array
-				if (data && data.features && data.features.length){
+				if (data && data.length){
 					
 					// Loop through the return features
-					for (var i = 0; i < data.features.length; i++){
+					for (var i = 0; i < data.length; i++){
 					
 						// All objects are assumed to be false until proven true (remember COPS?)
 						var onMap = false;
@@ -520,7 +520,7 @@
 							for (var i2 = 0; i2 < this._vectors.length; i2++){
 							
 								// Does the "uniqueField" property for this feature match the feature on the map
-								if (data.features[i].properties[this._options.uniqueField] == this._vectors[i2].properties[this._options.uniqueField]){
+								if (data[i][this._options.uniqueField] == this._vectors[i2][this._options.uniqueField]){
 									
 									// The feature is already on the map
 									onMap = true;
@@ -535,19 +535,19 @@
 						if (!onMap || !this._options.uniqueField){
 							
 							// Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-							var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._options.vectorOptions);
-							data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
+							var vector_or_vectors = this._geojsonGeometryToGoogle(data[i].geometry, this._options.vectorOptions);
+							data[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
 							
 							// Show the vector or vectors on the map
-							if (data.features[i].vector) data.features[i].vector.setMap(this._options.map);
-							if (data.features[i].vectors && data.features[i].vectors.length){
-								for (var i3 = 0; i3 < data.features[i].vectors.length; i3++){
-									data.features[i].vectors[i3].setMap(this._options.map);
+							if (data[i].vector) data[i].vector.setMap(this._options.map);
+							if (data[i].vectors && data[i].vectors.length){
+								for (var i3 = 0; i3 < data[i].vectors.length; i3++){
+									data[i].vectors[i3].setMap(this._options.map);
 								}
 							}
 							
 							// Store the vector in an array so we can remove it later
-							this._vectors.push(data.features[i]);
+							this._vectors.push(data[i]);
 						
 						}
 						
