@@ -506,10 +506,10 @@
                 
                 // Build URL
                 var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
-                "/features.json?" + // JSON please
-                "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-                /*"&geojson=1" + // Return GeoJSON formatted data*/
-                "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+                    "/features.json?" + // JSON please
+                    "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+                    /*"&geojson=1" + // Return GeoJSON formatted data*/
+                    "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
                 
                 // Dynamically load JSONP
                 var head = document.getElementsByTagName("head")[0];
@@ -794,7 +794,9 @@
     _vectors.AGS = function(opts) {
         
         // TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
-        if (!opts.url) return {"error": true, "message": "No \"url\" parameter provided."};
+        if (!opts.url) {
+            return {"error": true, "message": "No \"url\" parameter provided."};
+        }
         
         if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
         
@@ -831,15 +833,15 @@
                 
                 // Build URL
                 var url = this._options.url + "query" + // Query this layer
-                "?returnGeometry=true" + // Of course we want geometry
-                "&inSR=4326&outSR=4326" + // request/receive geometry in WGS 84 Lat/Lng. Esri got this right.
-                "&spatialRel=esriSpatialRelIntersects" + // Find stuff that intersects this envelope
-                "&f=json" + // Wish it were GeoJSON, but we'll take it
-                "&outFields=" + this._options.fields + // Please return the following fields
-                "&where=" + this._options.where + // By default return all feature (1=1) but could pass SQL statement (value<90)
-                "&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
-                "&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build envelope geometry
-                "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+                    "?returnGeometry=true" + // Of course we want geometry
+                    "&inSR=4326&outSR=4326" + // request/receive geometry in WGS 84 Lat/Lng. Esri got this right.
+                    "&spatialRel=esriSpatialRelIntersects" + // Find stuff that intersects this envelope
+                    "&f=json" + // Wish it were GeoJSON, but we'll take it
+                    "&outFields=" + this._options.fields + // Please return the following fields
+                    "&where=" + this._options.where + // By default return all feature (1=1) but could pass SQL statement (value<90)
+                    "&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
+                    "&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build envelope geometry
+                    "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
                 
                 // Dynamically load JSONP
                 var head = document.getElementsByTagName("head")[0];
@@ -855,7 +857,9 @@
                 
                 // Check to see if the _lastQueriedBounds is the same as the new bounds
                 // If true, don't bother querying again.
-                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
+                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) {
+                    return;
+                }
                 
                 // Store the bounds in the _lastQueriedBounds member so we don't have
                 // to query the layer again if someone simply turns a layer on/off
@@ -918,7 +922,9 @@
     // An Arc2Earth Datasource
     _vectors.A2E = function(opts) {
         
-        if (!opts.url) return {"error": true, "message": "No \"url\" parameter provided."};
+        if (!opts.url) {
+            return {"error": true, "message": "No \"url\" parameter provided."};
+        }
         
         if (opts.url.substr(opts.url.length-1, 1) !== "/") opts.url += "/";
         
@@ -949,10 +955,10 @@
                 
                 // Build URL
                 var url = this._options.url + "search" + // Arc2Earth datasource url + search service
-                "?f=gjson" + // Return GeoJSON formatted data
-                "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-                "&q=" + this._options.where + // By default return all features but could pass SQL statement (value<90)
-                "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+                    "?f=gjson" + // Return GeoJSON formatted data
+                    "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+                    "&q=" + this._options.where + // By default return all features but could pass SQL statement (value<90)
+                    "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
                 
                 // Dynamically load JSONP
                 var head = document.getElementsByTagName("head")[0];
@@ -969,7 +975,9 @@
                 
                 // Check to see if the _lastQueriedBounds is the same as the new bounds
                 // If true, don't bother querying again.
-                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
+                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) {
+                    return;
+                }
                 
                 // Store the bounds in the _lastQueriedBounds member so we don't have
                 // to query the layer again if someone simply turns a layer on/off
@@ -1047,7 +1055,9 @@
         //     Geocommons, url parameters are not honored (&bbox=-82,34,-80,36)
         //     http://getsatisfaction.com/geocommons/topics/features_api_doesnt_honor_url_parameters_when_requesting_geojson
         // TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
-        if (!opts.dataset) return { "error": true, "message": "No \"dataset\" parameter provided." };
+        if (!opts.dataset) {
+            return { "error": true, "message": "No \"dataset\" parameter provided." };
+        }
         
         var layer = {
         
@@ -1068,7 +1078,9 @@
                 // If we don't have a uniqueField value
                 // it's hard to tell if new features are
                 //duplicates so clear them all
-                if (!this._options.uniqueField) this._clearFeatures();
+                if (!this._options.uniqueField) {
+                    this._clearFeatures();
+                }
                 
                 // Get coordinates for SoutWest and NorthEast corners of current map extent,
                 // will use later when building "bbox" url parameter
@@ -1080,10 +1092,10 @@
                 
                 // Build URL
                 var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
-                "/features.json?" + // JSON please
-                "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-                /*"&geojson=1" + // Return GeoJSON formatted data*/
-                "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+                    "/features.json?" + // JSON please
+                    "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+                    /*"&geojson=1" + // Return GeoJSON formatted data*/
+                    "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
                 
                 // Dynamically load JSONP
                 var head = document.getElementsByTagName("head")[0];
@@ -1100,7 +1112,9 @@
                 
                 // Check to see if the _lastQueriedBounds is the same as the new bounds
                 // If true, don't bother querying again.
-                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) return;
+                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) {
+                    return;
+                }
                 
                 // Store the bounds in the _lastQueriedBounds member so we don't have
                 // to query the layer again if someone simply turns a layer on/off
