@@ -23,8 +23,9 @@
                 this._addZoomChangeListener();
             }
             if (this._options.autoUpdate && this._options.autoUpdateInterval) {
+                var me = this;
                 this._autoUpdateInterval = setInterval(function() {
-                    this._getFeatures
+                    me._getFeatures();
                 }, this._options.autoUpdateInterval);
             }
             google.maps.event.trigger(this._options.map, "zoom_changed");
@@ -32,8 +33,15 @@
         },
         
         _hide: function() {
-            if (this._idleListener) google.maps.event.removeListener(this._idleListener);
-            if (this._zoomChangeListener) google.maps.event.removeListener(this._zoomChangeListener);
+            if (this._idleListener) {
+                google.maps.event.removeListener(this._idleListener);
+            }
+            if (this._zoomChangeListener) {
+                google.maps.event.removeListener(this._zoomChangeListener);
+            }
+            if (this._autoUpdateInterval) {
+                clearInterval(this._autoUpdateInterval);
+            }
             this._clearFeatures();
             this._lastQueriedBounds = null;
         },
@@ -271,7 +279,7 @@
                 
                 // Check to see if the _lastQueriedBounds is the same as the new bounds
                 // If true, don't bother querying again.
-                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) {
+                if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds) && !this._autoUpdateInterval) {
                     return;
                 }
                 
@@ -298,6 +306,17 @@
                                 if (data.features[i].attributes[this._options.uniqueField] == this._vectors[i2].attributes[this._options.uniqueField]) {
                                     // The feature is already on the map
                                     onMap = true;
+                                    
+                                    // The feature's geometry might have changed, let's check.
+                                    if (!isNaN(data.features[i].geometry.x) && !isNaN(data.features[i].geometry.y)) {
+                                        // It's a point feature, these are the only ones we're updating for now
+                                        // In the future it might be helpful to use something similar to Underscore's isEqual object equality checker
+                                        if (!(data.features[i].geometry.x == this._vectors[i2].geometry.x && data.features[i].geometry.y == this._vectors[i2].geometry.y)) {
+                                            this._vectors[i2].attributes = data.features[i].attributes;
+                                            this._vectors[i2].geometry = data.features[i].geometry;
+                                            this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.y, this._vectors[i2].geometry.x));
+                                        }
+                                    }
                                 }
                                 
                             }
