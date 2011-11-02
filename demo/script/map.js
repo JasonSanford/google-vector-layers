@@ -4,8 +4,8 @@ $(function(){
 	
 	// Create Map
 	map = new google.maps.Map(document.getElementById("map_container"), {
-		center: new google.maps.LatLng(39.7374, -104.9864),
-		zoom: 15,
+		center: new google.maps.LatLng(39.75111061205554, -104.99916731491088),
+		zoom: 16,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	

@@ -120,6 +120,16 @@
                 this[this._options.visibleAtScale ? "_showVectors" : "_hideVectors"]();
             }
             
+            // Check to see if we need to set or clear any intervals for auto-updating layers
+            if (visibilityBefore && !this._options.visibleAtScale && this._autoUpdateInterval) {
+                clearInterval(this._autoUpdateInterval);
+            } else if (!visibilityBefore && this._options.autoUpdate && this._options.autoUpdateInterval) {
+                var me = this;
+                this._autoUpdateInterval = setInterval(function() {
+                    me._getFeatures();
+                }, this._options.autoUpdateInterval);
+            }
+            
         },
         
         _esriJsonToGoogle: function(feature, opts) {
