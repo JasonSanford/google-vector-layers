@@ -1,16 +1,16 @@
-var map, ags_swr_main, ags_swr_mh, geocommons_parcels, a2e_wtr_main, a2e_hydrants;
+var map, /*ags_swr_main, ags_swr_mh,*/ags_buses, geocommons_parcels, a2e_wtr_main, a2e_hydrants;
 
 $(function(){  
 	
 	// Create Map
 	map = new google.maps.Map(document.getElementById("map_container"), {
-		center: new google.maps.LatLng(35.05399, -80.66651),
-		zoom: 17,
+		center: new google.maps.LatLng(39.7374, -104.9864),
+		zoom: 15,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
 	// Create Vector Layers
-	ags_swr_main = new vectors.AGS({
+	/*ags_swr_main = new vectors.AGS({
 		url: "http://gisapps.co.union.nc.us/ArcGIS/rest/services/PWSWR/MapServer/10",
 		fields: "OBJECTID,WWTP,PIPE_DIA,PIPE_MAT",
 		uniqueField: "OBJECTID",
@@ -28,8 +28,21 @@ $(function(){
 		uniqueField: "OBJECTID",
 		scaleRange: [16, 21],
 		vectorOptions: {
-			icon: new google.maps.MarkerImage('img/markers/manhole.png',new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
+			icon: new google.maps.MarkerImage('img/markers/manhole.png', new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
 		}
+	});*/
+	
+	ags_buses = new vectors.AGS({
+	    url: "http://maps.rtd-denver.com/ArcGIS/rest/services/BusLocations/MapServer/0",
+	    fields: "*",
+	    uniqueField: "OBJECTID",
+	    scaleRange: [13, 20],
+	    vectorOptions: {
+	        icon: new google.maps.MarkerImage('img/markers/manhole.png', new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
+	    },
+	    dynamic: true,
+	    autoUpdate: true,
+	    autoUpdateInterval: 5000
 	});
 	
 	geocommons_parcels = new vectors.Geocommons({
@@ -57,7 +70,7 @@ $(function(){
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_hydrant",
 		scaleRange: [16, 21],
 		vectorOptions: {
-			icon: new google.maps.MarkerImage('img/markers/hydrant.png',new google.maps.Size(17, 28), new google.maps.Point(0, 0), new google.maps.Point(7, 8))
+			icon: new google.maps.MarkerImage('img/markers/hydrant.png', new google.maps.Size(17, 28), new google.maps.Point(0, 0), new google.maps.Point(7, 8))
 		}
 	});
 	
