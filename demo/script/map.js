@@ -33,8 +33,8 @@ $(function(){
 	});
 	
 	geocommons_parcels = new vectors.Geocommons({
-		dataset: 111601,
-		uniqueField: "OBJECTID",
+		dataset: 131518,
+		uniqueField: "name",
 		scaleRange: [17, 21],
 		vectorOptions: {
 			fillColor: "#4D8FFF",
