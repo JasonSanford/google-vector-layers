@@ -604,7 +604,6 @@
     
     window.vectors = _vectors;
     
-=======
 	var _base = {
 		
 		setMap: function(map){
