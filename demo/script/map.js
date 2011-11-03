@@ -1,4 +1,4 @@
-var map, /*ags_swr_main, ags_swr_mh,*/ags_buses, geocommons_parcels, a2e_wtr_main, a2e_hydrants;
+var map, /*ags_swr_main, ags_swr_mh,*/ags_buses, ags_light_rail, geocommons_parcels, a2e_wtr_main, a2e_hydrants;
 
 $(function(){  
 	
@@ -44,6 +44,19 @@ $(function(){
 	    autoUpdate: true,
 	    autoUpdateInterval: 5000,
 	    infoWindowTemplate: '<div class="iw-content"><h3>Bus #{VEHICLE_ALIAS}</h3><table><tr><th>Speed</th><td>{SPEED}</td></tr><tr><th>Route</th><td>{ROUTE}</td></tr><tr><th>Operator</th><td>{OPERATOR_LNAME},{OPERATOR_FNAME}</td></tr><tr><th>Last GPS Lock</th><td>{LOCKTIME}</td></tr></table></div>'
+	});
+	
+	ags_light_rail = new vectors.AGS({
+	    url: "http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleVectors/MapServer/1",
+	    fields: "*",
+	    uniqueField: "OBJECTID",
+	    scaleRange: [13, 20],
+	    vectorOptions: {
+	        strokeWeight: 7,
+	        strokeOpacity: 0.7,
+	        strokeColor: "#004a00"
+	    },
+	    infoWindowTemplate: 'Route: {ROUTE}'
 	});
 	
 	geocommons_parcels = new vectors.Geocommons({

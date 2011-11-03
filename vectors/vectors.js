@@ -152,15 +152,13 @@
             var infoWindowOptions = {
                 content: feature.iwContent
             };
-            if (evt.latLng) {
-                infoWindowOptions.position = evt.latLng;
-            }
             feature.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
-            if (!feature.vector.getPaths && !feature.vector.getPath) {
-                feature.infoWindow.open(this._options.map, feature.vector);
+            feature.infoWindow.open(this._options.map, feature.vector.getPaths || feature.vector.getPath ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
+            /*if (feature.vector.getPaths || feature.vector.getPath) {
+                feature.infoWindow.open(this._options.map, new google.maps.Marker({position: evt.latLng}));
             } else {
-                feature.infoWindow.open(this._options.map, evt.latLng);
-            }
+                feature.infoWindow.open(this._options.map, feature.vector);
+            }*/
         },
         
         _esriJsonToGoogle: function(feature, opts) {
