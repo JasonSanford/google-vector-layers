@@ -132,6 +132,30 @@
             
         },
         
+        _setInfoWindowContent: function(feature) {
+            var iwContent = this._options.infoWindowTemplate;
+            for (var prop in feature.attributes) {
+                var re = new RegExp("{" + prop + "}", "g");
+                iwContent = iwContent.replace(re, feature.attributes[prop]);
+            }
+            feature.iwContent = iwContent
+        },
+        
+        _showInfoWindow: function(feature, evt) {
+            var infoWindowOptions = {
+                content: feature.iwContent
+            };
+            if (evt.latLng) {
+                infoWindowOptions.position = evt.latLng;
+            }
+            feature.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+            if (!feature.vector.getPaths && !feature.vector.getPath) {
+                feature.infoWindow.open(this._options.map, feature.vector);
+            } else {
+                feature.infoWindow.open(this._options.map, evt.latLng);
+            }
+        },
+        
         _esriJsonToGoogle: function(feature, opts) {
             var vector;
             if (feature.geometry.x && feature.geometry.y) {
@@ -244,7 +268,8 @@
                 url: opts.url,
                 dynamic: opts.dynamic || false,
                 autoUpdate: opts.autoUpdate || false,
-                autoUpdateInterval: opts.autoUpdateInterval || null
+                autoUpdateInterval: opts.autoUpdateInterval || null,
+                infoWindowTemplate: opts.infoWindowTemplate || null
             },
             
             _getFeatures: function() {
@@ -344,6 +369,21 @@
                             
                             // Store the vector in an array so we can remove it later
                             this._vectors.push(data.features[i]);
+                            
+                            if (this._options.infoWindowTemplate) {
+                                
+                                var me = this;
+                                var feature = this._vectors[i2];
+                                
+                                this._setInfoWindowContent(feature);
+                                
+                                (function(feature){
+                                    google.maps.event.addListener(feature.vector, "click", function(evt) {
+                                        me._showInfoWindow(feature, evt);
+                                    });
+                                }(feature));
+                                
+                            }
                         
                         }
                         

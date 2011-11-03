@@ -42,7 +42,8 @@ $(function(){
 	    },
 	    dynamic: true,
 	    autoUpdate: true,
-	    autoUpdateInterval: 5000
+	    autoUpdateInterval: 5000,
+	    infoWindowTemplate: '<h3>Bus</h3><table><tr><th>Speed</th><td>{SPEED}</td></tr><tr><th>Route</th><td>{ROUTE}</td></tr></table>'
 	});
 	
 	geocommons_parcels = new vectors.Geocommons({
