@@ -56,7 +56,7 @@ $(function(){
 	        strokeOpacity: 0.7,
 	        strokeColor: "#004a00"
 	    },
-	    infoWindowTemplate: 'Route: {ROUTE}'
+	    infoWindowTemplate: '<div class="iw-content"><h3>Light Rail Line</h3><table><tr><th>Route</th><td>{ROUTE}</td></tr></table></div>'
 	});
 	
 	geocommons_parcels = new vectors.Geocommons({
