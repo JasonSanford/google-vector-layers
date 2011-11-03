@@ -49,10 +49,18 @@
         _hideVectors: function() {
         
             for (var i = 0; i < this._vectors.length; i++) {
-                if (this._vectors[i].vector) this._vectors[i].vector.setMap(null);
+                if (this._vectors[i].vector) {
+                    this._vectors[i].vector.setMap(null);
+                    if (this._vectors[i].infoWindow) {
+                        this._vectors[i].infoWindow.close()
+                    }
+                }
                 if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
                     for (var i2 = 0; i2 < this._vectors[i].vectors.length; i2++) {
                         this._vectors[i].vectors[i2].setMap(null);
+                        if (this._vectors[i].vectors[i2].infoWindow) {
+                            this._vectors[i].vectors[i2].infoWindow.close();
+                        }
                     }
                 }
             }
