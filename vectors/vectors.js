@@ -133,12 +133,19 @@
         },
         
         _setInfoWindowContent: function(feature) {
+        
+            var previousContent = feature.iwContent
+            
             var iwContent = this._options.infoWindowTemplate;
             for (var prop in feature.attributes) {
                 var re = new RegExp("{" + prop + "}", "g");
                 iwContent = iwContent.replace(re, feature.attributes[prop]);
             }
             feature.iwContent = iwContent
+            
+            if (feature.infoWindow && !(feature.iwContent == previousContent)) {
+                feature.infoWindow.setContent(feature.iwContent)
+            }
         },
         
         _showInfoWindow: function(feature, evt) {
@@ -342,16 +349,26 @@
                                     // The feature is already on the map
                                     onMap = true;
                                     
-                                    // The feature's geometry might have changed, let's check.
-                                    if (!isNaN(data.features[i].geometry.x) && !isNaN(data.features[i].geometry.y)) {
-                                        // It's a point feature, these are the only ones we're updating for now
-                                        // In the future it might be helpful to use something similar to Underscore's isEqual object equality checker
-                                        if (!(data.features[i].geometry.x == this._vectors[i2].geometry.x && data.features[i].geometry.y == this._vectors[i2].geometry.y)) {
-                                            this._vectors[i2].attributes = data.features[i].attributes;
-                                            this._vectors[i2].geometry = data.features[i].geometry;
-                                            this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.y, this._vectors[i2].geometry.x));
+                                    // We're only concerned about updating layers that are dynamic (options.dynamic = true).
+                                    if (this._options.dynamic) {
+                                    
+                                        // The feature's geometry might have changed, let's check.
+                                        if (!isNaN(data.features[i].geometry.x) && !isNaN(data.features[i].geometry.y)) {
+                                            
+                                            // It's a point feature, these are the only ones we're updating for now
+                                            // In the future it might be helpful to use something similar to Underscore's isEqual object equality checker
+                                            if (!(data.features[i].geometry.x == this._vectors[i2].geometry.x && data.features[i].geometry.y == this._vectors[i2].geometry.y)) {
+                                                this._vectors[i2].geometry = data.features[i].geometry;
+                                                this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.y, this._vectors[i2].geometry.x));
+                                            }
+                                            
                                         }
+                                        
+                                        this._vectors[i2].attributes = data.features[i].attributes;
+                                        this._setInfoWindowContent(this._vectors[i2]);
+                                    
                                     }
+                                    
                                 }
                                 
                             }
