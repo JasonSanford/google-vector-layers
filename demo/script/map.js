@@ -38,7 +38,7 @@ $(function(){
 	    uniqueField: "OBJECTID",
 	    scaleRange: [13, 20],
 	    vectorOptions: {
-	        icon: new google.maps.MarkerImage('img/markers/manhole.png', new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
+	        icon: "img/markers/bus-green.png"
 	    },
 	    dynamic: true,
 	    autoUpdate: true,
@@ -62,13 +62,11 @@ $(function(){
 	geocommons_ski = new vectors.Geocommons({
 		dataset: 164880,
 		uniqueField: "NAME",
-		scaleRange: [4, 20]/*,
+		scaleRange: [6, 20],
+		infoWindowTemplate: '<div class="iw-content"><h3>{NAME}</h3></div>',
 		vectorOptions: {
-			fillColor: "#4D8FFF",
-			fillOpacity: 0.5,
-			strokeWeight: 2,
-			strokeColor: "#DFFF7A"
-		}*/
+			icon: "img/markers/ski-lift.png"
+		}
 	});
 	
 	a2e_wtr_main = new vectors.A2E({

@@ -138,10 +138,13 @@
         _setInfoWindowContent: function(feature) {
             var previousContent = feature.iwContent
             
+            // Esri calls them attributes. GeoJSON calls them properties
+            var atts = feature.attributes || feature.properties
+            
             var iwContent = this._options.infoWindowTemplate;
-            for (var prop in feature.attributes) {
+            for (var prop in atts) {
                 var re = new RegExp("{" + prop + "}", "g");
-                iwContent = iwContent.replace(re, feature.attributes[prop]);
+                iwContent = iwContent.replace(re, atts[prop]);
             }
             feature.iwContent = iwContent
             
@@ -556,7 +559,8 @@
                 vectorOptions: opts.vectorOptions || {},
                 scaleRange: opts.scaleRange || null,
                 visibleAtScale: true,
-                dataset: opts.dataset
+                dataset: opts.dataset,
+                infoWindowTemplate: opts.infoWindowTemplate || null
             },
             
             _getFeatures: function() {
@@ -644,6 +648,21 @@
                             
                             // Store the vector in an array so we can remove it later
                             this._vectors.push(data.features[i]);
+                            
+                            if (this._options.infoWindowTemplate) {
+                                
+                                var me = this;
+                                var feature = this._vectors[i2];
+                                
+                                this._setInfoWindowContent(feature);
+                                
+                                (function(feature){
+                                    google.maps.event.addListener(feature.vector, "click", function(evt) {
+                                        me._showInfoWindow(feature, evt);
+                                    });
+                                }(feature));
+                                
+                            }
                         
                         }
                         
