@@ -47,7 +47,6 @@
         },
         
         _hideVectors: function() {
-        
             for (var i = 0; i < this._vectors.length; i++) {
                 if (this._vectors[i].vector) {
                     this._vectors[i].vector.setMap(null);
@@ -64,11 +63,9 @@
                     }
                 }
             }
-        
         },
         
         _showVectors: function() {
-        
             for (var i = 0; i < this._vectors.length; i++) {
                 if (this._vectors[i].vector) {
                     this._vectors[i].vector.setMap(this._options.map);
@@ -79,7 +76,6 @@
                     }
                 }
             }
-        
         },
         
         _clearFeatures: function() {
@@ -100,7 +96,6 @@
         },
         
         _addIdleListener: function() {
-        
             // "this" means something different inside "google.maps.event.addListener"
             // assign it to "me"
             var me = this;
@@ -141,7 +136,6 @@
         },
         
         _setInfoWindowContent: function(feature) {
-        
             var previousContent = feature.iwContent
             
             var iwContent = this._options.infoWindowTemplate;
@@ -162,11 +156,11 @@
             };
             feature.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
             feature.infoWindow.open(this._options.map, feature.vector.getPaths || feature.vector.getPath ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
-            /*if (feature.vector.getPaths || feature.vector.getPath) {
-                feature.infoWindow.open(this._options.map, new google.maps.Marker({position: evt.latLng}));
-            } else {
-                feature.infoWindow.open(this._options.map, feature.vector);
-            }*/
+        },
+        
+        _buildBoundsString: function(gBounds) {
+            var gBoundsParts = gBounds.toUrlValue().split(",");
+            return gBoundsParts[1] + "," + gBoundsParts[0] + "," + gBoundsParts[3] + "," + gBoundsParts[2];
         },
         
         _esriJsonToGoogle: function(feature, opts) {
@@ -293,14 +287,6 @@
                     this._clearFeatures();
                 }
                 
-                // Get coordinates for SoutWest and NorthEast corners of current map extent,
-                // will use later when building "esriGeometryEnvelope"
-                var bounds = this._options.map.getBounds();
-                var xMin = bounds.getSouthWest().lng();
-                var yMin = bounds.getSouthWest().lat();
-                var xMax = bounds.getNorthEast().lng();
-                var yMax = bounds.getNorthEast().lat();
-                
                 // Build URL
                 var url = this._options.url + "query" + // Query this layer
                     "?returnGeometry=true" + // Of course we want geometry
@@ -310,7 +296,7 @@
                     "&outFields=" + this._options.fields + // Please return the following fields
                     "&where=" + this._options.where + // By default return all feature (1=1) but could pass SQL statement (value<90)
                     "&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
-                    "&geometry=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build envelope geometry
+                    "&geometry=" + this._buildBoundsString(this._options.map.getBounds()) + // Build envelope geometry
                     "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
                 
                 // Dynamically load JSONP
@@ -322,7 +308,6 @@
             },
             
             _processFeatures: function(data) {
-                
                 var bounds = this._options.map.getBounds();
                 
                 // Check to see if the _lastQueriedBounds is the same as the new bounds
@@ -456,19 +441,10 @@
             },
             
             _getFeatures: function() {
-                
-                // Get coordinates for SoutWest and NorthEast corners of current map extent,
-                // will use later when building "bbox" url parameter
-                var bounds = this._options.map.getBounds();
-                var xMin = bounds.getSouthWest().lng();
-                var yMin = bounds.getSouthWest().lat();
-                var xMax = bounds.getNorthEast().lng();
-                var yMax = bounds.getNorthEast().lat();
-                
                 // Build URL
                 var url = this._options.url + "search" + // Arc2Earth datasource url + search service
                     "?f=gjson" + // Return GeoJSON formatted data
-                    "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
+                    "&bbox=" + this._buildBoundsString(this._options.map.getBounds()) + // Build bbox geometry
                     "&q=" + this._options.where + // By default return all features but could pass SQL statement (value<90)
                     "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
                 
@@ -482,7 +458,6 @@
             },
             
             _processFeatures: function(data) {
-            
                 var bounds = this._options.map.getBounds();
                 
                 // Check to see if the _lastQueriedBounds is the same as the new bounds
@@ -564,10 +539,6 @@
     
     // A Geocommons dataset
     _vectors.Geocommons = function(opts) {
-        
-        // ISSUE - This class isn't functional yet. When requesting GeoJSON from
-        //     Geocommons, url parameters are not honored (&bbox=-82,34,-80,36)
-        //     http://getsatisfaction.com/geocommons/topics/features_api_doesnt_honor_url_parameters_when_requesting_geojson
         // TODO - Find a better way to detect duplicate features than relying on a user inputing a uniqueField paramter
         if (!opts.dataset) {
             return { "error": true, "message": "No \"dataset\" parameter provided." };
@@ -596,19 +567,12 @@
                     this._clearFeatures();
                 }
                 
-                // Get coordinates for SoutWest and NorthEast corners of current map extent,
-                // will use later when building "bbox" url parameter
-                var bounds = this._options.map.getBounds();
-                var xMin = bounds.getSouthWest().lng();
-                var yMin = bounds.getSouthWest().lat();
-                var xMax = bounds.getNorthEast().lng();
-                var yMax = bounds.getNorthEast().lat();
-                
                 // Build URL
                 var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
                     "/features.json?" + // JSON please
-                    "&bbox=" + xMin + "," + yMin + "," + xMax + "," + yMax + // Build bbox geometry
-                    /*"&geojson=1" + // Return GeoJSON formatted data*/
+                    "&bbox=" + this._buildBoundsString(this._options.map.getBounds()) + // Build bbox geometry
+                    "&geojson=1" + // Return GeoJSON formatted data
+                    "&intersect=full" + // Return features that intersect this bbox, not just fully contained
                     "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
                 
                 // Dynamically load JSONP
@@ -621,7 +585,7 @@
             },
             
             _processFeatures: function(data) {
-            
+                data = JSON.parse(data);
                 var bounds = this._options.map.getBounds();
                 
                 // Check to see if the _lastQueriedBounds is the same as the new bounds
@@ -635,10 +599,10 @@
                 this._lastQueriedBounds = bounds;
             
                 // If "data.features" exists and there's more than one feature in the array
-                if (data && data.length) {
+                if (data && data.features && data.features.length) {
                     
                     // Loop through the return features
-                    for (var i = 0; i < data.length; i++) {
+                    for (var i = 0; i < data.features.length; i++) {
                     
                         // All objects are assumed to be false until proven true (remember COPS?)
                         var onMap = false;
@@ -650,7 +614,7 @@
                             for (var i2 = 0; i2 < this._vectors.length; i2++) {
                             
                                 // Does the "uniqueField" property for this feature match the feature on the map
-                                if (data[i][this._options.uniqueField] == this._vectors[i2][this._options.uniqueField]) {
+                                if (data.features[i].properties[this._options.uniqueField] == this._vectors[i2].properties[this._options.uniqueField]) {
                                     
                                     // The feature is already on the map
                                     onMap = true;
@@ -665,21 +629,21 @@
                         if (!onMap || !this._options.uniqueField) {
                             
                             // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-                            var vector_or_vectors = this._geojsonGeometryToGoogle(data[i].geometry, this._options.vectorOptions);
-                            data[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
+                            var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._options.vectorOptions);
+                            data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                             
                             // Show the vector or vectors on the map
-                            if (data[i].vector) {
-                                data[i].vector.setMap(this._options.map);
+                            if (data.features[i].vector) {
+                                data.features[i].vector.setMap(this._options.map);
                             }
-                            if (data[i].vectors && data[i].vectors.length) {
-                                for (var i3 = 0; i3 < data[i].vectors.length; i3++) {
-                                    data[i].vectors[i3].setMap(this._options.map);
+                            if (data.features[i].vectors && data.features[i].vectors.length) {
+                                for (var i3 = 0; i3 < data.features[i].vectors.length; i3++) {
+                                    data.features[i].vectors[i3].setMap(this._options.map);
                                 }
                             }
                             
                             // Store the vector in an array so we can remove it later
-                            this._vectors.push(data[i]);
+                            this._vectors.push(data.features[i]);
                         
                         }
                         

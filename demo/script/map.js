@@ -59,16 +59,16 @@ $(function(){
 	    infoWindowTemplate: '<div class="iw-content"><h3>Light Rail Line</h3><table><tr><th>Route</th><td>{ROUTE}</td></tr></table></div>'
 	});
 	
-	geocommons_parcels = new vectors.Geocommons({
-		dataset: 131518,
-		uniqueField: "name",
-		scaleRange: [17, 21],
+	geocommons_ski = new vectors.Geocommons({
+		dataset: 164880,
+		uniqueField: "NAME",
+		scaleRange: [4, 20]/*,
 		vectorOptions: {
 			fillColor: "#4D8FFF",
 			fillOpacity: 0.5,
 			strokeWeight: 2,
 			strokeColor: "#DFFF7A"
-		}
+		}*/
 	});
 	
 	a2e_wtr_main = new vectors.A2E({
