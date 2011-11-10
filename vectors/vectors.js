@@ -6,6 +6,11 @@
         
         setMap: function(map) {
             this._options.map = map;
+            if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
+                var z = this._options.map.getZoom();
+                var sr = this._options.scaleRange;
+                this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+            }
             this[map ? "_show" : "_hide"]();
         },
         
@@ -22,14 +27,16 @@
             if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
                 this._addZoomChangeListener();
             }
-            if (this._options.autoUpdate && this._options.autoUpdateInterval) {
-                var me = this;
-                this._autoUpdateInterval = setInterval(function() {
-                    me._getFeatures();
-                }, this._options.autoUpdateInterval);
+            if (this._options.visibleAtScale) {
+                if (this._options.autoUpdate && this._options.autoUpdateInterval) {
+                    var me = this;
+                    this._autoUpdateInterval = setInterval(function() {
+                        me._getFeatures();
+                    }, this._options.autoUpdateInterval);
+                }
+                google.maps.event.trigger(this._options.map, "zoom_changed");
+                google.maps.event.trigger(this._options.map, "idle");
             }
-            google.maps.event.trigger(this._options.map, "zoom_changed");
-            google.maps.event.trigger(this._options.map, "idle");
         },
         
         _hide: function() {
@@ -279,7 +286,8 @@
                 dynamic: opts.dynamic || false,
                 autoUpdate: opts.autoUpdate || false,
                 autoUpdateInterval: opts.autoUpdateInterval || null,
-                infoWindowTemplate: opts.infoWindowTemplate || null
+                infoWindowTemplate: opts.infoWindowTemplate || null,
+                symbology: opts.symbology || null
             },
             
             _getFeatures: function() {
@@ -410,7 +418,13 @@
         
         window[layer._globalPointer] = layer;
         
+        
         if (layer._options.map) {
+            if (layer._options.scaleRange && layer._options.scaleRange instanceof Array && layer._options.scaleRange.length === 2) {
+                var z = layer._options.map.getZoom();
+                var sr = layer._options.scaleRange;
+                layer._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+            }
             layer._show();
         }
         
@@ -533,6 +547,11 @@
         window[layer._globalPointer] = layer;
         
         if (layer._options.map) {
+            if (layer._options.scaleRange && layer._options.scaleRange instanceof Array && layer._options.scaleRange.length === 2) {
+                var z = layer._options.map.getZoom();
+                var sr = layer._options.scaleRange;
+                layer._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+            }
             layer._show();
         }
         
@@ -678,6 +697,11 @@
         window[layer._globalPointer] = layer;
         
         if (layer._options.map) {
+            if (layer._options.scaleRange && layer._options.scaleRange instanceof Array && layer._options.scaleRange.length === 2) {
+                var z = layer._options.map.getZoom();
+                var sr = layer._options.scaleRange;
+                layer._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+            }
             layer._show();
         }
         

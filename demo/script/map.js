@@ -5,7 +5,7 @@ $(function(){
 	// Create Map
 	map = new google.maps.Map(document.getElementById("map_container"), {
 		center: new google.maps.LatLng(39.75111061205554, -104.99916731491088),
-		zoom: 16,
+		zoom: 5,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
@@ -40,6 +40,28 @@ $(function(){
 	    vectorOptions: {
 	        icon: "img/markers/bus-green.png"
 	    },
+	    symbology: {
+	        type: "range",
+	        property: "SPEED",
+	        ranges: [
+	            {
+	                range: [0, 0],
+	                style: {
+	                    icon: "img/markers/bus-red.png"
+	                }
+	            },{
+	                range: [1, 25],
+	                style: {
+	                    icon: "img/markers/bus-orange.png"
+	                }
+	            },{
+	                range: [26, 100],
+	                style: {
+	                    icon: "img/markers/bus-green.png"
+	                }
+	            }
+	        ]
+	    },
 	    dynamic: true,
 	    autoUpdate: true,
 	    autoUpdateInterval: 5000,
@@ -60,6 +82,7 @@ $(function(){
 	});
 	
 	geocommons_ski = new vectors.Geocommons({
+	    map: map,
 		dataset: 164880,
 		uniqueField: "NAME",
 		scaleRange: [6, 20],
