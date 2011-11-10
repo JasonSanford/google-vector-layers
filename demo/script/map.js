@@ -5,7 +5,7 @@ $(function(){
 	// Create Map
 	map = new google.maps.Map(document.getElementById("map_container"), {
 		center: new google.maps.LatLng(39.75111061205554, -104.99916731491088),
-		zoom: 5,
+		zoom: 16,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
@@ -37,31 +37,50 @@ $(function(){
 	    fields: "*",
 	    uniqueField: "OBJECTID",
 	    scaleRange: [13, 20],
-	    vectorOptions: {
-	        icon: "img/markers/bus-green.png"
-	    },
 	    symbology: {
 	        type: "range",
 	        property: "SPEED",
 	        ranges: [
 	            {
 	                range: [0, 0],
-	                style: {
-	                    icon: "img/markers/bus-red.png"
+	                vectorOptions: {
+	                    icon: "img/markers/bus-black.png"
 	                }
 	            },{
-	                range: [1, 25],
-	                style: {
-	                    icon: "img/markers/bus-orange.png"
+	                range: [1, 20],
+	                vectorOptions: {
+	                    icon: "img/markers/bus-brown.png"
 	                }
 	            },{
-	                range: [26, 100],
-	                style: {
+	                range: [21, 100],
+	                vectorOptions: {
 	                    icon: "img/markers/bus-green.png"
 	                }
 	            }
 	        ]
 	    },
+	    /*symbology: {
+	        type: "unique",
+	        property: "SPEED",
+	        values: [
+	            {
+	                value: 0,
+	                vectorOptions: {
+	                    icon: "img/markers/bus-black.png"
+	                }
+	            },{
+	                value: 15,
+	                vectorOptions: {
+	                    icon: "img/markers/bus-brown.png"
+	                }
+	            },{
+	                value: 25,
+	                vectorOptions: {
+	                    icon: "img/markers/bus-green.png"
+	                }
+	            }
+	        ]
+	    },*/
 	    dynamic: true,
 	    autoUpdate: true,
 	    autoUpdateInterval: 5000,
@@ -82,13 +101,15 @@ $(function(){
 	});
 	
 	geocommons_ski = new vectors.Geocommons({
-	    map: map,
 		dataset: 164880,
 		uniqueField: "NAME",
 		scaleRange: [6, 20],
 		infoWindowTemplate: '<div class="iw-content"><h3>{NAME}</h3></div>',
-		vectorOptions: {
-			icon: "img/markers/ski-lift.png"
+		symbology: {
+		    type: "single",
+		    vectorOptions: {
+			    icon: "img/markers/ski-lift.png"
+		    }
 		}
 	});
 	

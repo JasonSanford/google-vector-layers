@@ -6,7 +6,7 @@
         
         setMap: function(map) {
             this._options.map = map;
-            if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
+            if (map && this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
                 var z = this._options.map.getZoom();
                 var sr = this._options.scaleRange;
                 this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
@@ -171,6 +171,44 @@
         _buildBoundsString: function(gBounds) {
             var gBoundsParts = gBounds.toUrlValue().split(",");
             return gBoundsParts[1] + "," + gBoundsParts[0] + "," + gBoundsParts[3] + "," + gBoundsParts[2];
+        },
+        
+        _getFeatureVectorOptions: function(feature) {
+            var vectorOptions = {};
+            
+            // Esri calls them attributes. GeoJSON calls them properties
+            var atts = feature.attributes || feature.properties
+            
+            if (this._options.symbology) {
+                switch (this._options.symbology.type) {
+                    case "single":
+                        for (var key in this._options.symbology.vectorOptions) {
+                            vectorOptions[key] = this._options.symbology.vectorOptions[key];
+                        }
+                        break;
+                    case "unique":
+                        var att = this._options.symbology.property;
+                        for (var i = 0, len = this._options.symbology.values.length; i < len; i++) {
+                            if (atts[att] == this._options.symbology.values[i].value) {
+                                for (var key in this._options.symbology.values[i].vectorOptions) {
+                                    vectorOptions[key] = this._options.symbology.values[i].vectorOptions[key];
+                                }
+                            }
+                        }
+                        break;
+                    case "range":
+                        var att = this._options.symbology.property;
+                        for (var i = 0, len = this._options.symbology.ranges.length; i < len; i++) {
+                            if (atts[att] >= this._options.symbology.ranges[i].range[0] && atts[att] <= this._options.symbology.ranges[i].range[1]) {
+                                for (var key in this._options.symbology.ranges[i].vectorOptions) {
+                                    vectorOptions[key] = this._options.symbology.ranges[i].vectorOptions[key];
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            return vectorOptions;
         },
         
         _esriJsonToGoogle: function(feature, opts) {
@@ -381,7 +419,8 @@
                         if (!onMap || !this._options.uniqueField) {
                             
                             // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-                            this._esriJsonToGoogle(data.features[i], this._options.vectorOptions);
+                            //this._esriJsonToGoogle(data.features[i], this._options.vectorOptions);
+                            this._esriJsonToGoogle(data.features[i], this._getFeatureVectorOptions(data.features[i]));
                             
                             // Show this vector on the map
                             data.features[i].vector.setMap(this._options.map);
@@ -518,7 +557,7 @@
                         if (!onMap) {
                             
                             // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-                            var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._options.vectorOptions);
+                            var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                             data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                             
                             // Show the vector or vectors on the map
@@ -579,7 +618,8 @@
                 scaleRange: opts.scaleRange || null,
                 visibleAtScale: true,
                 dataset: opts.dataset,
-                infoWindowTemplate: opts.infoWindowTemplate || null
+                infoWindowTemplate: opts.infoWindowTemplate || null,
+                symbology: opts.symbology || null
             },
             
             _getFeatures: function() {
@@ -652,7 +692,7 @@
                         if (!onMap || !this._options.uniqueField) {
                             
                             // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-                            var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._options.vectorOptions);
+                            var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                             data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                             
                             // Show the vector or vectors on the map
