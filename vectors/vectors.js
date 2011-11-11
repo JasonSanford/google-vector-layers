@@ -23,19 +23,23 @@
         },
         
         _show: function() {
-            this._addIdleListener();
-            if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
-                this._addZoomChangeListener();
-            }
-            if (this._options.visibleAtScale) {
-                if (this._options.autoUpdate && this._options.autoUpdateInterval) {
-                    var me = this;
-                    this._autoUpdateInterval = setInterval(function() {
-                        me._getFeatures();
-                    }, this._options.autoUpdateInterval);
+            if (!this._options.showAll) {
+                this._addIdleListener();
+                if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
+                    this._addZoomChangeListener();
                 }
-                google.maps.event.trigger(this._options.map, "zoom_changed");
-                google.maps.event.trigger(this._options.map, "idle");
+                if (this._options.visibleAtScale) {
+                    if (this._options.autoUpdate && this._options.autoUpdateInterval) {
+                        var me = this;
+                        this._autoUpdateInterval = setInterval(function() {
+                            me._getFeatures();
+                        }, this._options.autoUpdateInterval);
+                    }
+                    google.maps.event.trigger(this._options.map, "zoom_changed");
+                    google.maps.event.trigger(this._options.map, "idle");
+                }
+            } else {
+                this._getFeatures();
             }
         },
         
@@ -223,6 +227,15 @@
         
         _getGeometryChanged: function(oldGeom, newGeom) {
             // TODO: make this work for points, linestrings and polygons
+            var changed = false;
+            /*
+            if (oldGeom.coordinates && oldGeom.coordinates instanceof Array) {
+                // It's GeoJSON
+            } else {
+                // It's an EsriJSON
+            }
+            */
+            return changed;
         },
         
         _esriJsonToGoogle: function(feature, opts) {
@@ -339,7 +352,8 @@
                 autoUpdate: opts.autoUpdate || false,
                 autoUpdateInterval: opts.autoUpdateInterval || null,
                 infoWindowTemplate: opts.infoWindowTemplate || null,
-                symbology: opts.symbology || null
+                symbology: opts.symbology || null,
+                showAll: opts.showAll || false
             },
             
             _getFeatures: function() {
@@ -359,8 +373,10 @@
                     "&outFields=" + this._options.fields + // Please return the following fields
                     "&where=" + this._options.where + // By default return all feature (1=1) but could pass SQL statement (value<90)
                     "&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
-                    "&geometry=" + this._buildBoundsString(this._options.map.getBounds()) + // Build envelope geometry
                     "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+                if (!this._options.showAll) {
+                    url += "&geometry=" + this._buildBoundsString(this._options.map.getBounds()) // Build envelope geometry
+                }
                 
                 // Dynamically load JSONP
                 var head = document.getElementsByTagName("head")[0];
@@ -422,8 +438,12 @@
                                         
                                         if (attributesChanged) {
                                             this._vectors[i2].attributes = data.features[i].attributes;
-                                            this._setInfoWindowContent(this._vectors[i2]);
-                                            this._vectors[i2].vector.setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+                                            if (this._options.infoWindowTemplate) {
+                                                this._setInfoWindowContent(this._vectors[i2]);
+                                            }
+                                            if (this._options.symbology && this._options.symbology.type != "single") {
+                                                this._vectors[i2].vector.setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+                                            }
                                         }
                                     
                                     }
@@ -512,7 +532,8 @@
                 vectorOptions: opts.vectorOptions || {},
                 scaleRange: opts.scaleRange || null,
                 visibleAtScale: true,
-                url: opts.url
+                url: opts.url,
+                showAll: opts.showAll || false
             },
             
             _getFeatures: function() {
@@ -638,7 +659,8 @@
                 visibleAtScale: true,
                 dataset: opts.dataset,
                 infoWindowTemplate: opts.infoWindowTemplate || null,
-                symbology: opts.symbology || null
+                symbology: opts.symbology || null,
+                showAll: opts.showAll || false
             },
             
             _getFeatures: function() {
@@ -652,10 +674,13 @@
                 // Build URL
                 var url = "http://geocommons.com/datasets/" + this._options.dataset + // Geocommons dataset ID
                     "/features.json?" + // JSON please
-                    "&bbox=" + this._buildBoundsString(this._options.map.getBounds()) + // Build bbox geometry
-                    "&geojson=1" + // Return GeoJSON formatted data
-                    "&intersect=full" + // Return features that intersect this bbox, not just fully contained
-                    "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+                    "geojson=1" + // Return GeoJSON formatted data
+                    "&callback=" + this._globalPointer + "._processFeatures" + // Need this for JSONP
+                    "&limit=999"; // Don't limit our results
+                if (!this._options.showAll) {
+                    url += "&bbox=" + this._buildBoundsString(this._options.map.getBounds()) + // Build bbox geometry
+                        "&intersect=full"; // Return features that intersect this bbox, not just fully contained
+                }
                 
                 // Dynamically load JSONP
                 var head = document.getElementsByTagName("head")[0];

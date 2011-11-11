@@ -32,6 +32,12 @@
 	    padding: 4px 8px;
 	    text-align: center;
 	}
+	.iw-content a {
+	    text-decoration: underline;
+	}
+	.iw-content a:hover {
+	    text-decoration: none;
+	}
 	</style>
 	
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>
@@ -45,10 +51,9 @@
 		<h2>Data Sources</h2>
 		<div id="ags-layers">
 			<h3>ArcGIS Server</h3>
-			<!--<div><input type="checkbox" id="ags_swr_main" class="layer"> <label for="ags_swr_main">Sewer Mains</label></div>
-			<div><input type="checkbox" id="ags_swr_mh" class="layer"> <label for="ags_swr_mh">Sewer Manholes</label></div>-->
 			<div><input type="checkbox" id="ags_buses" class="layer"> <label for="ags_buses">RTD Buses (live)</label></div>
-			<div><input type="checkbox" id="ags_light_rail" class="layer"> <label for="ags_light_rail">Light Rail Lines</label></div>
+			<div><input type="checkbox" id="ags_light_rail" class="layer"> <label for="ags_light_rail">RTD Light Rail Lines</label></div>
+			<div><input type="checkbox" id="ags_director_districts" class="layer"> <label for="ags_director_districts">RTD Director Districts</label></div>
 		</div>
 		<div id="geocommons-layers">
 			<h3>Geocommons</h3>
@@ -56,8 +61,8 @@
 		</div>
 			<div id="a2e-layers">
 			<h3>Arc2Earth</h3>
-			<div><input type="checkbox" id="a2e_wtr_main" class="layer"> <label for="a2e_wtr_main">Water Mains</label></div>
-			<div><input type="checkbox" id="a2e_hydrants" class="layer"> <label for="a2e_hydrants">Hydrants</label></div>
+			<!--<div><input type="checkbox" id="a2e_wtr_main" class="layer"> <label for="a2e_wtr_main">Water Mains</label></div>
+			<div><input type="checkbox" id="a2e_hydrants" class="layer"> <label for="a2e_hydrants">Hydrants</label></div>-->
 		</div>
 	</div>
 </body>

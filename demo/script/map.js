@@ -1,4 +1,4 @@
-var map, /*ags_swr_main, ags_swr_mh,*/ags_buses, ags_light_rail, geocommons_parcels, a2e_wtr_main, a2e_hydrants;
+var map, /*ags_swr_main, ags_swr_mh,*/ags_buses, ags_director_districts, ags_light_rail, geocommons_parcels, a2e_wtr_main, a2e_hydrants;
 
 $(function(){  
 	
@@ -8,29 +8,6 @@ $(function(){
 		zoom: 16,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
-	
-	// Create Vector Layers
-	/*ags_swr_main = new vectors.AGS({
-		url: "http://gisapps.co.union.nc.us/ArcGIS/rest/services/PWSWR/MapServer/10",
-		fields: "OBJECTID,WWTP,PIPE_DIA,PIPE_MAT",
-		uniqueField: "OBJECTID",
-		scaleRange: [15, 21],
-		vectorOptions: {
-			strokeWeight: 6,
-			strokeOpacity: 0.5,
-			strokeColor: "#004a00"
-		}
-	});
-	
-	ags_swr_mh = new vectors.AGS({
-		url: "http://gisapps.co.union.nc.us/ArcGIS/rest/services/PWSWR/MapServer/0",
-		fields: "OBJECTID,MH_DIA,MH_DEPTH,GROUND_ELEV",
-		uniqueField: "OBJECTID",
-		scaleRange: [16, 21],
-		vectorOptions: {
-			icon: new google.maps.MarkerImage('img/markers/manhole.png', new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
-		}
-	});*/
 	
 	ags_buses = new vectors.AGS({
 	    url: "http://maps.rtd-denver.com/ArcGIS/rest/services/BusLocations/MapServer/0",
@@ -59,32 +36,99 @@ $(function(){
 	            }
 	        ]
 	    },
-	    /*symbology: {
-	        type: "unique",
-	        property: "SPEED",
-	        values: [
-	            {
-	                value: 0,
-	                vectorOptions: {
-	                    icon: "img/markers/bus-black.png"
-	                }
-	            },{
-	                value: 15,
-	                vectorOptions: {
-	                    icon: "img/markers/bus-brown.png"
-	                }
-	            },{
-	                value: 25,
-	                vectorOptions: {
-	                    icon: "img/markers/bus-green.png"
-	                }
-	            }
-	        ]
-	    },*/
 	    dynamic: true,
 	    autoUpdate: true,
 	    autoUpdateInterval: 5000,
 	    infoWindowTemplate: '<div class="iw-content"><h3>Bus #{VEHICLE_ALIAS}</h3><table><tr><th>Speed</th><td>{SPEED} mph</td></tr><tr><th>Route</th><td>{ROUTE}</td></tr><tr><th>Operator</th><td>{OPERATOR_LNAME},{OPERATOR_FNAME}</td></tr><tr><th>Last GPS Lock</th><td>{LOCKTIME}</td></tr></table></div>'
+	});
+	
+	ags_director_districts = new vectors.AGS({
+	    url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
+	    fields: "*",
+	    uniqueField: "OBJECTID",
+	    showAll: true,
+	    scaleRange: [4, 14],
+	    where: "DISTRICT+NOT+IN('I','J','K','L','M','N','O')",
+	    symbology: {
+	        type: "unique",
+	        property: "DISTRICT",
+	        values: [
+	            {
+	                value: "A",
+	                vectorOptions: {
+	                    fillColor: "#6600FF",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }, {
+	                value: "B",
+	                vectorOptions: {
+	                    fillColor: "#660066",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }, {
+	                value: "C",
+	                vectorOptions: {
+	                    fillColor: "#FF9900",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }, {
+	                value: "D",
+	                vectorOptions: {
+	                    fillColor: "#00FFFF",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }, {
+	                value: "E",
+	                vectorOptions: {
+	                    fillColor: "#FFFF00",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }, {
+	                value: "F",
+	                vectorOptions: {
+	                    fillColor: "#003333",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }, {
+	                value: "G",
+	                vectorOptions: {
+	                    fillColor: "#ff7800",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }, {
+	                value: "H",
+	                vectorOptions: {
+	                    fillColor: "#46461f",
+	                    fillOpacity: 0.6,
+	                    strokeColor: "#666666",
+	                    strokeOpacity: 0.8,
+	                    strokeWeight: 1
+	                }
+	            }
+	        ]
+	    },
+	    infoWindowTemplate: '<div class="iw-content"><h3>District {DISTRICT}</h3><table><tr><th>Links</th><td><a target="_blank" href="{MAP}">Map</a>, <a href="{URL}" target="_blank">Director\'s Website</a></td></tr></table></div>'
 	});
 	
 	ags_light_rail = new vectors.AGS({
@@ -92,10 +136,14 @@ $(function(){
 	    fields: "*",
 	    uniqueField: "OBJECTID",
 	    scaleRange: [13, 20],
-	    vectorOptions: {
-	        strokeWeight: 7,
-	        strokeOpacity: 0.7,
-	        strokeColor: "#004a00"
+	    showAll: true,
+	    symbology: {
+	        type: "single",
+    	    vectorOptions: {
+    	        strokeWeight: 7,
+    	        strokeOpacity: 0.7,
+    	        strokeColor: "#004a00"
+    	    }    
 	    },
 	    infoWindowTemplate: '<div class="iw-content"><h3>Light Rail Line</h3><table><tr><th>Route</th><td>{ROUTE}</td></tr></table></div>'
 	});
