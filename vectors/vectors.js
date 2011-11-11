@@ -211,6 +211,20 @@
             return vectorOptions;
         },
         
+        _getAttributesChanged: function(oldAtts, newAtts) {
+            var changed = false;
+            for (var key in oldAtts) {
+                if (oldAtts[key] != newAtts[key]) {
+                    changed = true;
+                }
+            }
+            return changed;
+        },
+        
+        _getGeometryChanged: function(oldGeom, newGeom) {
+            // TODO: make this work for points, linestrings and polygons
+        },
+        
         _esriJsonToGoogle: function(feature, opts) {
             var vector;
             if (feature.geometry.x && feature.geometry.y) {
@@ -404,8 +418,13 @@
                                             
                                         }
                                         
-                                        this._vectors[i2].attributes = data.features[i].attributes;
-                                        this._setInfoWindowContent(this._vectors[i2]);
+                                        var attributesChanged = this._getAttributesChanged(this._vectors[i2].attributes, data.features[i].attributes);
+                                        
+                                        if (attributesChanged) {
+                                            this._vectors[i2].attributes = data.features[i].attributes;
+                                            this._setInfoWindowContent(this._vectors[i2]);
+                                            this._vectors[i2].vector.setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+                                        }
                                     
                                     }
                                     
