@@ -174,7 +174,7 @@
             // Don't ask, I don't know.
             setTimeout(function() {
                 feature.infoWindow.open(me._options.map, feature.vector.getPaths || feature.vector.getPath ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
-            }, 100);
+            }, 200);
         },
         
         _buildBoundsString: function(gBounds) {
