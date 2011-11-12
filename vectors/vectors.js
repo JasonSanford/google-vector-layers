@@ -538,7 +538,8 @@
                 scaleRange: opts.scaleRange || null,
                 visibleAtScale: true,
                 url: opts.url,
-                showAll: opts.showAll || false
+                showAll: opts.showAll || false,
+                symbology: opts.symbology || null
             },
             
             _getFeatures: function() {

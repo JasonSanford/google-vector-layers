@@ -1,4 +1,4 @@
-var map, /*ags_swr_main, ags_swr_mh,*/ags_buses, ags_director_districts, ags_light_rail, geocommons_parcels, a2e_wtr_main, a2e_hydrants;
+var map, ags_buses, ags_director_districts, ags_light_rail, a2e_counties;
 
 $(function(){  
 	
@@ -161,7 +161,18 @@ $(function(){
 		}
 	});
 	
-	a2e_wtr_main = new vectors.A2E({
+	a2e_counties = new vectors.A2E({
+		url: "http://beta.arc2cloud.com/services/data/datasources/VersionCheck",
+		scaleRange: [6, 15],
+		symbology: {
+		    type: "single",
+		    vectorOptions: {
+			    icon: "img/markers/computer.png"
+		    }
+		}
+	});
+	
+	/*a2e_wtr_main = new vectors.A2E({
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_main",
 		scaleRange: [15, 21],
 		vectorOptions: {
@@ -176,7 +187,7 @@ $(function(){
 		vectorOptions: {
 			icon: new google.maps.MarkerImage('img/markers/hydrant.png', new google.maps.Size(17, 28), new google.maps.Point(0, 0), new google.maps.Point(7, 8))
 		}
-	});
+	});*/
 	
 	// Respond to checkbox clicks
 	$(".layer").click(function(){
