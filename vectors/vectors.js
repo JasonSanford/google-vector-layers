@@ -539,7 +539,8 @@
                 visibleAtScale: true,
                 url: opts.url,
                 showAll: opts.showAll || false,
-                symbology: opts.symbology || null
+                symbology: opts.symbology || null,
+                infoWindowTemplate: opts.infoWindowTemplate || null,
             },
             
             _getFeatures: function() {
@@ -616,6 +617,21 @@
                             
                             // Store the vector in an array so we can remove it later
                             this._vectors.push(data.features[i]);
+                            
+                            if (this._options.infoWindowTemplate) {
+                                
+                                var me = this;
+                                var feature = this._vectors[i2];
+                                
+                                this._setInfoWindowContent(feature);
+                                
+                                (function(feature){
+                                    google.maps.event.addListener(feature.vector, "click", function(evt) {
+                                        me._showInfoWindow(feature, evt);
+                                    });
+                                }(feature));
+                                
+                            }
                         
                         }
                         

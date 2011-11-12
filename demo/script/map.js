@@ -1,4 +1,4 @@
-var map, ags_buses, ags_director_districts, ags_light_rail, a2e_counties;
+var map, ags_buses, ags_director_districts, ags_light_rail, a2e_users;
 
 $(function(){  
 	
@@ -161,15 +161,16 @@ $(function(){
 		}
 	});
 	
-	a2e_counties = new vectors.A2E({
+	a2e_users = new vectors.A2E({
 		url: "http://beta.arc2cloud.com/services/data/datasources/VersionCheck",
-		scaleRange: [6, 15],
+		scaleRange: [6, 21],
 		symbology: {
 		    type: "single",
 		    vectorOptions: {
 			    icon: "img/markers/computer.png"
 		    }
-		}
+		},
+		infoWindowTemplate: '<div class="iw-content"><h3>{City}</h3><table><tr><th>A2E Version</th><td>{A2EVersion}</td></tr><tr><th>AGS Version</th><td>{AGSVersion}</td></tr><tr><th>Updated</th><td>{Updated}</td></tr></table></div>'
 	});
 	
 	/*a2e_wtr_main = new vectors.A2E({
