@@ -541,15 +541,18 @@
                 showAll: opts.showAll || false,
                 symbology: opts.symbology || null,
                 infoWindowTemplate: opts.infoWindowTemplate || null,
+                showAll: opts.showAll || false
             },
             
             _getFeatures: function() {
                 // Build URL
                 var url = this._options.url + "search" + // Arc2Earth datasource url + search service
                     "?f=gjson" + // Return GeoJSON formatted data
-                    "&bbox=" + this._buildBoundsString(this._options.map.getBounds()) + // Build bbox geometry
                     "&q=" + this._options.where + // By default return all features but could pass SQL statement (value<90)
                     "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+                    if (!this._options.showAll) {
+                        url += "&bbox=" + this._buildBoundsString(this._options.map.getBounds()); // Build bbox geometry
+                    }
                 
                 // Dynamically load JSONP
                 var head = document.getElementsByTagName("head")[0];

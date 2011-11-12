@@ -5,7 +5,7 @@ $(function(){
 	// Create Map
 	map = new google.maps.Map(document.getElementById("map_container"), {
 		center: new google.maps.LatLng(39.75111061205554, -104.99916731491088),
-		zoom: 16,
+		zoom: 5,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
@@ -162,8 +162,10 @@ $(function(){
 	});
 	
 	a2e_users = new vectors.A2E({
+	    map: map,
 		url: "http://beta.arc2cloud.com/services/data/datasources/VersionCheck",
 		scaleRange: [6, 21],
+		showAll: true,
 		symbology: {
 		    type: "single",
 		    vectorOptions: {
