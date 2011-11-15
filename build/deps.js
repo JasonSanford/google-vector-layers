@@ -2,9 +2,7 @@ var deps = {
 	Core: {
 		src: ['gvector.js',
 		      'core/Util.js',
-		      'core/Class.js',
-		      'geo/crs/CRS.EPSG4326.js',
-		      'map/Map.js'],
+		      'core/Class.js'],
 		desc: 'The core of the library, including OOP, base layer properties, etc.'
 	},
 	
