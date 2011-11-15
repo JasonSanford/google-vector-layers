@@ -149,7 +149,6 @@ $(function(){
 	});
 	
 	geocommons_ski = new gvector.GeoIQ({
-		map: map,
 		dataset: 164880,
 		uniqueField: "NAME",
 		scaleRange: [6, 20],
@@ -163,10 +162,8 @@ $(function(){
 	});
 	
 	/*a2e_users = new gvector.A2E({
-	    map: map,
 		url: "http://beta.arc2cloud.com/services/data/datasources/VersionCheck",
 		scaleRange: [6, 21],
-		showAll: true,
 		symbology: {
 		    type: "single",
 		    vectorOptions: {

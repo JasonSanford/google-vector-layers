@@ -8,7 +8,7 @@
 
 (function (root) {
 	root.gvector = {
-		VERSION: '0.3',
+		VERSION: '0.1',
 
 		ROOT_URL: (function () {
 			var scripts = document.getElementsByTagName('script'),
