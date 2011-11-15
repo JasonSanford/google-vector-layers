@@ -5,11 +5,11 @@ $(function(){
 	// Create Map
 	map = new google.maps.Map(document.getElementById("map_container"), {
 		center: new google.maps.LatLng(39.75111061205554, -104.99916731491088),
-		zoom: 5,
+		zoom: 14,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
-	ags_buses = new vectors.AGS({
+	ags_buses = new gvector.AGS({
 	    url: "http://maps.rtd-denver.com/ArcGIS/rest/services/BusLocations/MapServer/0",
 	    fields: "*",
 	    uniqueField: "OBJECTID",
@@ -42,7 +42,7 @@ $(function(){
 	    infoWindowTemplate: '<div class="iw-content"><h3>Bus #{VEHICLE_ALIAS}</h3><table><tr><th>Speed</th><td>{SPEED} mph</td></tr><tr><th>Route</th><td>{ROUTE}</td></tr><tr><th>Operator</th><td>{OPERATOR_LNAME},{OPERATOR_FNAME}</td></tr><tr><th>Last GPS Lock</th><td>{LOCKTIME}</td></tr></table></div>'
 	});
 	
-	ags_director_districts = new vectors.AGS({
+	ags_director_districts = new gvector.AGS({
 	    url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
 	    fields: "*",
 	    uniqueField: "OBJECTID",
@@ -131,7 +131,7 @@ $(function(){
 	    infoWindowTemplate: '<div class="iw-content"><h3>District {DISTRICT}</h3><table><tr><th>Links</th><td><a target="_blank" href="{MAP}">Map</a>, <a href="{URL}" target="_blank">Director\'s Website</a></td></tr></table></div>'
 	});
 	
-	ags_light_rail = new vectors.AGS({
+	ags_light_rail = new gvector.AGS({
 	    url: "http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleVectors/MapServer/1",
 	    fields: "*",
 	    uniqueField: "OBJECTID",
@@ -148,7 +148,7 @@ $(function(){
 	    infoWindowTemplate: '<div class="iw-content"><h3>Light Rail Line</h3><table><tr><th>Route</th><td>{ROUTE}</td></tr></table></div>'
 	});
 	
-	geocommons_ski = new vectors.Geocommons({
+	/*geocommons_ski = new gvector.Geocommons({
 		dataset: 164880,
 		uniqueField: "NAME",
 		scaleRange: [6, 20],
@@ -159,9 +159,9 @@ $(function(){
 			    icon: "img/markers/ski-lift.png"
 		    }
 		}
-	});
+	});*/
 	
-	a2e_users = new vectors.A2E({
+	/*a2e_users = new gvector.A2E({
 	    map: map,
 		url: "http://beta.arc2cloud.com/services/data/datasources/VersionCheck",
 		scaleRange: [6, 21],
@@ -173,9 +173,9 @@ $(function(){
 		    }
 		},
 		infoWindowTemplate: '<div class="iw-content"><h3>{City}</h3><table><tr><th>A2E Version</th><td>{A2EVersion}</td></tr><tr><th>AGS Version</th><td>{AGSVersion}</td></tr><tr><th>Updated</th><td>{Updated}</td></tr></table></div>'
-	});
+	});*/
 	
-	/*a2e_wtr_main = new vectors.A2E({
+	/*a2e_wtr_main = new gvector.A2E({
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_main",
 		scaleRange: [15, 21],
 		vectorOptions: {
@@ -184,7 +184,7 @@ $(function(){
 		}
 	});
 	
-	a2e_hydrants = new vectors.A2E({
+	a2e_hydrants = new gvector.A2E({
 		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_hydrant",
 		scaleRange: [16, 21],
 		vectorOptions: {

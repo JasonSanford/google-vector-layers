@@ -3,7 +3,7 @@
  */
 
 gvector.Layer = gvector.Class.extend({
-	includes: [gvector.Mixin.Events],
+	//includes: [gvector.Mixin.Events],
 	
 	options: {
 		fields: "",
@@ -21,44 +21,43 @@ gvector.Layer = gvector.Class.extend({
 
 	initialize: function(options) {
 		gvector.Util.setOptions(this, options);
-		this._globalPointer = this.statics.LAYER_TYPE + Math.floor(Math.random() * 100000)
 	},
 	
 	_vectors: [],
 	
 	setMap: function(map) {
-	    this._options.map = map;
-	    if (map && this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
-	        var z = this._options.map.getZoom();
-	        var sr = this._options.scaleRange;
-	        this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+	    this.options.map = map;
+	    if (map && this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+	        var z = this.options.map.getZoom();
+	        var sr = this.options.scaleRange;
+	        this.options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
 	    }
 	    this[map ? "_show" : "_hide"]();
 	},
 	
 	getMap: function() {
-	    return this._options.map;
+	    return this.options.map;
 	},
 	
 	setOptions: function(o) {
-	    // TODO - Merge new options (o) with current options (this._options)
+	    // TODO - Merge new options (o) with current options (this.options)
 	},
 	
 	_show: function() {
-	    if (!this._options.showAll) {
+	    if (!this.options.showAll) {
 	        this._addIdleListener();
-	        if (this._options.scaleRange && this._options.scaleRange instanceof Array && this._options.scaleRange.length === 2) {
+	        if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
 	            this._addZoomChangeListener();
 	        }
-	        if (this._options.visibleAtScale) {
-	            if (this._options.autoUpdate && this._options.autoUpdateInterval) {
+	        if (this.options.visibleAtScale) {
+	            if (this.options.autoUpdate && this.options.autoUpdateInterval) {
 	                var me = this;
 	                this._autoUpdateInterval = setInterval(function() {
 	                    me._getFeatures();
-	                }, this._options.autoUpdateInterval);
+	                }, this.options.autoUpdateInterval);
 	            }
-	            google.maps.event.trigger(this._options.map, "zoom_changed");
-	            google.maps.event.trigger(this._options.map, "idle");
+	            google.maps.event.trigger(this.options.map, "zoom_changed");
+	            google.maps.event.trigger(this.options.map, "idle");
 	        }
 	    } else {
 	        this._getFeatures();
@@ -101,11 +100,11 @@ gvector.Layer = gvector.Class.extend({
 	_showVectors: function() {
 	    for (var i = 0; i < this._vectors.length; i++) {
 	        if (this._vectors[i].vector) {
-	            this._vectors[i].vector.setMap(this._options.map);
+	            this._vectors[i].vector.setMap(this.options.map);
 	        }
 	        if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
 	            for (var i2 = 0; i2 < this._vectors[i].vectors.length; i2++) {
-	                this._vectors[i].vectors[i2].setMap(this._options.map);
+	                this._vectors[i].vectors[i2].setMap(this.options.map);
 	            }
 	        }
 	    }
@@ -122,8 +121,8 @@ gvector.Layer = gvector.Class.extend({
 	    // assign it to "me"
 	    var me = this;
 	    
-	    // Whenever the map's zoom changes, check the layer's visibility (this._options.visibleAtScale)
-	    this._zoomChangeListener = google.maps.event.addListener(this._options.map, "zoom_changed", function() {
+	    // Whenever the map's zoom changes, check the layer's visibility (this.options.visibleAtScale)
+	    this._zoomChangeListener = google.maps.event.addListener(this.options.map, "zoom_changed", function() {
 	        me._checkLayerVisibility();
 	    });
 	},
@@ -134,8 +133,8 @@ gvector.Layer = gvector.Class.extend({
 	    var me = this;
 	    
 	    // Whenever the map idles (pan or zoom). Get the features in the current map extent.
-	    this._idleListener = google.maps.event.addListener(this._options.map, "idle", function() {
-	        if (me._options.visibleAtScale) {
+	    this._idleListener = google.maps.event.addListener(this.options.map, "idle", function() {
+	        if (me.options.visibleAtScale) {
 	            me._getFeatures();
 	        }
 	    });
@@ -143,27 +142,27 @@ gvector.Layer = gvector.Class.extend({
 	
 	_checkLayerVisibility: function() {
 	    // Store current visibility so we can see if it changed
-	    var visibilityBefore = this._options.visibleAtScale;
+	    var visibilityBefore = this.options.visibleAtScale;
 	    
 	    // Check current map scale and see if it's in this layer's range
-	    var z = this._options.map.getZoom();
-	    var sr = this._options.scaleRange;
-	    this._options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+	    var z = this.options.map.getZoom();
+	    var sr = this.options.scaleRange;
+	    this.options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
 	    
 	    // Check to see if the visibility has changed
-	    if (visibilityBefore !== this._options.visibleAtScale) {
+	    if (visibilityBefore !== this.options.visibleAtScale) {
 	        // It did.
-	        this[this._options.visibleAtScale ? "_showVectors" : "_hideVectors"]();
+	        this[this.options.visibleAtScale ? "_showVectors" : "_hideVectors"]();
 	    }
 	    
 	    // Check to see if we need to set or clear any intervals for auto-updating layers
-	    if (visibilityBefore && !this._options.visibleAtScale && this._autoUpdateInterval) {
+	    if (visibilityBefore && !this.options.visibleAtScale && this._autoUpdateInterval) {
 	        clearInterval(this._autoUpdateInterval);
-	    } else if (!visibilityBefore && this._options.autoUpdate && this._options.autoUpdateInterval) {
+	    } else if (!visibilityBefore && this.options.autoUpdate && this.options.autoUpdateInterval) {
 	        var me = this;
 	        this._autoUpdateInterval = setInterval(function() {
 	            me._getFeatures();
-	        }, this._options.autoUpdateInterval);
+	        }, this.options.autoUpdateInterval);
 	    }
 	    
 	},
@@ -174,7 +173,7 @@ gvector.Layer = gvector.Class.extend({
 	    // Esri calls them attributes. GeoJSON calls them properties
 	    var atts = feature.attributes || feature.properties
 	    
-	    var iwContent = this._options.infoWindowTemplate;
+	    var iwContent = this.options.infoWindowTemplate;
 	    for (var prop in atts) {
 	        var re = new RegExp("{" + prop + "}", "g");
 	        iwContent = iwContent.replace(re, atts[prop]);
@@ -195,7 +194,7 @@ gvector.Layer = gvector.Class.extend({
 	    
 	    // Don't ask, I don't know.
 	    setTimeout(function() {
-	        feature.infoWindow.open(me._options.map, feature.vector.getPaths || feature.vector.getPath ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
+	        feature.infoWindow.open(me.options.map, feature.vector.getPaths || feature.vector.getPath ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
 	    }, 200);
 	},
 	
@@ -210,29 +209,29 @@ gvector.Layer = gvector.Class.extend({
 	    // Esri calls them attributes. GeoJSON calls them properties
 	    var atts = feature.attributes || feature.properties
 	    
-	    if (this._options.symbology) {
-	        switch (this._options.symbology.type) {
+	    if (this.options.symbology) {
+	        switch (this.options.symbology.type) {
 	            case "single":
-	                for (var key in this._options.symbology.vectorOptions) {
-	                    vectorOptions[key] = this._options.symbology.vectorOptions[key];
+	                for (var key in this.options.symbology.vectorOptions) {
+	                    vectorOptions[key] = this.options.symbology.vectorOptions[key];
 	                }
 	                break;
 	            case "unique":
-	                var att = this._options.symbology.property;
-	                for (var i = 0, len = this._options.symbology.values.length; i < len; i++) {
-	                    if (atts[att] == this._options.symbology.values[i].value) {
-	                        for (var key in this._options.symbology.values[i].vectorOptions) {
-	                            vectorOptions[key] = this._options.symbology.values[i].vectorOptions[key];
+	                var att = this.options.symbology.property;
+	                for (var i = 0, len = this.options.symbology.values.length; i < len; i++) {
+	                    if (atts[att] == this.options.symbology.values[i].value) {
+	                        for (var key in this.options.symbology.values[i].vectorOptions) {
+	                            vectorOptions[key] = this.options.symbology.values[i].vectorOptions[key];
 	                        }
 	                    }
 	                }
 	                break;
 	            case "range":
-	                var att = this._options.symbology.property;
-	                for (var i = 0, len = this._options.symbology.ranges.length; i < len; i++) {
-	                    if (atts[att] >= this._options.symbology.ranges[i].range[0] && atts[att] <= this._options.symbology.ranges[i].range[1]) {
-	                        for (var key in this._options.symbology.ranges[i].vectorOptions) {
-	                            vectorOptions[key] = this._options.symbology.ranges[i].vectorOptions[key];
+	                var att = this.options.symbology.property;
+	                for (var i = 0, len = this.options.symbology.ranges.length; i < len; i++) {
+	                    if (atts[att] >= this.options.symbology.ranges[i].range[0] && atts[att] <= this.options.symbology.ranges[i].range[1]) {
+	                        for (var key in this.options.symbology.ranges[i].vectorOptions) {
+	                            vectorOptions[key] = this.options.symbology.ranges[i].vectorOptions[key];
 	                        }
 	                    }
 	                }

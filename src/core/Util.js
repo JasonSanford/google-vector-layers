@@ -1,8 +1,8 @@
 /*
- * L.Util is a namespace for various utility functions.
+ * gvector.Util is a namespace for various utility functions.
  */
 
-L.Util = {
+gvector.Util = {
 	extend: function(/*Object*/ dest) /*-> Object*/ {	// merge src properties into dest
 		var sources = Array.prototype.slice.call(arguments, 1);
 		for (var j = 0, len = sources.length, src; j < len; j++) {
@@ -43,7 +43,7 @@ L.Util = {
 			timeoutDefer;
 		
 		return function(callback, context, immediate, contextEl) {
-			callback = context ? L.Util.bind(callback, context) : callback;
+			callback = context ? gvector.Util.bind(callback, context) : callback;
 			if (immediate && requestFn === timeoutDefer) {
 				callback();
 			} else {
@@ -81,7 +81,7 @@ L.Util = {
 	},
 	
 	setOptions: function(obj, options) {
-		obj.options = L.Util.extend({}, obj.options, options);
+		obj.options = gvector.Util.extend({}, obj.options, options);
 	},
 	
 	getParamString: function(obj) {
