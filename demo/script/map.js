@@ -148,7 +148,7 @@ $(function(){
 	    infoWindowTemplate: '<div class="iw-content"><h3>Light Rail Line</h3><table><tr><th>Route</th><td>{ROUTE}</td></tr></table></div>'
 	});
 	
-	/*geocommons_ski = new gvector.Geocommons({
+	geocommons_ski = new gvector.GeoIQ({
 		dataset: 164880,
 		uniqueField: "NAME",
 		scaleRange: [6, 20],
@@ -159,7 +159,7 @@ $(function(){
 			    icon: "img/markers/ski-lift.png"
 		    }
 		}
-	});*/
+	});
 	
 	/*a2e_users = new gvector.A2E({
 	    map: map,

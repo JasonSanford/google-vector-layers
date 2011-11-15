@@ -1,13 +1,5 @@
-
 gvector.AGS = gvector.Layer.extend({
-    statics: {
-        LAYER_TYPE: "AGS"
-    },
-    
 	initialize: function(options) {
-	    //
-	    // TODO: We should be throwing proper errors if required parameters are not given.
-	    //
 	    if (!options.url) {
 	        throw new Error("No \"url\" parameter provided.");
 	    }
