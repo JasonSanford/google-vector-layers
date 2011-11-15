@@ -1,7 +1,7 @@
 /**
- * @preserve Copyright (c) 2010-2011, CloudMade, Vladimir Agafonkin
- * Leaflet is a BSD-licensed JavaScript library for map display and interaction.
- * See http://leaflet.cloudmade.com for more information.
+ * @preserve Copyright (c) 2011, Jason Sanford
+ * Google Vector Layers is a library for showing geometry objects
+ * from multiple geoweb services with the Google Maps API
  */
 
 /*global gvector */

@@ -1,5 +1,5 @@
 /*
- * Class powers the OOP facilities of the library. Thanks to John Resig and Dean Edwards for inspiration!
+ * Class powers the OOP facilities of the library.
  */
 
 gvector.Class = function() {}; 
