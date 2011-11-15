@@ -9,6 +9,14 @@ gvector.AGS = gvector.Layer.extend({
 		gvector.Layer.prototype.initialize.call(this, options);
 		this._globalPointer = "AGS_" + Math.floor(Math.random() * 100000);
 		window[this._globalPointer] = this;
+		if (this.options.map) {
+		    if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+		        var z = this.options.map.getZoom();
+		        var sr = this.options.scaleRange;
+		        this.options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+		    }
+		    this._show();
+		}
 	},
 	
 	options: {
@@ -118,7 +126,6 @@ gvector.AGS = gvector.Layer.extend({
 	            if (!onMap || !this.options.uniqueField) {
 	                
 	                // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-	                //this._esriJsonToGoogle(data.features[i], this.options.vectorOptions);
 	                this._esriJsonToGoogle(data.features[i], this._getFeatureVectorOptions(data.features[i]));
 	                
 	                // Show this vector on the map

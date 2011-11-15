@@ -149,6 +149,7 @@ $(function(){
 	});
 	
 	geocommons_ski = new gvector.GeoIQ({
+		map: map,
 		dataset: 164880,
 		uniqueField: "NAME",
 		scaleRange: [6, 20],

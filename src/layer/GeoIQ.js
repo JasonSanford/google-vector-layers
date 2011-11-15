@@ -6,6 +6,14 @@ gvector.GeoIQ = gvector.Layer.extend({
 		gvector.Layer.prototype.initialize.call(this, options);
 		this._globalPointer = "GeoIQ_" + Math.floor(Math.random() * 100000);
 		window[this._globalPointer] = this;
+		if (this.options.map) {
+		    if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+		        var z = this.options.map.getZoom();
+		        var sr = this.options.scaleRange;
+		        this.options.visibleAtScale = (z >= sr[0] && z <= sr[1]);
+		    }
+		    this._show();
+		}
 	},
 	
 	options: {
