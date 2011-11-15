@@ -1,4 +1,4 @@
-var map, ags_buses, ags_director_districts, ags_light_rail, a2e_users;
+var map, ags_buses, ags_director_districts, ags_light_rail, geoiq_ski;
 
 $(function(){  
 	
@@ -148,7 +148,7 @@ $(function(){
 	    infoWindowTemplate: '<div class="iw-content"><h3>Light Rail Line</h3><table><tr><th>Route</th><td>{ROUTE}</td></tr></table></div>'
 	});
 	
-	geocommons_ski = new gvector.GeoIQ({
+	geoiq_ski = new gvector.GeoIQ({
 		dataset: 164880,
 		uniqueField: "NAME",
 		scaleRange: [6, 20],
@@ -160,35 +160,6 @@ $(function(){
 		    }
 		}
 	});
-	
-	/*a2e_users = new gvector.A2E({
-		url: "http://beta.arc2cloud.com/services/data/datasources/VersionCheck",
-		scaleRange: [6, 21],
-		symbology: {
-		    type: "single",
-		    vectorOptions: {
-			    icon: "img/markers/computer.png"
-		    }
-		},
-		infoWindowTemplate: '<div class="iw-content"><h3>{City}</h3><table><tr><th>A2E Version</th><td>{A2EVersion}</td></tr><tr><th>AGS Version</th><td>{AGSVersion}</td></tr><tr><th>Updated</th><td>{Updated}</td></tr></table></div>'
-	});*/
-	
-	/*a2e_wtr_main = new gvector.A2E({
-		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_main",
-		scaleRange: [15, 21],
-		vectorOptions: {
-			strokeColor: "#2f2ff0",
-			strokeWeight: 1.5
-		}
-	});
-	
-	a2e_hydrants = new gvector.A2E({
-		url: "http://jeesanford.appspot.com/a2e/data/datasources/wtr_hydrant",
-		scaleRange: [16, 21],
-		vectorOptions: {
-			icon: new google.maps.MarkerImage('img/markers/hydrant.png', new google.maps.Size(17, 28), new google.maps.Point(0, 0), new google.maps.Point(7, 8))
-		}
-	});*/
 	
 	// Respond to checkbox clicks
 	$(".layer").click(function(){
