@@ -5,7 +5,13 @@ gvector.AGS = gvector.Layer.extend({
     },
     
 	initialize: function(options) {
-	    if (options.url.substr(options.url.length-1, 1) !== "/") {
+	    //
+	    // TODO: We should be throwing proper errors if required parameters are not given.
+	    //
+	    if (!options.url) {
+	        throw new Error("No \"url\" parameter provided.");
+	    }
+	    if (options.url.substr(options.url.length - 1, 1) !== "/") {
 	        options.url += "/";
 	    }
 		gvector.Layer.prototype.initialize.call(this, options);
