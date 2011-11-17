@@ -1,11 +1,11 @@
-var map, ags_buses, ags_director_districts, ags_light_rail, geoiq_ski;
+var map, ags_buses, ags_director_districts, ags_light_rail, geoiq_ski, cartodb_sewer_line;
 
 $(function(){  
 	
 	// Create Map
 	map = new google.maps.Map(document.getElementById("map_container"), {
-		center: new google.maps.LatLng(39.75111061205554, -104.99916731491088),
-		zoom: 14,
+		center: new google.maps.LatLng(/*39.75111061205554, -104.99916731491088*/35.05301, -80.66464),
+		zoom: 17,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
@@ -159,6 +159,11 @@ $(function(){
 			    icon: "img/markers/ski-lift.png"
 		    }
 		}
+	});
+	
+	cartodb_sewer_line = new gvector.CartoDB({
+	    user: "geojason",
+	    table: "sewer_line"
 	});
 	
 	// Respond to checkbox clicks

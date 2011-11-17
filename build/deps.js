@@ -31,5 +31,12 @@ var deps = {
 		desc: 'The GeoIQ layer.',
 		heading: 'GeoIQ',
 		deps: ['Layer']
+	},
+	
+	CartoDB: {
+		src: ['layer/CartoDB.js'],
+		desc: 'The CartoDB layer.',
+		heading: 'CartoDB',
+		deps: ['Layer']
 	}
 };
