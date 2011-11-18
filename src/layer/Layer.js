@@ -25,6 +25,9 @@ gvector.Layer = gvector.Class.extend({
     _vectors: [],
     
     setMap: function(map) {
+        if (map && this.options.map) {
+            return;
+        }
         this.options.map = map;
         if (map && this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
             var z = this.options.map.getZoom();
