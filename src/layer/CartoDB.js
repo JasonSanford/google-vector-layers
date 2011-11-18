@@ -167,11 +167,21 @@ gvector.CartoDB = gvector.Layer.extend({
 	                    
 	                    this._setInfoWindowContent(feature);
 	                    
-	                    (function(feature){
-	                        google.maps.event.addListener(feature.vector, "click", function(evt) {
-	                            me._showInfoWindow(feature, evt);
-	                        });
-	                    }(feature));
+	                    if (feature.vector) {
+	                        (function(feature){
+	                            google.maps.event.addListener(feature.vector, "click", function(evt) {
+	                                me._showInfoWindow(feature, evt);
+	                            });
+	                        }(feature));
+	                    } else if (feature.vectors) {
+	                        for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
+	                            (function(feature){
+	                                google.maps.event.addListener(feature.vectors[i3], "click", function(evt) {
+	                                    me._showInfoWindow(feature, evt);
+	                                });
+	                            }(feature));
+	                        }
+	                    }
 	                    
 	                }
 	            

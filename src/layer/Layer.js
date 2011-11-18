@@ -191,9 +191,19 @@ gvector.Layer = gvector.Class.extend({
 	    feature.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
 	    var me = this;
 	    
+	    var isLineOrPolygon = false;
+	    if (feature.vector) {
+	        if (feature.vector.getPaths || feature.vector.getPath) {
+	            isLineOrPolygon = true;
+	        }
+	    } else if (feature.vectors && feature.vectors.length) {
+	        if (feature.vectors[0].getPaths || feature.vectors[0].getPath) {
+	            isLineOrPolygon = true
+	        }
+	    }
 	    // Don't ask, I don't know.
 	    setTimeout(function() {
-	        feature.infoWindow.open(me.options.map, feature.vector.getPaths || feature.vector.getPath ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
+	        feature.infoWindow.open(me.options.map, isLineOrPolygon ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
 	    }, 200);
 	},
 	

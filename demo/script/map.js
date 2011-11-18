@@ -171,7 +171,8 @@ $(function(){
 	            strokeColor: "#46461f",
 	            strokeOpacity: 0.8
 	        }
-	    }
+	    },
+	    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table><tr><th>Diameter</th><td>{pipe_dia}</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp}</td></tr></table></div>'
 	});
 	
 	// Respond to checkbox clicks
