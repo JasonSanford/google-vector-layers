@@ -1,4 +1,4 @@
-var map, ags_buses, ags_director_districts, ags_light_rail, geoiq_ski, cartodb_sewer_line;
+var map, ags_buses, ags_director_districts, ags_light_rail, geoiq_ski, cartodb_sewer_line, cartodb_man_hole;
 
 $(function(){  
 	
@@ -165,14 +165,39 @@ $(function(){
 	    user: "geojason",
 	    table: "sewer_line",
 	    symbology: {
+	        type: "range",
+	        property: "pipe_dia",
+	        ranges: [
+	            {
+	                range: [0, 8],
+	                vectorOptions: {
+	                    strokeWeight: 3,
+	                    strokeColor: "#46461f",
+	                    strokeOpacity: 0.8
+	                }
+	            },{
+	                range: [8.00001, 100],
+	                vectorOptions: {
+	                    strokeWeight: 8,
+	                    strokeColor: "#ff7800",
+	                    strokeOpacity: 1
+	                }
+	            }
+	        ]
+	    },
+	    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table><tr><th>Diameter</th><td>{pipe_dia} ft.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+	});
+	
+	cartodb_man_hole = new gvector.CartoDB({
+	    user: "geojason",
+	    table: "man_hole",
+	    symbology: {
 	        type: "single",
 	        vectorOptions: {
-	            strokeWeight: 7,
-	            strokeColor: "#46461f",
-	            strokeOpacity: 0.8
+	            icon: new google.maps.MarkerImage('img/markers/manhole.png', new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
 	        }
 	    },
-	    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table><tr><th>Diameter</th><td>{pipe_dia}</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp}</td></tr></table></div>'
+	    infoWindowTemplate: '<div class="iw-content"><h3>Man Hole</h3><table><tr><th>Diameter</th><td>{mh_dia} ft.</td></tr><tr><th>Depth</th><td>{mh_depth} ft.</td></tr><tr><th>Address</th><td>{street_add}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
 	});
 	
 	// Respond to checkbox clicks
