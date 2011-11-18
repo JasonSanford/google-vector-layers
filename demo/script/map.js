@@ -164,6 +164,7 @@ $(function(){
 	cartodb_sewer_line = new gvector.CartoDB({
 	    user: "geojason",
 	    table: "sewer_line",
+	    scaleRange: [15, 20],
 	    symbology: {
 	        type: "range",
 	        property: "pipe_dia",
@@ -171,7 +172,7 @@ $(function(){
 	            {
 	                range: [0, 8],
 	                vectorOptions: {
-	                    strokeWeight: 3,
+	                    strokeWeight: 4,
 	                    strokeColor: "#46461f",
 	                    strokeOpacity: 0.8
 	                }
@@ -185,12 +186,13 @@ $(function(){
 	            }
 	        ]
 	    },
-	    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table><tr><th>Diameter</th><td>{pipe_dia} ft.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+	    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
 	});
 	
 	cartodb_man_hole = new gvector.CartoDB({
 	    user: "geojason",
 	    table: "man_hole",
+	    scaleRange: [16, 20],
 	    symbology: {
 	        type: "single",
 	        vectorOptions: {

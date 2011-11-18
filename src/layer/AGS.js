@@ -90,12 +90,11 @@ gvector.AGS = gvector.Layer.extend({
 	                        // We're only concerned about updating layers that are dynamic (options.dynamic = true).
 	                        if (this.options.dynamic) {
 	                        
-	                            // The feature's geometry might have changed, let's check.
-	                            if (!isNaN(data.features[i].geometry.x) && !isNaN(data.features[i].geometry.y)) {
+	                    	    // The feature's geometry might have changed, let's check.
+	                            if (this._getGeometryChanged(this._vectors[i2].geometry, data.features[i].geometry)) {
 	                                
-	                                // It's a point feature, these are the only ones we're updating for now
-	                                // In the future it might be helpful to use something similar to Underscore's isEqual object equality checker
-	                                if (!(data.features[i].geometry.x == this._vectors[i2].geometry.x && data.features[i].geometry.y == this._vectors[i2].geometry.y)) {
+	                                // Check to see if it's a point feature, these are the only ones we're updating for now
+	                                if (!isNaN(data.features[i].geometry.x) && !isNaN(data.features[i].geometry.y)) {
 	                                    this._vectors[i2].geometry = data.features[i].geometry;
 	                                    this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.y, this._vectors[i2].geometry.x));
 	                                }

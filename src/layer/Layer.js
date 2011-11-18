@@ -263,13 +263,21 @@ gvector.Layer = gvector.Class.extend({
 	_getGeometryChanged: function(oldGeom, newGeom) {
 	    // TODO: make this work for points, linestrings and polygons
 	    var changed = false;
-	    /*
 	    if (oldGeom.coordinates && oldGeom.coordinates instanceof Array) {
 	        // It's GeoJSON
+	        
+	        // For now only checking for point changes
+	        if (!(oldGeom.coordinates[0] == newGeom.coordinates[0] && oldGeom.coordinates[1] == newGeom.coordinates[1])) {
+	            changed = true;
+	        }
 	    } else {
 	        // It's an EsriJSON
+	        
+	        // For now only checking for point changes
+	        if (!(oldGeom.x == newGeom.x && oldGeom.y == newGeom.y)) {
+	            changed = true;
+	        }
 	    }
-	    */
 	    return changed;
 	},
 	

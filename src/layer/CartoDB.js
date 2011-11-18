@@ -105,14 +105,13 @@ gvector.CartoDB = gvector.Layer.extend({
 	                        if (this.options.dynamic) {
 	                        
 	                            // The feature's geometry might have changed, let's check.
-	                            if (!isNaN(data.features[i].geometry.x) && !isNaN(data.features[i].geometry.y)) {
+	                            if (this._getGeometryChanged(this._vectors[i2].geometry, data.features[i].geometry)) {
 	                                
-	                                // It's a point feature, these are the only ones we're updating for now
-	                                // In the future it might be helpful to use something similar to Underscore's isEqual object equality checker
-	                                if (!(data.features[i].geometry.x == this._vectors[i2].geometry.x && data.features[i].geometry.y == this._vectors[i2].geometry.y)) {
-	                                    this._vectors[i2].geometry = data.features[i].geometry;
-	                                    this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.y, this._vectors[i2].geometry.x));
-	                                }
+	                                // Check to see if it's a point feature, these are the only ones we're updating for now
+                                    if (!isNaN(data.features[i].geometry.coordinates[0]) && !isNaN(data.features[i].geometry.coordinates[1])) {
+    	                                this._vectors[i2].geometry = data.features[i].geometry;
+    	                                this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.coordinates[1], this._vectors[i2].geometry.coordinates[0]));
+    	                            }
 	                                
 	                            }
 	                            
@@ -124,7 +123,13 @@ gvector.CartoDB = gvector.Layer.extend({
 	                                    this._setInfoWindowContent(this._vectors[i2]);
 	                                }
 	                                if (this.options.symbology && this.options.symbology.type != "single") {
-	                                    this._vectors[i2].vector.setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+	                                    if (this._vectors[i2].vector) {
+	                                        this._vectors[i2].vector.setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+	                                    } else if (this._vectors[i2].vectors) {
+	                                        for (var i3 = 0, len = this._vectors[i2].vectors.length; i3 < len; i3++) {
+	                                            this._vectors[i2].vectors[i3].setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+	                                        }
+	                                    }
 	                                }
 	                            }
 	                        
@@ -167,21 +172,21 @@ gvector.CartoDB = gvector.Layer.extend({
 	                    
 	                    this._setInfoWindowContent(feature);
 	                    
-	                    if (feature.vector) {
-	                        (function(feature){
+                        (function(feature){
+                            if (feature.vector) {
 	                            google.maps.event.addListener(feature.vector, "click", function(evt) {
 	                                me._showInfoWindow(feature, evt);
 	                            });
-	                        }(feature));
-	                    } else if (feature.vectors) {
-	                        for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
-	                            (function(feature){
-	                                google.maps.event.addListener(feature.vectors[i3], "click", function(evt) {
-	                                    me._showInfoWindow(feature, evt);
-	                                });
-	                            }(feature));
+	                        } else if (feature.vectors) {
+	                            for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
+	                                (function(feature){
+	                                    google.maps.event.addListener(feature.vectors[i3], "click", function(evt) {
+	                                        me._showInfoWindow(feature, evt);
+	                                    });
+	                                }(feature));
+	                            }
 	                        }
-	                    }
+                        }(feature));
 	                    
 	                }
 	            
