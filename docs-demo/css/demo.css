@@ -1,0 +1,35 @@
+.demo {
+    height: 450px;
+    position: relative;
+}
+.demo .height-controlled {
+    height: 100%;
+}
+.demo pre {
+    height: 100%;
+    overflow: auto;
+    white-space: pre;
+    word-wrap: normal;
+}
+.map {
+    height: 100%;
+    border: 1px solid #a5a5a5;
+    -moz-box-shadow: 5px 5px 5px #d2d2d2;
+    -webkit-box-shadow: 5px 5px 5px #d2d2d2;
+    box-shadow: 5px 5px 5px #d2d2d2;
+}
+.map .layer-buttons {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 15px;
+    margin-bottom: 25px;
+    z-index: 100;
+}
+.iw-content {
+    
+}
+.iw-content h3 {
+    font-size: 18px;
+    text-align: center;
+}
