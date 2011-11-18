@@ -22,40 +22,50 @@ gvector.CartoDB = gvector.Layer.extend({
 	    version: 1,
 	    user: null,
 	    table: null,
-		where: null
+		where: null,
+		limit: null,
+		uniqueField: "cartodb_id"
 	},
 	
 	_requiredParams: ["user", "table"],
 	
 	_getFeatures: function() {
 	    // http://geojason.cartodb.com/api/v1/sql?q=SELECT%20*%20FROM%20sewer_line%20LIMIT%20100&format=geojson
-	    // http://geojason.cartodb.com/api/v1/sql?q=SELECT%20*%20FROM%20sewer_line%20WHERE%20the_geom%20%26%26%20st_setsrid(st_makebox2d(st_point(-80.67024581684115,35.050634204320026),st_point(-80.6590341831589,35.05538572656619)),4326)%20LIMIT%201000&format=geojson
+	    // http://geojason.cartodb.com/api/v1/sql
+	    //    ?q=SELECT * FROM sewer_line WHERE the_geom && st_setsrid(st_makebox2d(st_point(-80.67024581684115,35.050634204320026),st_point(-80.6590341831589,35.05538572656619)),4326)  LIMIT 1000&format=geojson
 	    // If we don't have a uniqueField value
 	    // it's hard to tell if new features are
 	    //duplicates so clear them all
-	    if (!this.options.uniqueField) {
-	        this._clearFeatures();
+	    //if (!this.options.uniqueField) {
+	    //    this._clearFeatures();
+	    //}
+	    
+	    // Build Query
+	    var where = this.options.where || "";
+	    if (!this.options.showAll) {
+	        var bounds = this.options.map.getBounds();
+	        var sw = bounds.getSouthWest();
+	        var ne = bounds.getNorthEast();
+	        where += (where.length ? " AND " : "") + "the_geom && st_setsrid(st_makebox2d(st_point(" + sw.lng() + "," + sw.lat() + "),st_point(" + ne.lng() + "," + ne.lat() + ")),4326)";
 	    }
+	    if (this.options.limit) {
+	        where += (where.length ? " " : "") + "limit " + this.options.limit;
+	    }
+	    where = (where.length ? " " + where : "");
+	    var query = "SELECT * FROM " + this.options.table + (where.length ? " WHERE " + where : "");
 	    
 	    // Build URL
 	    var url = "http://" + this.options.user + ".cartodb.com/api/v" + this.options.version + "/sql" + // The API entry point
-	        "?returnGeometry=true" + // The SQL statement
-	        "&spatialRel=esriSpatialRelIntersects" + // Find stuff that intersects this envelope
-	        "&f=json" + // Wish it were GeoJSON, but we'll take it
-	        "&outFields=" + this.options.fields + // Please return the following fields
-	        "&where=" + this.options.where + // By default return all feature (1=1) but could pass SQL statement (value<90)
-	        "&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
+	        "?q=" + encodeURIComponent(query) + // The SQL statement
+	        "&format=geojson" + // GeoJSON please
 	        "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
-	    if (!this.options.showAll) {
-	        url += "&geometry=" + this._buildBoundsString(this.options.map.getBounds()); // Build envelope geometry
-	    }
 	    
 	    // Dynamically load JSONP
 	    var head = document.getElementsByTagName("head")[0];
 	    var script = document.createElement("script");
 	    script.type = "text/javascript";
 	    script.src = url;
-	    head.appendChild(script);*/
+	    head.appendChild(script);
 	},
 	
 	_processFeatures: function(data) {
@@ -86,8 +96,8 @@ gvector.CartoDB = gvector.Layer.extend({
 	                // Loop through all of the features currently on the map
 	                for (var i2 = 0; i2 < this._vectors.length; i2++) {
 	                
-	                    // Does the "uniqueField" attribute for this feature match the feature on the map
-	                    if (data.features[i].attributes[this.options.uniqueField] == this._vectors[i2].attributes[this.options.uniqueField]) {
+	                    // Does the "uniqueField" property for this feature match the feature on the map
+	                    if (data.features[i].properties[this.options.uniqueField] == this._vectors[i2].properties[this.options.uniqueField]) {
 	                        // The feature is already on the map
 	                        onMap = true;
 	                        
@@ -106,10 +116,10 @@ gvector.CartoDB = gvector.Layer.extend({
 	                                
 	                            }
 	                            
-	                            var attributesChanged = this._getAttributesChanged(this._vectors[i2].attributes, data.features[i].attributes);
+	                            var propertiesChanged = this._getPropertiesChanged(this._vectors[i2].properties, data.features[i].properties);
 	                            
-	                            if (attributesChanged) {
-	                                this._vectors[i2].attributes = data.features[i].attributes;
+	                            if (propertiesChanged) {
+	                                this._vectors[i2].properties = data.features[i].properties;
 	                                if (this.options.infoWindowTemplate) {
 	                                    this._setInfoWindowContent(this._vectors[i2]);
 	                                }
@@ -129,11 +139,23 @@ gvector.CartoDB = gvector.Layer.extend({
 	            // If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
 	            if (!onMap || !this.options.uniqueField) {
 	                
-	                // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-	                this._esriJsonToGoogle(data.features[i], this._getFeatureVectorOptions(data.features[i]));
+	                // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
+	                //this._geojsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
+	                // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
+	                var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
+	                data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
 	                
 	                // Show this vector on the map
-	                data.features[i].vector.setMap(this.options.map);
+	                //data.features[i].vector.setMap(this.options.map);
+	                // Show the vector or vectors on the map
+	                if (data.features[i].vector) {
+	                    data.features[i].vector.setMap(this.options.map);
+	                }
+	                if (data.features[i].vectors && data.features[i].vectors.length) {
+	                    for (var i3 = 0; i3 < data.features[i].vectors.length; i3++) {
+	                        data.features[i].vectors[i3].setMap(this.options.map);
+	                    }
+	                }
 	                
 	                // Store the vector in an array so we can remove it later
 	                this._vectors.push(data.features[i]);

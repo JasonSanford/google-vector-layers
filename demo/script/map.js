@@ -163,7 +163,15 @@ $(function(){
 	
 	cartodb_sewer_line = new gvector.CartoDB({
 	    user: "geojason",
-	    table: "sewer_line"
+	    table: "sewer_line",
+	    symbology: {
+	        type: "single",
+	        vectorOptions: {
+	            strokeWeight: 7,
+	            strokeColor: "#46461f",
+	            strokeOpacity: 0.8
+	        }
+	    }
 	});
 	
 	// Respond to checkbox clicks

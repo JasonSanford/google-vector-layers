@@ -102,9 +102,9 @@ gvector.AGS = gvector.Layer.extend({
 	                                
 	                            }
 	                            
-	                            var attributesChanged = this._getAttributesChanged(this._vectors[i2].attributes, data.features[i].attributes);
+	                            var propertiesChanged = this._getPropertiesChanged(this._vectors[i2].attributes, data.features[i].attributes);
 	                            
-	                            if (attributesChanged) {
+	                            if (propertiesChanged) {
 	                                this._vectors[i2].attributes = data.features[i].attributes;
 	                                if (this.options.infoWindowTemplate) {
 	                                    this._setInfoWindowContent(this._vectors[i2]);

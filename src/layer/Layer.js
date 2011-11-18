@@ -3,7 +3,6 @@
  */
 
 gvector.Layer = gvector.Class.extend({
-	//includes: [gvector.Mixin.Events],
 	
 	options: {
 		fields: "",
@@ -241,7 +240,7 @@ gvector.Layer = gvector.Class.extend({
 	    return vectorOptions;
 	},
 	
-	_getAttributesChanged: function(oldAtts, newAtts) {
+	_getPropertiesChanged: function(oldAtts, newAtts) {
 	    var changed = false;
 	    for (var key in oldAtts) {
 	        if (oldAtts[key] != newAtts[key]) {
@@ -311,6 +310,20 @@ gvector.Layer = gvector.Class.extend({
 	            }
 	            opts.path = path;
 	            vector = new google.maps.Polyline(opts);
+	            break;
+	        
+	        case "MultiLineString":
+	            vectors = [];
+	            for (var i = 0; i < feature.coordinates.length; i++){
+                    var path = [];
+                    for (var j = 0; j < feature.coordinates[i].length; j++){
+                        var coord = feature.coordinates[i][j];
+                        var ll = new google.maps.LatLng(coord[1], coord[0]);
+                        path.push(ll);
+                    }
+                    opts.path = path;
+                    vectors.push(new google.maps.Polyline(opts));
+                }
 	            break;
 	            
 	        case "Polygon":
