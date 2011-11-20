@@ -32,4 +32,12 @@
 .iw-content h3 {
     font-size: 18px;
     text-align: center;
+    margin: 4px 0 4px 0;
+    line-height: inherit;
+}
+.iw-content h4 {
+    font-size: 14px;
+    text-align: center;
+    margin: 0 0 4px 0;
+    line-height: inherit;
 }

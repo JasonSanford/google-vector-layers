@@ -489,8 +489,20 @@
                         ]    
                     },
                     /*infoWindowTemplate: '<div class="iw-content"><h3>{NAME} County, {STATE_NAME}</h3><table class="condensed-table"><tr><th>Median Age</th><td>{MED_AGE}</td></tr></table></div>'*/
-                    infoWindowTemplate: function() {
-                        return "Hello World";
+                    infoWindowTemplate: function(atts) {
+                        var totPop = atts.POP2000;
+                        
+                        var percent_under_5 = (atts.AGE_UNDER5/totPop) * 100,
+                            percent_5_17 = (atts.AGE_5_17/totPop) * 100,
+                            percent_18_21 = (atts.AGE_18_21/totPop) * 100,
+                            percent_22_29 = (atts.AGE_22_29/totPop) * 100,
+                            percent_30_39 = (atts.AGE_30_39/totPop) * 100,
+                            percent_40_49 = (atts.AGE_40_49/totPop) * 100,
+                            percent_50_64 = (atts.AGE_50_64/totPop) * 100,
+                            percent_65_up = (atts.AGE_65_UP/totPop) * 100;
+                        
+                        var imageURL = "http://chart.googleapis.com/chart?cht=p&chs=285x150&chl=%3C5|5%20-%2017|18%20-%2021|22%20-%2029|30%20-%2039|40%20-%2049|50%20-%2064|%3E64&chdl=" + parseInt(percent_under_5) + "%|" + parseInt(percent_5_17) + "%|" + parseInt(percent_18_21) + "%|" + parseInt(percent_22_29) + "%|" + parseInt(percent_30_39) + "%|" + parseInt(percent_40_49) + "%|" + parseInt(percent_50_64) + "%|" + parseInt(percent_65_up) + "&chd=t:" + percent_under_5 + "," + percent_5_17 + "," + percent_18_21 + "," + percent_22_29 + "," + percent_30_39 + "," + percent_40_49 + "," + percent_50_64 + "," + percent_65_up;
+                        return '<div class="iw-content"><h3>' + atts.NAME + ' County, ' + atts.STATE_NAME + '</h3><h4>Median Age: ' + atts.MED_AGE + '</h4><img src="' + imageURL + '" /></div>';
                     }
                 });
                 
