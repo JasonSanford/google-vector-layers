@@ -476,19 +476,22 @@
                                     fillOpacity: 0.8,
                                     fillColor: "#238443"
                                 }
+                            },{
+                                range: [35.0000001, 48],
+                                vectorOptions: {
+                                    strokeWeight: 1,
+                                    strokeColor: "#666666",
+                                    strokeOpacity: 0.5,
+                                    fillOpacity: 0.8,
+                                    fillColor: "#C2E699"
+                                }
                             }
-,{
-    range: [35.0000001, 48],
-    vectorOptions: {
-        strokeWeight: 1,
-        strokeColor: "#666666",
-        strokeOpacity: 0.5,
-        fillOpacity: 0.8,
-        fillColor: "#C2E699"
-    }
-}                        ]    
+                        ]    
                     },
-                    infoWindowTemplate: '<div class="iw-content"><h3>{NAME} County, {STATE_NAME}</h3><table class="condensed-table"><tr><th>Median Age</th><td>{MED_AGE}</td></tr></table></div>'
+                    /*infoWindowTemplate: '<div class="iw-content"><h3>{NAME} County, {STATE_NAME}</h3><table class="condensed-table"><tr><th>Median Age</th><td>{MED_AGE}</td></tr></table></div>'*/
+                    infoWindowTemplate: function() {
+                        return "Hello World";
+                    }
                 });
                 
             });

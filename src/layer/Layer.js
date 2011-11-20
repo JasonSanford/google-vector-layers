@@ -175,10 +175,17 @@ gvector.Layer = gvector.Class.extend({
         // Esri calls them attributes. GeoJSON calls them properties
         var atts = feature.attributes || feature.properties
         
-        var iwContent = this.options.infoWindowTemplate;
-        for (var prop in atts) {
-            var re = new RegExp("{" + prop + "}", "g");
-            iwContent = iwContent.replace(re, atts[prop]);
+        var iwContent;
+        if (typeof this.options.infoWindowTemplate == "string") {
+            iwContent = this.options.infoWindowTemplate;
+            for (var prop in atts) {
+                var re = new RegExp("{" + prop + "}", "g");
+                iwContent = iwContent.replace(re, atts[prop]);
+            }
+        } else if (typeof this.options.infoWindowTemplate == "function") {
+            iwContent = this.options.infoWindowTemplate(atts);
+        } else {
+            return;
         }
         feature.iwContent = iwContent;
         
