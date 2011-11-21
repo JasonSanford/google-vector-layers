@@ -22,9 +22,13 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    margin-right: 15px;
-    margin-bottom: 25px;
+    margin-right: 10px;
+    margin-bottom: 20px;
     z-index: 100;
+    float: right;
+}
+.layer-button-row a{
+    margin-bottom: 5px;
 }
 .iw-content {
     
