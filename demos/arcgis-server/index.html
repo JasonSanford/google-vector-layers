@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Google Vector Layers - Jason Sanford</title>
+        <title>Google Vector Layers - ArcGIS Server Demo</title>
         <meta name="description" content="Display vector data from ArcGIS Server, GeoIQ, Geocommons, Arc2Earth, CartoDB and others in Google Maps">
         <meta name="author" content="Jason Sanford">
 
@@ -55,7 +55,7 @@
             <div class="content">
                 <h1>ArcGIS Server</h1>
                 <h2>Light Rail Lines</h2>
-                <p>This example has a simple, single symbology and uses the "showAll" parameter to fetch all features at once since there only a handful.</p>
+                <p>This example has a simple, single symbology and uses the "showAll" parameter to fetch all features at once since there are only a handful.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_light_rail = new gvector.AGS({
@@ -188,6 +188,7 @@
                 <hr>
                 <h2>Live Bus Locations</h2>
                 <p>Here we're using the "dynamic" and "autoUpdate" options to refresh map data every 5 seconds. If a bus changes location or speed, the map marker moves and (potentially) changes color. We're using the range symbology type here where stopped buses (0 mph) are black, slow buses (1 - 20 mph) are orange and fast buses (21 - 100 mph) are green.</p>
+                <p>Unfortunately each bus updates their current location every few minutes, but if you wait around for a few seconds you should see a bus or two move and/or change speed.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_buses = new gvector.AGS({
@@ -232,11 +233,84 @@
                     </div>
                 </div>
                 <hr>
-                <h2>Old People</h2>
-                <p>Thanks go to <a href="http://colorbrewer2.org/">Cynthia Brewer</a> for the color scheme.</p>
+                <h2>les personnes âgées</h2>
+                <p>This example has features styled using the "range" symbology type where values of a particular attribute ("MED_AGE" in this example) within a specific range have a specific style. Polygons with lighter shades have a population with a lower median age while the darker polygons have an older population.</p>
+                <p>Also, instead of a string-based "infoWindowTempate", we're using a function that is passed feature attributes and returns a string for populating the infoWindow. This way we can do more complex things with our attributes, like create charts.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">ags_census = new gvector.AGS({
+    url: "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer/3",
+    fields: "*",
+    uniqueField: "ObjectID",
+    scaleRange: [6, 20],
+    symbology: {
+        type: "range",
+        property: "MED_AGE",
+        ranges: [
+            {
+                range: [0, 32],
+                vectorOptions: {
+                    strokeWeight: 1,
+                    strokeColor: "#666666",
+                    strokeOpacity: 0.5,
+                    fillOpacity: 0.8,
+                    fillColor: "#FFFFCC"
+                }
+            },{
+                range: [32.0000001, 40],
+                vectorOptions: {
+                    strokeWeight: 1,
+                    strokeColor: "#666666",
+                    strokeOpacity: 0.5,
+                    fillOpacity: 0.8,
+                    fillColor: "#C2E699"
+                }
+            },{
+                range: [44.0000001, 50],
+                vectorOptions: {
+                    strokeWeight: 1,
+                    strokeColor: "#666666",
+                    strokeOpacity: 0.5,
+                    fillOpacity: 0.8,
+                    fillColor: "#78C679"
+                }
+            },{
+                range: [50.0000001, 100],
+                vectorOptions: {
+                    strokeWeight: 1,
+                    strokeColor: "#666666",
+                    strokeOpacity: 0.5,
+                    fillOpacity: 0.8,
+                    fillColor: "#238443"
+                }
+            },{
+                range: [35.0000001, 48],
+                vectorOptions: {
+                    strokeWeight: 1,
+                    strokeColor: "#666666",
+                    strokeOpacity: 0.5,
+                    fillOpacity: 0.8,
+                    fillColor: "#C2E699"
+                }
+            }
+        ]    
+    },
+    infoWindowTemplate: function(atts) {
+        var totPop = atts.POP2000;
+        
+        var percent_under_5 = (atts.AGE_UNDER5/totPop) * 100,
+            percent_5_17 = (atts.AGE_5_17/totPop) * 100,
+            percent_18_21 = (atts.AGE_18_21/totPop) * 100,
+            percent_22_29 = (atts.AGE_22_29/totPop) * 100,
+            percent_30_39 = (atts.AGE_30_39/totPop) * 100,
+            percent_40_49 = (atts.AGE_40_49/totPop) * 100,
+            percent_50_64 = (atts.AGE_50_64/totPop) * 100,
+            percent_65_up = (atts.AGE_65_UP/totPop) * 100;
+        
+        var imageURL = "http://chart.googleapis.com/chart?cht=p&chs=285x150&chl=%3C5|5%20-%2017|18%20-%2021|22%20-%2029|30%20-%2039|40%20-%2049|50%20-%2064|%3E64&chdl=" + parseInt(percent_under_5) + "%|" + parseInt(percent_5_17) + "%|" + parseInt(percent_18_21) + "%|" + parseInt(percent_22_29) + "%|" + parseInt(percent_30_39) + "%|" + parseInt(percent_40_49) + "%|" + parseInt(percent_50_64) + "%|" + parseInt(percent_65_up) + "&chd=t:" + percent_under_5 + "," + percent_5_17 + "," + percent_18_21 + "," + percent_22_29 + "," + percent_30_39 + "," + percent_40_49 + "," + percent_50_64 + "," + percent_65_up;
+        return '&lt;div class="iw-content"&gt;&lt;h3&gt;' + atts.NAME + ' County, ' + atts.STATE_NAME + '&lt;/h3&gt;&lt;h4&gt;Median Age: ' + atts.MED_AGE + '&lt;/h4&gt;&lt;img style="height:150px;width:285px;" src="' + imageURL + '" /&gt;&lt;/div&gt;';
+    }
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-4" class="map">
@@ -488,7 +562,6 @@
                             }
                         ]    
                     },
-                    /*infoWindowTemplate: '<div class="iw-content"><h3>{NAME} County, {STATE_NAME}</h3><table class="condensed-table"><tr><th>Median Age</th><td>{MED_AGE}</td></tr></table></div>'*/
                     infoWindowTemplate: function(atts) {
                         var totPop = atts.POP2000;
                         
