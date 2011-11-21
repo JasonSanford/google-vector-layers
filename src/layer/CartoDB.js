@@ -22,6 +22,7 @@ gvector.CartoDB = gvector.Layer.extend({
         version: 1,
         user: null,
         table: null,
+        fields: "*",
         where: null,
         limit: null,
         uniqueField: "cartodb_id"
@@ -36,13 +37,13 @@ gvector.CartoDB = gvector.Layer.extend({
             var bounds = this.options.map.getBounds();
             var sw = bounds.getSouthWest();
             var ne = bounds.getNorthEast();
-            where += (where.length ? " AND " : "") + "the_geom && st_setsrid(st_makebox2d(st_point(" + sw.lng() + "," + sw.lat() + "),st_point(" + ne.lng() + "," + ne.lat() + ")),4326)";
+            where += (where.length ? " AND " : "") + (this.options.table.split(",").length > 1 ? this.options.table.split(",")[0].split(".")[0] + ".the_geom" : "the_geom") + " && st_setsrid(st_makebox2d(st_point(" + sw.lng() + "," + sw.lat() + "),st_point(" + ne.lng() + "," + ne.lat() + ")),4326)";
         }
         if (this.options.limit) {
             where += (where.length ? " " : "") + "limit " + this.options.limit;
         }
         where = (where.length ? " " + where : "");
-        var query = "SELECT * FROM " + this.options.table + (where.length ? " WHERE " + where : "");
+        var query = "SELECT " + this.options.fields + " FROM " + this.options.table + (where.length ? " WHERE " + where : "");
         
         // Build URL
         var url = "http://" + this.options.user + ".cartodb.com/api/v" + this.options.version + "/sql" + // The API entry point
