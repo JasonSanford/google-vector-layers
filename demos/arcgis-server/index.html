@@ -78,7 +78,7 @@
                     <div class="span10 height-controlled">
                         <div id="map-container-1" class="map">
                             <div class="layer-buttons">
-                                <a href="javascript:ags_light_rail.setMap(map1);" class="btn success">Layer On</a> <a href="javascript:ags_light_rail.setMap(null);" class="btn danger">Layer Off</a>
+                                <div class="row layer-button-row"><a href="javascript:ags_light_rail.setMap(map1);" class="btn success">Layer On</a> <a href="javascript:ags_light_rail.setMap(null);" class="btn danger">Layer Off</a></div>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_director_districts = new gvector.AGS({
     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
-    fields: "*",
+    fields: "OBJECTID,DISTRICT,URL,MAP",
     uniqueField: "OBJECTID",
     showAll: true,
     scaleRange: [4, 14],
@@ -180,7 +180,7 @@
                     <div class="span10 height-controlled">
                         <div id="map-container-2" class="map">
                             <div class="layer-buttons">
-                                <a href="javascript:ags_districts.setMap(map2);" class="btn success">Layer On</a> <a href="javascript:ags_districts.setMap(null);" class="btn danger">Layer Off</a>
+                                <div class="row layer-button-row"><a href="javascript:ags_districts.setMap(map2);" class="btn success">Layer On</a> <a href="javascript:ags_districts.setMap(null);" class="btn danger">Layer Off</a></div>
                             </div>
                         </div>
                     </div>
@@ -193,7 +193,7 @@
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_buses = new gvector.AGS({
     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/BusLocations/MapServer/0",
-    fields: "*",
+    fields: "OBJECTID,SPEED,VEHICLE_ALIAS,SPEED,ROUTE,OPERATOR_LNAME,OPERATOR_FNAME,LOCKTIME",
     uniqueField: "OBJECTID",
     scaleRange: [13, 20],
     symbology: {
@@ -227,7 +227,7 @@
                     <div class="span10 height-controlled">
                         <div id="map-container-3" class="map">
                             <div class="layer-buttons">
-                                <a href="javascript:ags_buses.setMap(map3);" class="btn success">Layer On</a> <a href="javascript:ags_buses.setMap(null);" class="btn danger">Layer Off</a>
+                                <div class="layer-button-row row"><a href="javascript:ags_buses.setMap(map3);" class="btn success">Layer On</a> <a href="javascript:ags_buses.setMap(null);" class="btn danger">Layer Off</a></div>
                             </div>
                         </div>
                     </div>
@@ -240,7 +240,7 @@
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_census = new gvector.AGS({
     url: "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer/3",
-    fields: "*",
+    fields: "ObjectID,NAME,STATE_NAME,POP2000,MED_AGE,AGE_UNDER5,AGE_5_17,AGE_18_21,AGE_22_29,AGE_30_39,AGE_40_49,AGE_50_64,AGE_65_UP",
     uniqueField: "ObjectID",
     scaleRange: [6, 20],
     symbology: {
@@ -315,7 +315,7 @@
                     <div class="span10 height-controlled">
                         <div id="map-container-4" class="map">
                             <div class="layer-buttons">
-                                <a href="javascript:ags_census.setMap(map4);" class="btn success">Layer On</a> <a href="javascript:ags_census.setMap(null);" class="btn danger">Layer Off</a>
+                                <div class="row layer-button-row"><a href="javascript:ags_census.setMap(map4);" class="btn success">Layer On</a> <a href="javascript:ags_census.setMap(null);" class="btn danger">Layer Off</a></div>
                             </div>
                         </div>
                     </div>
@@ -385,7 +385,7 @@
                 
                 ags_districts = new gvector.AGS({
                     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
-                    fields: "*",
+                    fields: "OBJECTID,DISTRICT,URL,MAP",
                     uniqueField: "OBJECTID",
                     showAll: true,
                     scaleRange: [4, 14],
@@ -474,7 +474,7 @@
                 
                 ags_buses = new gvector.AGS({
                     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/BusLocations/MapServer/0",
-                    fields: "*",
+                    fields: "OBJECTID,SPEED,VEHICLE_ALIAS,SPEED,ROUTE,OPERATOR_LNAME,OPERATOR_FNAME,LOCKTIME",
                     uniqueField: "OBJECTID",
                     scaleRange: [13, 20],
                     symbology: {
@@ -507,7 +507,7 @@
                 
                 ags_census = new gvector.AGS({
                     url: "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer/3",
-                    fields: "*",
+                    fields: "ObjectID,NAME,STATE_NAME,POP2000,MED_AGE,AGE_UNDER5,AGE_5_17,AGE_18_21,AGE_22_29,AGE_30_39,AGE_40_49,AGE_50_64,AGE_65_UP",
                     uniqueField: "ObjectID",
                     scaleRange: [6, 20],
                     symbology: {
