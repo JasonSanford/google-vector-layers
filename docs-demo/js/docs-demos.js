@@ -5,7 +5,7 @@ $(document).ready(function() {
         if (issues && issues.data && issues.data.length) {
             var issuesHTML = '<h5>Current Issues</h5><ul>';
             $.each(issues.data, function(i, o) {
-                var li = '<li><a href="' + o.html_url + '">' + o.title + '</a></li>';
+                var li = '<li><a href="' + o.html_url + '" title="' + o.body + '">' + o.title + '</a></li>';
                 issuesHTML += li;
             });
             issuesHTML += '</ul>';
