@@ -37,15 +37,16 @@ gvector.AGS = gvector.Layer.extend({
         // Build URL
         var url = this.options.url + "query" + // Query this layer
             "?returnGeometry=true" + // Of course we want geometry
-            "&inSR=4326&outSR=4326" + // request/receive geometry in WGS 84 Lat/Lng. Esri got this right.
-            "&spatialRel=esriSpatialRelIntersects" + // Find stuff that intersects this envelope
+            "&outSR=4326" + // receive geometry in WGS 84 Lat/Lng.
             "&f=json" + // Wish it were GeoJSON, but we'll take it
             "&outFields=" + this.options.fields + // Please return the following fields
             "&where=" + this.options.where + // By default return all feature (1=1) but could pass SQL statement (value<90)
-            "&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
             "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
         if (!this.options.showAll) {
-            url += "&geometry=" + this._buildBoundsString(this.options.map.getBounds()); // Build envelope geometry
+            url += "&inSR=4326" + // request geometry in WGS 84 Lat/Lng.
+            "&spatialRel=esriSpatialRelIntersects" + // Find stuff that intersects this envelope
+            "&geometryType=esriGeometryEnvelope" + // Our "geometry" url param will be an envelope
+            "&geometry=" + this._buildBoundsString(this.options.map.getBounds()); // Build envelope geometry
         }
         
         // Dynamically load JSONP
