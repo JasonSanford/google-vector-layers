@@ -37,7 +37,10 @@ gvector.CartoDB = gvector.Layer.extend({
             var bounds = this.options.map.getBounds();
             var sw = bounds.getSouthWest();
             var ne = bounds.getNorthEast();
-            where += (where.length ? " AND " : "") + (this.options.table.split(",").length > 1 ? this.options.table.split(",")[0].split(".")[0] + ".the_geom" : "the_geom") + " && st_setsrid(st_makebox2d(st_point(" + sw.lng() + "," + sw.lat() + "),st_point(" + ne.lng() + "," + ne.lat() + ")),4326)";
+            var tableCount = this.options.table.split(",").length;
+            for (var i = 0; i < tableCount; i++) {
+                where += (where.length ? " AND " : "") + (tableCount > 1 ? this.options.table.split(",")[i].split(".")[0] + ".the_geom" : "the_geom") + " && st_setsrid(st_makebox2d(st_point(" + sw.lng() + "," + sw.lat() + "),st_point(" + ne.lng() + "," + ne.lat() + ")),4326)";
+            }
         }
         if (this.options.limit) {
             where += (where.length ? " " : "") + "limit " + this.options.limit;
