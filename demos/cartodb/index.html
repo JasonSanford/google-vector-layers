@@ -58,7 +58,46 @@
                 <p>This example ...</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">cartodb_sewer_line = new gvector.CartoDB({
+    user: "geojason",
+    table: "sewer_line",
+    scaleRange: [15, 20],
+    symbology: {
+        type: "range",
+        property: "pipe_dia",
+        ranges: [
+            {
+                range: [0, 8],
+                vectorOptions: {
+                    strokeWeight: 4,
+                    strokeColor: "#46461f",
+                    strokeOpacity: 0.8
+                }
+            },{
+                range: [8.00001, 100],
+                vectorOptions: {
+                    strokeWeight: 8,
+                    strokeColor: "#ff7800",
+                    strokeOpacity: 0.8
+                }
+            }
+        ]
+    },
+    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table class="condensed-table"><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+});
+
+cartodb_man_hole = new gvector.CartoDB({
+    user: "geojason",
+    table: "man_hole",
+    scaleRange: [16, 20],
+    symbology: {
+        type: "single",
+        vectorOptions: {
+            icon: new google.maps.MarkerImage("../../docs-demo/img/markers/manhole.png", new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
+        }
+    },
+    infoWindowTemplate: '<div class="iw-content"><h3>Man Hole</h3><table class="condensed-table"><tr><th>Diameter</th><td>{mh_dia} ft.</td></tr><tr><th>Depth</th><td>{mh_depth} ft.</td></tr><tr><th>Address</th><td>{street_add}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-1" class="map">
@@ -71,11 +110,54 @@
                 </div>
                 <hr>
                 
-                <h2>Parcels in Flood Zones</h2>
-                <p>This example ...</p>
+                <h2>Flood Zones</h2>
+                <p>One huge benefit when using CartoDB is that we get direct SQL access to the PostGIS database. In this example we're using the "ST_Simplify" function to trim down the number of vertices on returned geometry so that features appear a little quicker. This isn't necessary on all data sets but is helpful when dealing with contour lines or flood zones.</p>
+                <p>Keep in mind when performing geometric functions with SQL, your output geometry must be in a field named "the_geom" to return proper GeoJSON.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">cartodb_flood_zones = new gvector.CartoDB({
+    user: "geojason",
+    table: "flood_zones",
+    fields: "cartodb_id,label,st_simplify(the_geom,0.000008) the_geom",
+    scaleRange: [14, 20],
+    symbology: {
+        type: "unique",
+        property: "label",
+        values: [
+            {
+                value: "AE",
+                vectorOptions: {
+                    fillColor: "#2f952f",
+                    fillOpacity: 0.6,
+                    strokeWeight: 1,
+                    strokeColor: "#fff",
+                    strokeOpacity: 0
+                }
+            },
+            {
+                value: "AE-FW",
+                vectorOptions: {
+                    fillColor: "#004a00",
+                    fillOpacity: 0.6,
+                    strokeWeight: 1,
+                    strokeColor: "#fff",
+                    strokeOpacity: 0
+                }
+            },
+            {
+                value: "0.2% Annual Chance",
+                vectorOptions: {
+                    fillColor: "#aaff7a",
+                    fillOpacity: 0.6,
+                    strokeWeight: 1,
+                    strokeColor: "#fff",
+                    strokeOpacity: 0
+                }
+            }
+        ],
+    },
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;Flood Zone&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Type&lt;/th&gt;&lt;td&gt;{label}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;'
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-2" class="map">
@@ -114,7 +196,7 @@
                 map2 = new google.maps.Map(document.getElementById("map-container-2"), {
                     center: new google.maps.LatLng(35.02218076922061, -80.67909174217226),
                     zoom: 16,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeId: google.maps.MapTypeId.SATELLITE,
                     noClear: true
                 });
                 
@@ -144,7 +226,7 @@
                         ]
                     },
                     infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table class="condensed-table"><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
-                });  
+                });
                 
                 cartodb_man_hole = new gvector.CartoDB({
                     user: "geojason",
