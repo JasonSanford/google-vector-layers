@@ -1,5 +1,6 @@
 gvector.AGS = gvector.Layer.extend({
     initialize: function(options) {
+        this._vectors = [];
         for (var i = 0, len = this._requiredParams.length; i < len; i++) {
             if (!options[this._requiredParams[i]]) {
                 throw new Error("No \"" + this._requiredParams[i] + "\" parameter found.");

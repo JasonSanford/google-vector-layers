@@ -22,8 +22,6 @@ gvector.Layer = gvector.Class.extend({
         gvector.Util.setOptions(this, options);
     },
     
-    _vectors: [],
-    
     setMap: function(map) {
         if (map && this.options.map) {
             return;
