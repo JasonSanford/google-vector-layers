@@ -311,57 +311,58 @@ gvector.Layer = gvector.Class.extend({
         return changed;
     },
     
-    _esriJsonToGoogle: function(feature, opts) {
-        var vector;
-        if (feature.geometry.x && feature.geometry.y) {
-            opts.position = new google.maps.LatLng(feature.geometry.y, feature.geometry.x);
+    _esriJsonToGoogle: function(geometry, opts) {
+        var vector, vectors;
+        if (geometry.x && geometry.y) {
+            opts.position = new google.maps.LatLng(geometry.y, geometry.x);
             vector = new google.maps.Marker(opts);
-        } else if (feature.geometry.paths) {
+        } else if (geometry.paths) {
             var path = [];
-            for (var i = 0; i < feature.geometry.paths.length; i++) {
-                for (var i2 = 0; i2 < feature.geometry.paths[i].length; i2++) {
-                    path.push(new google.maps.LatLng(feature.geometry.paths[i][i2][1], feature.geometry.paths[i][i2][0]));
+            for (var i = 0; i < geometry.paths.length; i++) {
+                for (var i2 = 0; i2 < geometry.paths[i].length; i2++) {
+                    path.push(new google.maps.LatLng(geometry.paths[i][i2][1], geometry.paths[i][i2][0]));
                 }
             }
             opts.path = path;
             vector = new google.maps.Polyline(opts);
-        } else if (feature.geometry.rings) {
+        } else if (geometry.rings) {
             var paths = [];
-            for (var i = 0; i < feature.geometry.rings.length; i++) {
+            for (var i = 0; i < geometry.rings.length; i++) {
                 var path = [];
-                for (var i2 = 0; i2 < feature.geometry.rings[i].length; i2++) {
-                    path.push(new google.maps.LatLng(feature.geometry.rings[i][i2][1], feature.geometry.rings[i][i2][0]));
+                for (var i2 = 0; i2 < geometry.rings[i].length; i2++) {
+                    path.push(new google.maps.LatLng(geometry.rings[i][i2][1], geometry.rings[i][i2][0]));
                 }
                 paths.push(path);
             }
             opts.paths = paths;
             vector = new google.maps.Polygon(opts);
         }
-        feature.vector = vector;
+        //feature.vector = vector;
+        return vector || vectors;
     },
     
     // Using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
-    _geojsonGeometryToGoogle: function(feature, opts) {
+    _geojsonGeometryToGoogle: function(geometry, opts) {
         
         var vector, vectors;
-        switch (feature.type) {
+        switch (geometry.type) {
             case "Point":
-                opts.position = new google.maps.LatLng(feature.coordinates[1], feature.coordinates[0]);
+                opts.position = new google.maps.LatLng(geometry.coordinates[1], geometry.coordinates[0]);
                 vector = new google.maps.Marker(opts);
                 break;
             
             case "MultiPoint":
                 vectors = [];
-                for (var i = 0, len = feature.coordinates.length; i < len; i++) {
-                    opts.position = new google.maps.LatLng(feature.coordinates[i][1], feature.coordinates[i][0]);
+                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
+                    opts.position = new google.maps.LatLng(geometry.coordinates[i][1], geometry.coordinates[i][0]);
                     vectors.push(new google.maps.Marker(opts));
                 }
                 break;
                         
             case "LineString":
                 var path = [];
-                for (var i = 0, len = feature.coordinates.length; i < len; i++) {
-                    var ll = new google.maps.LatLng(feature.coordinates[i][1], feature.coordinates[i][0]);
+                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
+                    var ll = new google.maps.LatLng(geometry.coordinates[i][1], geometry.coordinates[i][0]);
                     path.push(ll);
                 }
                 opts.path = path;
@@ -370,10 +371,10 @@ gvector.Layer = gvector.Class.extend({
             
             case "MultiLineString":
                 vectors = [];
-                for (var i = 0, len = feature.coordinates.length; i < len; i++){
+                for (var i = 0, len = geometry.coordinates.length; i < len; i++){
                     var path = [];
-                    for (var j = 0; j < feature.coordinates[i].length; j++){
-                        var coord = feature.coordinates[i][j];
+                    for (var j = 0; j < geometry.coordinates[i].length; j++){
+                        var coord = geometry.coordinates[i][j];
                         var ll = new google.maps.LatLng(coord[1], coord[0]);
                         path.push(ll);
                     }
@@ -384,10 +385,10 @@ gvector.Layer = gvector.Class.extend({
                 
             case "Polygon":
                 var paths = [];
-                for (var i = 0, len = feature.coordinates.length; i < len; i++) {
+                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
                     var path = [];
-                    for (var i2 = 0; i2 < feature.coordinates[i].length; i2++) {
-                            var ll = new google.maps.LatLng(feature.coordinates[i][i2][1], feature.coordinates[i][i2][0]);
+                    for (var i2 = 0; i2 < geometry.coordinates[i].length; i2++) {
+                            var ll = new google.maps.LatLng(geometry.coordinates[i][i2][1], geometry.coordinates[i][i2][0]);
                         path.push(ll);
                     }
                     paths.push(path);
@@ -398,12 +399,12 @@ gvector.Layer = gvector.Class.extend({
             
             case "MultiPolygon":
                 vectors = [];
-                for (var i = 0, len = feature.coordinates.length; i < len; i++) {
+                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
                     paths = [];
-                    for (var i2 = 0, len2 = feature.coordinates[i].length; i2 < len2; i2++) {
+                    for (var i2 = 0, len2 = geometry.coordinates[i].length; i2 < len2; i2++) {
                         var path = [];
-                        for (var i3 = 0, len3 = feature.coordinates[i][i2].length; i3 < len3; i3++) {
-                            path.push(new google.maps.LatLng(feature.coordinates[i][i2][i3][1], feature.coordinates[i][i2][i3][0]));
+                        for (var i3 = 0, len3 = geometry.coordinates[i][i2].length; i3 < len3; i3++) {
+                            path.push(new google.maps.LatLng(geometry.coordinates[i][i2][i3][1], geometry.coordinates[i][i2][i3][0]));
                         }
                         paths.push(path);
                     }
@@ -414,8 +415,8 @@ gvector.Layer = gvector.Class.extend({
                 
             case "GeometryCollection":
                 vectors = [];
-                for (var i = 0, len = feature.geometries.length; i < len; i++) {
-                    vectors.push(this._geojsonGeometryToGoogle(feature.geometries[i], opts));
+                for (var i = 0, len = geometry.geometries.length; i < len; i++) {
+                    vectors.push(this._geojsonGeometryToGoogle(geometry.geometries[i], opts));
                 }
                 break;
         }

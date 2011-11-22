@@ -129,10 +129,17 @@ gvector.AGS = gvector.Layer.extend({
                 if (!onMap || !this.options.uniqueField) {
                     
                     // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-                    this._esriJsonToGoogle(data.features[i], this._getFeatureVectorOptions(data.features[i]));
+                    var vector_or_vectors = this._esriJsonToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
+                    data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                     
-                    // Show this vector on the map
-                    data.features[i].vector.setMap(this.options.map);
+                    // Show the vector or vectors on the map
+                    if (data.features[i].vector) {
+                        data.features[i].vector.setMap(this.options.map);
+                    } else if (data.features[i].vectors && data.features[i].vectors.length) {
+                        for (var i3 = 0; i3 < data.features[i].vectors.length; i3++) {
+                            data.features[i].vectors[i3].setMap(this.options.map);
+                        }
+                    }
                     
                     // Store the vector in an array so we can remove it later
                     this._vectors.push(data.features[i]);
@@ -145,9 +152,17 @@ gvector.AGS = gvector.Layer.extend({
                         this._setInfoWindowContent(feature);
                         
                         (function(feature){
-                            google.maps.event.addListener(feature.vector, "click", function(evt) {
-                                me._showInfoWindow(feature, evt);
-                            });
+                            if (feature.vector) {
+                                google.maps.event.addListener(feature.vector, "click", function(evt) {
+                                    me._showInfoWindow(feature, evt);
+                                });
+                            } else if (feature.vectors) {
+                                for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
+                                    google.maps.event.addListener(feature.vectors[i3], "click", function(evt) {
+                                        me._showInfoWindow(feature, evt);
+                                    });
+                                }
+                            }
                         }(feature));
                         
                     }

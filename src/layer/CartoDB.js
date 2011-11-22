@@ -140,18 +140,13 @@ gvector.CartoDB = gvector.Layer.extend({
                 if (!onMap || !this.options.uniqueField) {
                     
                     // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-                    //this._geojsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
-                    // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
                     var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                     data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                     
-                    // Show this vector on the map
-                    //data.features[i].vector.setMap(this.options.map);
                     // Show the vector or vectors on the map
                     if (data.features[i].vector) {
                         data.features[i].vector.setMap(this.options.map);
-                    }
-                    if (data.features[i].vectors && data.features[i].vectors.length) {
+                    } else if (data.features[i].vectors && data.features[i].vectors.length) {
                         for (var i3 = 0; i3 < data.features[i].vectors.length; i3++) {
                             data.features[i].vectors[i3].setMap(this.options.map);
                         }
@@ -174,11 +169,9 @@ gvector.CartoDB = gvector.Layer.extend({
                                 });
                             } else if (feature.vectors) {
                                 for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
-                                    (function(feature){
-                                        google.maps.event.addListener(feature.vectors[i3], "click", function(evt) {
-                                            me._showInfoWindow(feature, evt);
-                                        });
-                                    }(feature));
+                                    google.maps.event.addListener(feature.vectors[i3], "click", function(evt) {
+                                        me._showInfoWindow(feature, evt);
+                                    });
                                 }
                             }
                         }(feature));
