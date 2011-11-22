@@ -83,7 +83,8 @@
             }
         ]
     },
-    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table class="condensed-table"><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table class="condensed-table"><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>',
+    singleInfoWindow: true
 });
 
 cartodb_man_hole = new gvector.CartoDB({
@@ -96,7 +97,8 @@ cartodb_man_hole = new gvector.CartoDB({
             icon: new google.maps.MarkerImage("../../docs-demo/img/markers/manhole.png", new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
         }
     },
-    infoWindowTemplate: '<div class="iw-content"><h3>Man Hole</h3><table class="condensed-table"><tr><th>Diameter</th><td>{mh_dia} ft.</td></tr><tr><th>Depth</th><td>{mh_depth} ft.</td></tr><tr><th>Address</th><td>{street_add}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+    infoWindowTemplate: '<div class="iw-content"><h3>Man Hole</h3><table class="condensed-table"><tr><th>Diameter</th><td>{mh_dia} ft.</td></tr><tr><th>Depth</th><td>{mh_depth} ft.</td></tr><tr><th>Address</th><td>{street_add}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>',
+    singleInfoWindow: true
 });</pre>
                     </div>
                     <div class="span10 height-controlled">
@@ -156,7 +158,8 @@ cartodb_man_hole = new gvector.CartoDB({
             }
         ],
     },
-    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;Flood Zone&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Type&lt;/th&gt;&lt;td&gt;{label}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;'
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;Flood Zone&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Type&lt;/th&gt;&lt;td&gt;{label}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
 });</pre>
                     </div>
                     <div class="span10 height-controlled">
@@ -225,7 +228,8 @@ cartodb_man_hole = new gvector.CartoDB({
                             }
                         ]
                     },
-                    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table class="condensed-table"><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+                    infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table class="condensed-table"><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>',
+                    singleInfoWindow: true
                 });
                 
                 cartodb_man_hole = new gvector.CartoDB({
@@ -238,7 +242,8 @@ cartodb_man_hole = new gvector.CartoDB({
                             icon: new google.maps.MarkerImage("../../docs-demo/img/markers/manhole.png", new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
                         }
                     },
-                    infoWindowTemplate: '<div class="iw-content"><h3>Man Hole</h3><table class="condensed-table"><tr><th>Diameter</th><td>{mh_dia} ft.</td></tr><tr><th>Depth</th><td>{mh_depth} ft.</td></tr><tr><th>Address</th><td>{street_add}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>'
+                    infoWindowTemplate: '<div class="iw-content"><h3>Man Hole</h3><table class="condensed-table"><tr><th>Diameter</th><td>{mh_dia} ft.</td></tr><tr><th>Depth</th><td>{mh_depth} ft.</td></tr><tr><th>Address</th><td>{street_add}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>',
+                    singleInfoWindow: true
                 });
                 
                 cartodb_flood_zones = new gvector.CartoDB({
@@ -282,7 +287,8 @@ cartodb_man_hole = new gvector.CartoDB({
                             }
                         ],
                     },
-                    infoWindowTemplate: '<div class="iw-content"><h3>Flood Zone</h3><table class="condensed-table"><tr><th>Type</th><td>{label}</td></tr></table></div>'
+                    infoWindowTemplate: '<div class="iw-content"><h3>Flood Zone</h3><table class="condensed-table"><tr><th>Type</th><td>{label}</td></tr></table></div>',
+                    singleInfoWindow: true
                 });
                 
             });

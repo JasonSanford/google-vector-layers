@@ -1,5 +1,5 @@
 /*
- * gvector.Layer is a base class for rendering vector layers on a Google Maps API map. It's inherited by AGS, A2E GeoIQ, etc.
+ * gvector.Layer is a base class for rendering vector layers on a Google Maps API map. It's inherited by AGS, A2E, CartoDB, GeoIQ, etc.
  */
 
 gvector.Layer = gvector.Class.extend({
@@ -14,6 +14,7 @@ gvector.Layer = gvector.Class.extend({
         autoUpdate: false,
         autoUpdateInterval: null,
         infoWindowTemplate: null,
+        singleInfoWindow: false,
         symbology: null,
         showAll: false
     },
@@ -84,6 +85,9 @@ gvector.Layer = gvector.Class.extend({
                 this._vectors[i].vector.setMap(null);
                 if (this._vectors[i].infoWindow) {
                     this._vectors[i].infoWindow.close()
+                } else if (this.infoWindow && this.infoWindow.get("associatedFeature") && this.infoWindow.get("associatedFeature") == this._vectors[i]) {
+                    this.infoWindow.close();
+                    this.infoWindow = null;
                 }
             }
             if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
@@ -91,6 +95,9 @@ gvector.Layer = gvector.Class.extend({
                     this._vectors[i].vectors[i2].setMap(null);
                     if (this._vectors[i].vectors[i2].infoWindow) {
                         this._vectors[i].vectors[i2].infoWindow.close();
+                    } else if (this.infoWindow && this.infoWindow.get("associatedFeature") && this.infoWindow.get("associatedFeature") == this._vectors[i]) {
+                        this.infoWindow.close();
+                        this.infoWindow = null;
                     }
                 }
             }
@@ -196,8 +203,20 @@ gvector.Layer = gvector.Class.extend({
         var infoWindowOptions = {
             content: feature.iwContent
         };
-        feature.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
-        var me = this;
+        
+        var ownsInfoWindow;
+        if (!this.options.singleInfoWindow) {
+            feature.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+            ownsInfoWindow = feature;
+        } else {
+            if (this.infoWindow) {
+                this.infoWindow.close();
+                this.infoWindow = null;
+            }
+            this.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+            this.infoWindow.set("associatedFeature", feature);
+            ownsInfoWindow = this;
+        }
         
         var isLineOrPolygon = false;
         if (feature.vector) {
@@ -209,9 +228,12 @@ gvector.Layer = gvector.Class.extend({
                 isLineOrPolygon = true
             }
         }
+        
+        var me = this;
+        
         // Don't ask, I don't know.
         setTimeout(function() {
-            feature.infoWindow.open(me.options.map, isLineOrPolygon ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
+            ownsInfoWindow.infoWindow.open(me.options.map, isLineOrPolygon ? new google.maps.Marker({position: evt.latLng}) : feature.vector);
         }, 200);
     },
     
