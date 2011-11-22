@@ -349,6 +349,14 @@ gvector.Layer = gvector.Class.extend({
                 opts.position = new google.maps.LatLng(feature.coordinates[1], feature.coordinates[0]);
                 vector = new google.maps.Marker(opts);
                 break;
+            
+            case "MultiPoint":
+                vectors = [];
+                for (var i = 0, len = feature.coordinates.length; i < len; i++) {
+                    opts.position = new google.maps.LatLng(feature.coordinates[i][1], feature.coordinates[i][0]);
+                    vectors.push(new google.maps.Marker(opts));
+                }
+                break;
                         
             case "LineString":
                 var path = [];
@@ -389,7 +397,7 @@ gvector.Layer = gvector.Class.extend({
                 break;
             
             case "MultiPolygon":
-                var vectors = [];
+                vectors = [];
                 for (var i = 0, len = feature.coordinates.length; i < len; i++) {
                     paths = [];
                     for (var i2 = 0, len2 = feature.coordinates[i].length; i2 < len2; i2++) {
