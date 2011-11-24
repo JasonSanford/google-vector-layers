@@ -52,6 +52,13 @@ gvector.GeoIQ = gvector.Layer.extend({
     },
     
     _processFeatures: function(data) {
+        //
+        // Sometimes requests take a while to come back and
+        // the user might have turned the layer off
+        //
+        if (!this.options.map) {
+            return;
+        }
         data = JSON.parse(data);
         var bounds = this.options.map.getBounds();
         

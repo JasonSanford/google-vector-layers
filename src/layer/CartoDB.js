@@ -64,6 +64,13 @@ gvector.CartoDB = gvector.Layer.extend({
     },
     
     _processFeatures: function(data) {
+        //
+        // Sometimes requests take a while to come back and
+        // the user might have turned the layer off
+        //
+        if (!this.options.map) {
+            return;
+        }
         var bounds = this.options.map.getBounds();
         
         // Check to see if the _lastQueriedBounds is the same as the new bounds
