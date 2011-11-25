@@ -61,7 +61,6 @@
                         <pre class="prettyprint">ags_light_rail = new gvector.AGS({
     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleVectors/MapServer/1",
     fields: "*",
-    uniqueField: "OBJECTID",
     scaleRange: [13, 20],
     showAll: true,
     symbology: {
@@ -91,7 +90,6 @@
                         <pre class="prettyprint">ags_director_districts = new gvector.AGS({
     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
     fields: "OBJECTID,DISTRICT,URL,MAP",
-    uniqueField: "OBJECTID",
     showAll: true,
     scaleRange: [4, 14],
     where: "DISTRICT+NOT+IN('I','J','K','L','M','N','O')",
@@ -371,7 +369,6 @@
                 ags_light_rail = new gvector.AGS({
                     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/SystemMapLiteGoogleVectors/MapServer/1",
                     fields: "*",
-                    uniqueField: "OBJECTID",
                     scaleRange: [13, 20],
                     showAll: true,
                     symbology: {
@@ -388,7 +385,6 @@
                 ags_districts = new gvector.AGS({
                     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
                     fields: "OBJECTID,DISTRICT,URL,MAP",
-                    uniqueField: "OBJECTID",
                     showAll: true,
                     scaleRange: [4, 14],
                     where: "DISTRICT+NOT+IN('I','J','K','L','M','N','O')",

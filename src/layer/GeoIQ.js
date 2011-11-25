@@ -121,7 +121,7 @@ gvector.GeoIQ = gvector.Layer.extend({
                     if (this.options.infoWindowTemplate) {
                         
                         var me = this;
-                        var feature = this._vectors[i2];
+                        var feature = data.features[i];
                         
                         this._setInfoWindowContent(feature);
                         
