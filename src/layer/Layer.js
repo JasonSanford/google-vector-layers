@@ -406,8 +406,8 @@ gvector.Layer = gvector.Class.extend({
                 vectors = [];
                 for (var i = 0, len = geometry.coordinates.length; i < len; i++){
                     var path = [];
-                    for (var j = 0; j < geometry.coordinates[i].length; j++){
-                        var coord = geometry.coordinates[i][j];
+                    for (var i2 = 0, len2 = geometry.coordinates[i].length; i2 < len2; i2++){
+                        var coord = geometry.coordinates[i][i2];
                         var ll = new google.maps.LatLng(coord[1], coord[0]);
                         path.push(ll);
                     }
@@ -420,7 +420,7 @@ gvector.Layer = gvector.Class.extend({
                 var paths = [];
                 for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
                     var path = [];
-                    for (var i2 = 0; i2 < geometry.coordinates[i].length; i2++) {
+                    for (var i2 = 0, len2 = geometry.coordinates[i].length; i2 < len2; i2++) {
                             var ll = new google.maps.LatLng(geometry.coordinates[i][i2][1], geometry.coordinates[i][i2][0]);
                         path.push(ll);
                     }
