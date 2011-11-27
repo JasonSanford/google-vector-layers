@@ -136,7 +136,7 @@ gvector.AGS = gvector.Layer.extend({
                 if (!onMap || !this.options.uniqueField) {
                     
                     // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-                    var vector_or_vectors = this._esriJsonToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
+                    var vector_or_vectors = this._esriJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                     data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                     
                     // Show the vector or vectors on the map

@@ -98,7 +98,7 @@ gvector.A2E = gvector.Layer.extend({
                 if (!onMap) {
                     
                     // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-                    var vector_or_vectors = this._geojsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
+                    var vector_or_vectors = this._geoJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                     data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                     
                     // Show the vector or vectors on the map

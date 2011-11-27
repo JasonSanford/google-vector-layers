@@ -311,7 +311,7 @@ gvector.Layer = gvector.Class.extend({
         return changed;
     },
     
-    _esriJsonToGoogle: function(geometry, opts) {
+    _esriJsonGeometryToGoogle: function(geometry, opts) {
         var vector, vectors;
         if (geometry.x && geometry.y) {
             opts.position = new google.maps.LatLng(geometry.y, geometry.x);
@@ -342,7 +342,7 @@ gvector.Layer = gvector.Class.extend({
     },
     
     // Using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
-    _geojsonGeometryToGoogle: function(geometry, opts) {
+    _geoJsonGeometryToGoogle: function(geometry, opts) {
         
         var vector, vectors;
         switch (geometry.type) {
@@ -416,7 +416,7 @@ gvector.Layer = gvector.Class.extend({
             case "GeometryCollection":
                 vectors = [];
                 for (var i = 0, len = geometry.geometries.length; i < len; i++) {
-                    vectors.push(this._geojsonGeometryToGoogle(geometry.geometries[i], opts));
+                    vectors.push(this._geoJsonGeometryToGoogle(geometry.geometries[i], opts));
                 }
                 break;
         }
