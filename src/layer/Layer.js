@@ -314,8 +314,15 @@ gvector.Layer = gvector.Class.extend({
     _esriJsonGeometryToGoogle: function(geometry, opts) {
         var vector, vectors;
         if (geometry.x && geometry.y) {
+            // A simple point
             opts.position = new google.maps.LatLng(geometry.y, geometry.x);
             vector = new google.maps.Marker(opts);
+        } else if (geometry.points) {
+            vectors = [];
+            for (var i = 0, len = geometry.points.length; i < len; i++) {
+                opts.position = new google.maps.LatLng(geometry.points[i].y, geometry.points[i].x);
+                vectors.push(new google.maps.Marker(opts));
+            }
         } else if (geometry.paths) {
             var path = [];
             for (var i = 0; i < geometry.paths.length; i++) {
@@ -337,7 +344,6 @@ gvector.Layer = gvector.Class.extend({
             opts.paths = paths;
             vector = new google.maps.Polygon(opts);
         }
-        //feature.vector = vector;
         return vector || vectors;
     },
     
