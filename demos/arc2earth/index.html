@@ -63,7 +63,7 @@
                     <div class="span10 height-controlled">
                         <div id="map-container-1" class="map">
                             <div class="layer-buttons">
-                                <div class="row layer-button-row"><a href="javascript:a2e_.setMap(map1);" class="btn success">Layer On</a> <a href="javascript:a2e_.setMap(null);" class="btn danger">Layer Off</a></div>
+                                <div class="row layer-button-row"><a href="javascript:a2e_parcels.setMap(map1);" class="btn success">Layer On</a> <a href="javascript:a2e_parcels.setMap(null);" class="btn danger">Layer Off</a></div>
                             </div>
                         </div>
                     </div>
@@ -84,14 +84,22 @@
         <script src="../../debug/gvector-include.js" type="text/javascript"></script>
         <script type="text/javascript">
             var map1;
+            var a2e_parcels;
             
             $(document).ready(function() {
             
                 map1 = new google.maps.Map(document.getElementById("map-container-1"), {
-                    center: new google.maps.LatLng(39.67, -106.12),
-                    zoom: 8,
-                    mapTypeId: google.maps.MapTypeId.TERRAIN,
+                    center: new google.maps.LatLng(40.4504835, -74.5429415),
+                    zoom: 16,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
                     noClear: true
+                });
+                
+                a2e_parcels = new gvector.A2E({
+                    url: "http://sdl-arc2earth.appspot.com/a2e/data/datasources/Franklin_Parcels2",
+                    scaleRange: [15, 20],
+                    infoWindowTemplate: '<div class="iw-content"><h3>{StreetAddr}</h3><table class="condensed-table"><tr><th>Block</th><td>{gBlock}</td></tr><tr><th>Lot</th><td>{gLot}</td></tr><tr><th>Tax Value</th><td>${NetTaxable}</td></tr></table></div>',
+                    singleInfoWindow: true,
                 });
                 
             });
