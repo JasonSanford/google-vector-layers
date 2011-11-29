@@ -347,6 +347,8 @@
                 
                 <p class="docs">The <code>unique</code> type displays features with the same attibute values with the same symbology. This is helpful when you have a handful of discrete values for which you want to define symbology.</p>
                 
+                <p>Check the <a href="../demos/arcgis-server/#districts">districts example</a> on the <a href="../demos/arcgis-server/">ArcGIS Server demo page</a> and view source to see it in action.</p>
+                
                 <pre class="prettyprint docs">{
     type: "unique", // Defines the symbology as a unique type where features with an attribute of a specific value are symbolized the same way
     property: "DISTRICT", // The property (field, attribute) to use for defining unique values and styles
@@ -387,6 +389,8 @@
                 <h3>range</h3>
                 
                 <p class="docs">The <code>range</code> type tests values to see if they are within a specified range and symbolizes them accordingly. This is helpful for datasets that have values with lots of individual values like population counts per county in the US or in this example, vehicle speeds.</p>
+                
+                <p>Check the <a href="../demos/arcgis-server/#rtd-buses">RTD buses example</a> on the <a href="../demos/arcgis-server/">ArcGIS Server demo page</a> and view source to see it in action.</p>
                 
                 <pre class="prettyprint docs">{
     type: "range", // Defines the symbology as a range type where values above a minimum and below a maximum value are symbolized the same way
