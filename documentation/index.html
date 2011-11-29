@@ -18,6 +18,17 @@
             body {
                 padding-top: 60px;
             }
+            h2 {
+                background-color: #E1E1E1;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+                padding: 0 10px;
+                margin-bottom: 12px;
+            }
+            h2 small {
+                color: #5a5a5a;
+            }
             .container-fluid > .sidebar {
                 position: fixed !important;
                 margin-top: 60px;
@@ -118,7 +129,7 @@
                         <tr><td><code>singleInfoWindow</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to show a single InfoWindow for a layer when features are clicked. This keeps the map from getting cluttered when multiple features are clicked.</td></tr>
                         <tr><td><code>symbology</code></td><td><code>Object <a href="#docs-symbology">symbology options</a></code></td><td><code>null</code></td><td>The symbology options for the layer. Features can be rendered with a single symbology or can also be symbolized based on an attribute using unique values or a value range. For details check the <a href="#docs-symbology">symbology options documentation</a>.</td></tr>
                         <tr><td><code>showAll</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>If true, all features will be fetched and shown once, not after a map extent change. This is helpful for layers with only a handful of features.</td></tr>
-                        <tr><td><code>fields</code></td><td><code>String</code></td><td><code>null</code></td><td>A list of comma separated fields to be returned with the features. For example: <code>"OBJECTID,OWNER_NAME"</code> returns two fields and <code>"*"</code> returns all fields.</td></tr>
+                        <tr><td><code>fields</code></td><td><code>String</code></td><td><code>null</code></td><td>A list of comma separated fields to be returned with the features. For example <code>"OBJECTID,OWNER_NAME"</code> returns two fields and <code>"*"</code> returns all fields.</td></tr>
                         <tr><td><code>uniqueField</code></td><td><code>String</code></td><td><code>null</code></td><td>A field in the returned data that can be considered unique. This isn't required but is very helpful in determining which features are already on the map when the map extent changes.</td></tr>
                     </tbody>
                 </table>
@@ -185,15 +196,138 @@
                 </table>
                 
                 <h2 id="docs-geoiq">gvector.GeoIQ <small>GeoIQ - Geocommons</small></h2>
+                
+                <p>This class creates a layer that processes and displays features from a GeoIQ dataset.</p>
+                                
+                <h3>Usage Example</h3>
+                <pre class="prettyprint">var myGeoIQLayer = new gvector.GeoIQ({
+    dataset: 164880,
+    uniqueField: "NAME",
+    scaleRange: [6, 20],
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{NAME}&lt;/h3&gt;&lt;/div&gt;',
+    singleInfoWindow: true,
+    symbology: {
+        type: "single",
+        vectorOptions: {
+    	    icon: "../../docs-demo/img/markers/ski-lift.png"
+        }
+    }
+});</pre>
+                <h3>Constructor</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Constructor</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>gvector.GeoIQ( &lt;<a href="#docs-geoiq-options">GeoIQ options</a>&gt; options )</code></td><td>Instantiates a GeoIQ layer with an object literal with GeoIQ options described below.</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3 id="docs-geoiq-options">Options</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Option</th><th>Type</th><th>Default Value</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>dataset</code></td><td><code>Number</code></td><td><code>null</code></td><td>Required. A dataset id for a GeoIQ/Geocommons dataset.</td></tr>
+                        <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
+                        <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
+                        <tr><td><code>dynamic</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not the layer contains dynamic data. If true, feature geometry and attributes will be checked for changes after extent change and/or after a defined interval. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
+                        <tr><td><code>autoUpdate</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to auto-update a dynamic layer. If true, feature geometry and attributes will be updated at an interval set by the <code>autoUpdateInterval</code> option. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
+                        <tr><td><code>autoUpdateInterval</code></td><td><code>Integer</code></td><td><code>null</code></td><td>The interval (in milliseconds) between checks for updated feature geometry and attributes when the <code>autoUpdate</code> option is set to <code>true</code>. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
+                        <tr><td><code>infoWindowTemplate</code></td><td><code>String|Function</code></td><td><code>null</code></td><td>A template for creating the content of a <a href="http://maps.googleapis.com/">Google Maps InfoWindow</a> when a feature is clicked. For details check the <a href="#docs-infowindow">InfoWindow Template documentation</a>.</td></tr>
+                        <tr><td><code>singleInfoWindow</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to show a single InfoWindow for a layer when features are clicked. This keeps the map from getting cluttered when multiple features are clicked.</td></tr>
+                        <tr><td><code>symbology</code></td><td><code>Object <a href="#docs-symbology">symbology options</a></code></td><td><code>null</code></td><td>The symbology options for the layer. Features can be rendered with a single symbology or can also be symbolized based on an attribute using unique values or a value range. For details check the <a href="#docs-symbology">symbology options documentation</a>.</td></tr>
+                        <tr><td><code>showAll</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>If true, all features will be fetched and shown once, not after a map extent change. This is helpful for layers with only a handful of features.</td></tr>
+                        <tr><td><code>uniqueField</code></td><td><code>String</code></td><td><code>null</code></td><td>A field in the returned data that can be considered unique. This isn't required but is very helpful in determining which features are already on the map when the map extent changes.</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3>Methods</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Method</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map.</td></tr>
+                        <tr><td><code>getMap()</code></td><td>Gets the map (if any) that the layer has been added to.</td></tr>
+                    </tbody>
+                </table>
+                
                 <h2 id="docs-cartodb">gvector.CartoDB <small>CartoDB</small></h2>
+                
+                <p>This class creates a layer that processes and displays features from a CartoDB table.</p>
+                
+                <h3>Usage Example</h3>
+                <pre class="prettyprint">var myCartoDBLayer = new gvector.CartoDB({
+    user: "geojason",
+    table: "man_hole",
+    scaleRange: [16, 20],
+    symbology: {
+        type: "single",
+        vectorOptions: {
+            icon: "../../docs-demo/img/markers/manhole.png"
+        }
+    },
+    infoWindowTemplate: '&lt;h3&gt;Man Hole&lt;/h3&lt;p&gt;Depth: {mh_depth&lt;/p&gt;',
+    singleInfoWindow: true
+});</pre>
+                <h3>Constructor</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Constructor</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>gvector.CartoDB( &lt;<a href="#docs-cartodb-options">CartoDB options</a>&gt; options )</code></td><td>Instantiates a CartoDB layer with an object literal with CartoDB options described below.</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3 id="docs-cartodb-options">Options</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Option</th><th>Type</th><th>Default Value</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>user</code></td><td><code>String</code></td><td><code>null</code></td><td>Required. The CartoDB user that owns the table to be displayed. For example a CartoDB map viewed via a URL like <code>http://geojason.cartodb.com/map</code>, "geojason" is the CartoDB user.</td></tr>
+                        <tr><td><code>table</code></td><td><code>String</code></td><td><code>null</code></td><td>Required. The CartoDB table name for the data to be displayed.</td></tr>
+                        <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
+                        <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
+                        <tr><td><code>dynamic</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not the layer contains dynamic data. If true, feature geometry and attributes will be checked for changes after extent change and/or after a defined interval. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
+                        <tr><td><code>autoUpdate</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to auto-update a dynamic layer. If true, feature geometry and attributes will be updated at an interval set by the <code>autoUpdateInterval</code> option. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
+                        <tr><td><code>autoUpdateInterval</code></td><td><code>Integer</code></td><td><code>null</code></td><td>The interval (in milliseconds) between checks for updated feature geometry and attributes when the <code>autoUpdate</code> option is set to <code>true</code>. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
+                        <tr><td><code>infoWindowTemplate</code></td><td><code>String|Function</code></td><td><code>null</code></td><td>A template for creating the content of a <a href="http://maps.googleapis.com/">Google Maps InfoWindow</a> when a feature is clicked. For details check the <a href="#docs-infowindow">InfoWindow Template documentation</a>.</td></tr>
+                        <tr><td><code>singleInfoWindow</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to show a single InfoWindow for a layer when features are clicked. This keeps the map from getting cluttered when multiple features are clicked.</td></tr>
+                        <tr><td><code>symbology</code></td><td><code>Object <a href="#docs-symbology">symbology options</a></code></td><td><code>null</code></td><td>The symbology options for the layer. Features can be rendered with a single symbology or can also be symbolized based on an attribute using unique values or a value range. For details check the <a href="#docs-symbology">symbology options documentation</a>.</td></tr>
+                        <tr><td><code>showAll</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>If true, all features will be fetched and shown once, not after a map extent change. This is helpful for layers with only a handful of features.</td></tr>
+                        <tr><td><code>fields</code></td><td><code>String</code></td><td><code>"*"</code></td><td>A list of comma separated fields to be returned with the features. By default all fields are returned.</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3>Methods</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Method</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map.</td></tr>
+                        <tr><td><code>getMap()</code></td><td>Gets the map (if any) that the layer has been added to.</td></tr>
+                    </tbody>
+                </table>
+                
                 <hr>
+                
                 <h1>Other Reference</h1>
+                
                 <h2 id="docs-symbology">Symbology</h2>
+                
                 <h2 id="docs-infowindow">InfoWindow Templates</h2>
+                
                 <h2 id="docs-dynamic">Dynamic Data</h2>
+                
                 <footer>
                     <p>&copy; Jason Sanford - geojason.info 2011</p>
                 </footer>
+                
             </div>
         </div>
         <script src="../docs-demo/js/prettify.js" type="text/javascript"></script>
