@@ -39,6 +39,11 @@
                 color: rgba(0, 0, 0, 0.75);
                 padding: 0 !important;
             }
+            pre.docs {
+                overflow: auto;
+                white-space: pre;
+                word-wrap: normal;
+            }
             .docs td {
                 min-width: 120px;
             }
@@ -96,7 +101,7 @@
                 <p>This class creates a layer that processes and displays features from an ArcGIS Server.</p>
                 
                 <h3>Usage Example</h3>
-                <pre class="prettyprint">var myAGSLayer = new gvector.AGS({
+                <pre class="prettyprint docs">var myAGSLayer = new gvector.AGS({
     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/BusLocations/MapServer/0",
     fields: "*",
     uniqueField: "OBJECTID",
@@ -119,7 +124,7 @@
                         <tr><th>Option</th><th>Type</th><th>Default Value</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>url</code></td><td><code>String</code></td><td><code>null</code></td><td>Required. A url for a specific layer in an ArcGIS Server service.</td></tr>
+                        <tr><td><code>url</code></td><td><code>String</code></td><td><code>null</code></td><td><strong>Required</strong> -  A url for a specific layer in an ArcGIS Server service.</td></tr>
                         <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
                         <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
                         <tr><td><code>dynamic</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not the layer contains dynamic data. If true, feature geometry and attributes will be checked for changes after extent change and/or after a defined interval. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
@@ -150,7 +155,7 @@
                 <p>This class creates a layer that processes and displays features from an Arc2Earth.</p>
                                 
                 <h3>Usage Example</h3>
-                <pre class="prettyprint">var myA2ELayer = new gvector.A2E({
+                <pre class="prettyprint docs">var myA2ELayer = new gvector.A2E({
     url: "http://my-a2e-instance.appspot.com/a2e/data/datasources/parcels",
     scaleRange: [15, 20],
     infoWindowTemplate: '&lt;h3&gt;{street_addr}&lt;/h3&gt;&lt;p&gt;Tax Value: {net_taxable}&lt;/p&gt;'
@@ -171,7 +176,7 @@
                         <tr><th>Option</th><th>Type</th><th>Default Value</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>url</code></td><td><code>String</code></td><td><code>null</code></td><td>Required. A url for a specific datasource in an Arc2Earth instance.</td></tr>
+                        <tr><td><code>url</code></td><td><code>String</code></td><td><code>null</code></td><td><strong>Required</strong> -  A url for a specific datasource in an Arc2Earth instance.</td></tr>
                         <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
                         <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
                         <tr><td><code>dynamic</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not the layer contains dynamic data. If true, feature geometry and attributes will be checked for changes after extent change and/or after a defined interval. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
@@ -200,7 +205,7 @@
                 <p>This class creates a layer that processes and displays features from a GeoIQ dataset.</p>
                                 
                 <h3>Usage Example</h3>
-                <pre class="prettyprint">var myGeoIQLayer = new gvector.GeoIQ({
+                <pre class="prettyprint docs">var myGeoIQLayer = new gvector.GeoIQ({
     dataset: 164880,
     uniqueField: "NAME",
     scaleRange: [6, 20],
@@ -229,7 +234,7 @@
                         <tr><th>Option</th><th>Type</th><th>Default Value</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>dataset</code></td><td><code>Number</code></td><td><code>null</code></td><td>Required. A dataset id for a GeoIQ/Geocommons dataset.</td></tr>
+                        <tr><td><code>dataset</code></td><td><code>Number</code></td><td><code>null</code></td><td><strong>Required</strong> -  A dataset id for a GeoIQ/Geocommons dataset.</td></tr>
                         <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
                         <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
                         <tr><td><code>dynamic</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not the layer contains dynamic data. If true, feature geometry and attributes will be checked for changes after extent change and/or after a defined interval. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
@@ -259,7 +264,7 @@
                 <p>This class creates a layer that processes and displays features from a CartoDB table.</p>
                 
                 <h3>Usage Example</h3>
-                <pre class="prettyprint">var myCartoDBLayer = new gvector.CartoDB({
+                <pre class="prettyprint docs">var myCartoDBLayer = new gvector.CartoDB({
     user: "geojason",
     table: "man_hole",
     scaleRange: [16, 20],
@@ -288,8 +293,8 @@
                         <tr><th>Option</th><th>Type</th><th>Default Value</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>user</code></td><td><code>String</code></td><td><code>null</code></td><td>Required. The CartoDB user that owns the table to be displayed. For example a CartoDB map viewed via a URL like <code>http://geojason.cartodb.com/map</code>, "geojason" is the CartoDB user.</td></tr>
-                        <tr><td><code>table</code></td><td><code>String</code></td><td><code>null</code></td><td>Required. The CartoDB table name for the data to be displayed.</td></tr>
+                        <tr><td><code>user</code></td><td><code>String</code></td><td><code>null</code></td><td><strong>Required</strong> -  The CartoDB user that owns the table to be displayed. For example a CartoDB map viewed via a URL like <code>http://geojason.cartodb.com/map</code>, "geojason" is the CartoDB user.</td></tr>
+                        <tr><td><code>table</code></td><td><code>String</code></td><td><code>null</code></td><td><strong>Required</strong> -  The CartoDB table name for the data to be displayed.</td></tr>
                         <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
                         <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
                         <tr><td><code>dynamic</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not the layer contains dynamic data. If true, feature geometry and attributes will be checked for changes after extent change and/or after a defined interval. For details check the <a href="#docs-dynamic">dynamic data documentation</a>.</td></tr>
@@ -319,6 +324,87 @@
                 <h1>Other Reference</h1>
                 
                 <h2 id="docs-symbology">Symbology</h2>
+                
+                <p class="docs">Symbology for a layer can be defined a few different ways including <code>single</code>, <code>unique</code> and <code>range</code>. If no symbology is defined the default Google Maps vector styles will be used -- Sad, black lines with gray fill for paths and boring red markers.</p>
+                
+                <p class="docs">When instantiating a new layer, use one of the options below when setting the <code>symbology</code> option value.</p>
+                
+                <h3>single</h3>
+                
+                <p class="docs">The <code>single</code> type displays all features with the same symbology.</p>
+                
+                <pre class="prettyprint docs">{
+    type: "single", // Defines the symbology as a single type of representation for all features
+    vectorOptions: { // Google maps vector options for all features
+        fillColor: "#46461f",
+        fillOpacity: 0.5,
+        strokeWeight: 4,
+        strokeColor: "#ff7800"
+    }    
+}</pre>
+                
+                <h3>unique</h3>
+                
+                <p class="docs">The <code>unique</code> type displays features with the same attibute values with the same symbology. This is helpful when you have a handful of discrete values for which you want to define symbology.</p>
+                
+                <pre class="prettyprint docs">{
+    type: "unique", // Defines the symbology as a unique type where features with an attribute of a specific value are symbolized the same way
+    property: "DISTRICT", // The property (field, attribute) to use for defining unique values and styles
+    values: [ // An array of values to set symbology. Each value has a specific symbology
+        {
+            value: "A", // If feature.properties.DISTRICT == "A"
+            vectorOptions: { // Use these Google Maps vector options for features matching
+                fillColor: "#6600FF",
+                fillOpacity: 0.6,
+                strokeColor: "#666666",
+                strokeOpacity: 0.8,
+                strokeWeight: 1
+            }
+        },
+        {
+            value: "B",
+            vectorOptions: {
+                fillColor: "#660066",
+                fillOpacity: 0.6,
+                strokeColor: "#666666",
+                strokeOpacity: 0.8,
+                strokeWeight: 1
+            }
+        },
+        {
+            value: "C",
+            vectorOptions: {
+                fillColor: "#FF9900",
+                fillOpacity: 0.6,
+                strokeColor: "#666666",
+                strokeOpacity: 0.8,
+                strokeWeight: 1
+            }
+        }
+    ]
+}</pre>
+                
+                <h3>range</h3>
+                
+                <p class="docs">The <code>range</code> type tests values to see if they are within a specified range and symbolizes them accordingly. This is helpful for datasets that have values with lots of individual values like population counts per county in the US or in this example, vehicle speeds.</p>
+                
+                <pre class="prettyprint docs">{
+    type: "range", // Defines the symbology as a range type where values above a minimum and below a maximum value are symbolized the same way
+    property: "SPEED", // The property (field, attribute) to use for defining range values and styles
+    ranges: [ // An array of value ranges to set symbology. Each value range has a specific symbology.
+        {
+            range: [1, 20], // if feature.properties.SPEED &gt;= 1 AND feature.properties.SPEED &lt;= 20
+            vectorOptions: { // Use these Google Maps vector options for features with values in this range
+                icon: "../../docs-demo/img/markers/bus-brown.png"
+            }
+        },{
+            range: [21, 100],
+            vectorOptions: {
+                icon: "../../docs-demo/img/markers/bus-green.png"
+            }
+        }
+    ]
+}</pre>
                 
                 <h2 id="docs-infowindow">InfoWindow Templates</h2>
                 
