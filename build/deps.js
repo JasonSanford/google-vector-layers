@@ -12,13 +12,6 @@ var deps = {
         heading: 'Layers Core'
     },
     
-    A2E: {
-        src: ['layer/A2E.js'],
-        desc: 'The Arc2Earth layer.',
-        heading: 'Arc2Earth',
-        deps: ['Layer']
-    },
-    
     AGS: {
         src: ['layer/AGS.js'],
         desc: 'The ArcGIS Server layer.',
