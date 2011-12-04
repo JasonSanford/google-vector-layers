@@ -104,6 +104,40 @@ gvector.GeoIQ = gvector.Layer.extend({
                             // The feature is already on the map
                             onMap = true;
                             
+                            // We're only concerned about updating layers that are dynamic (options.dynamic = true).
+                            if (this.options.dynamic) {
+                            
+                                // The feature's geometry might have changed, let's check.
+                                if (this._getGeometryChanged(this._vectors[i2].geometry, data.features[i].geometry)) {
+                                    
+                                    // Check to see if it's a point feature, these are the only ones we're updating for now
+                                    if (!isNaN(data.features[i].geometry.coordinates[0]) && !isNaN(data.features[i].geometry.coordinates[1])) {
+                                        this._vectors[i2].geometry = data.features[i].geometry;
+                                        this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.coordinates[1], this._vectors[i2].geometry.coordinates[0]));
+                                    }
+                                    
+                                }
+                                
+                                var propertiesChanged = this._getPropertiesChanged(this._vectors[i2].properties, data.features[i].properties);
+                                
+                                if (propertiesChanged) {
+                                    this._vectors[i2].properties = data.features[i].properties;
+                                    if (this.options.infoWindowTemplate) {
+                                        this._setInfoWindowContent(this._vectors[i2]);
+                                    }
+                                    if (this.options.symbology && this.options.symbology.type != "single") {
+                                        if (this._vectors[i2].vector) {
+                                            this._vectors[i2].vector.setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+                                        } else if (this._vectors[i2].vectors) {
+                                            for (var i3 = 0, len = this._vectors[i2].vectors.length; i3 < len; i3++) {
+                                                this._vectors[i2].vectors[i3].setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
+                                            }
+                                        }
+                                    }
+                                }
+                            
+                            }
+                            
                         }
                         
                     }

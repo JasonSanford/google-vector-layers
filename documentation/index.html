@@ -415,6 +415,47 @@
                 
                 <h2 id="docs-infowindow">InfoWindow Templates</h2>
                 
+                <p class="docs">To create content to show InfoWindows when features are clicked we can use the <code>infoWindowTemplate</code> option. An infoWindowTemplate can be set two ways:</p>
+                
+                <ul class="docs">
+                    <li>A string with property names wrapped in curly brackets (<code>{road_name}</code>) to act as placeholders for the values</li>
+                    <li>A function that returns a string that will be used as the InfoWindow content. This function is passed the feature properties so that these properties can be used any number of ways to create InfoWindow content. You could do things like create a chart with Google's Chart API or format ALL CAPS text to Proper Case.</li>
+                </ul>
+                
+                <h3>String Based</h3>
+                
+                <p>A simple infoWindowTemplate might look like:</p>
+                
+                <pre class="prettyprint docs">"&lt;h3&gt;{road_name}&lt;/h3&gt;&lt;p&gt;Speed Limit: {speed_limit} mph&lt;/p&gt;"</pre>
+                
+                <p>which gets transformed to:</p>
+                
+                <pre class="prettyprint docs">"&lt;h3&gt;S Bemis St&lt;/h3&gt;&lt;p&gt;Speed Limit: 25 mph&lt;/p&gt;"</pre>
+                
+                <h3>Function Based</h3>
+                
+                <p>For more flexibility we can use a function to do some more complex operations with our feature properties for customized output. A function for an infoWindwTemplate might look like:</p>
+                
+                <pre class="prettyprint docs">function(properties) {
+    /* Assuming "properties" is an object like:
+    {
+        ROAD_NAME: "S Bemis St",
+        SPEED_LIMIT: 25
+    }
+    */
+    
+    var output = "&lt;h3&gt;State Road&lt;/h3&gt;";
+    
+    for (var prop in properties) {
+        output += prop.replace(/_/gi, " ").replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) + ": " + properties[prop] + "&lt;br /&gt;";
+    }
+    return output;
+}</pre>
+                
+                <p class="docs">This function iterates through each property in properties and formats each to Proper Case for better looking output.</p>
+                
+                <pre class="prettyprint docs">"&lt;h3&gt;State Road&lt;/h3&gt;Road Name: S Bemis St&lt;br /&gt;Speed Limit: 25&lt;br /&gt;"</pre>
+                
                 <h2 id="docs-dynamic">Dynamic Data</h2>
                 
                 <footer>
