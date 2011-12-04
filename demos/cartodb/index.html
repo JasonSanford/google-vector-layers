@@ -14,16 +14,8 @@
         <!-- Le styles -->
         <link href="../../docs-demo/css/bootstrap.css" rel="stylesheet">
         <link href="../../docs-demo/css/prettify.css" rel="stylesheet">
+        <link href="../../docs-demo/css/docs.css" rel="stylesheet">
         <link href="../../docs-demo/css/demo.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                padding-top: 60px;
-            }
-            .container-fluid > .sidebar {
-                position: fixed !important;
-                margin-top: 60px;
-            }
-        </style>
 
     </head>
 
@@ -56,7 +48,7 @@
                 <h1>CartoDB</h1>
                 <h2>Sewer Network</h2>
                 <p>This demo shows a point an a line table from <a href="http://cartodb.com">CartoDB</a>, sewer lines and man holes. The man holes are displayed using a simple symbology while the sewer lines use the range symbology. Pipes up to 8" in diameter are shown with a thinner green line, while larger pipes are shown with a thicker orange line.</p>
-                <p>We're also using the "singleInfoWindow" option here so that only one infoWindow is shown for each layer. This keeps the map from getting cluttered when selecting lots of features.</p>
+                <p class="docs">We're also using the <code>singleInfoWindow</code> option here so that only one InfoWindow is shown for each layer. This keeps the map from getting cluttered when selecting lots of features.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">cartodb_sewer_line = new gvector.CartoDB({
@@ -114,8 +106,8 @@ cartodb_man_hole = new gvector.CartoDB({
                 <hr>
                 
                 <h2>Flood Zones</h2>
-                <p>One huge benefit when using CartoDB is that we get direct SQL access to the PostGIS database. In this example we're using the "ST_Simplify" function to trim down the number of vertices on returned geometry so that features appear a little quicker. This isn't necessary on all data sets but is helpful when dealing with contour lines or flood zones.</p>
-                <p>Keep in mind when performing geometric functions with SQL, your output geometry must be in a field named "the_geom" to return proper GeoJSON.</p>
+                <p class="docs">One huge benefit when using CartoDB is that we get direct SQL access to the PostGIS database. In this example we're using the <code>ST_Simplify</code> function to trim down the number of vertices on returned geometry so that features appear a little quicker. This isn't necessary on all data sets but is helpful when dealing with complex geometries.</p>
+                <p class="docs">Keep in mind when performing geometric functions with SQL, your output geometry must be in a field named <code>the_geom</code> to return proper GeoJSON.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">cartodb_flood_zones = new gvector.CartoDB({

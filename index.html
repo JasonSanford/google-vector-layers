@@ -14,27 +14,8 @@
         <!-- Le styles -->
         <link href="docs-demo/css/bootstrap.css" rel="stylesheet">
         <link href="docs-demo/css/prettify.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                padding-top: 60px;
-            }
-            .container-fluid > .sidebar {
-                position: fixed !important;
-                margin-top: 60px;
-            }
-            .sample-image {
-                border: 1px solid #DDD;
-                -webkit-border-radius: 4px;
-                -moz-border-radius: 4px;
-                border-radius: 4px;
-                -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.075);
-                -moz-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.075);
-                box-shadow: 0 3px 3px rgba(0, 0, 0, 0.075);
-                float: left;
-                margin: 0 10px 4px 0;
-                padding: 5px;
-            }
-        </style>
+        <link href="docs-demo/css/docs.css" rel="stylesheet">
+        <link href="docs-demo/css/demo.css" rel="stylesheet">
 
     </head>
 
@@ -94,7 +75,7 @@
                     <div class="span8">
                         <h2>Easy InfoWindow Templating</h2>
                         <p><img src="docs-demo/img/infowindow.png" class="sample-image" />The simplest way to describe features in Google Maps is by using the API's InfoWindow.</p>
-                        <p>Templates can be in the form of a simple string with field names mustache-wrapped (<code>{driver_name}</code>), or a function that returns HTML content for the InfoWindow. The feature's properties are passed to this function so you can do things like analyze data or <a href="demos/arcgis-server#charts-graphs">show charts and graphs</a>.</p>
+                        <p class="docs">Templates can be in the form of a simple string with field names mustache-wrapped (<code>{driver_name}</code>), or a function that returns HTML content for the InfoWindow. The feature's properties are passed to this function so you can do things like analyze data or <a href="demos/arcgis-server#charts-graphs">show charts and graphs</a>.</p>
                         <p>For details on InfoWindow templating <a href="documentation#docs-infowindow">check the documentation</a>.</p>
                     </div>
                 </div>
@@ -113,7 +94,7 @@
                 <div class="row">
                     <div class="span8">
                         <h2>Scale Dependent Rendering</h2>
-                        <p>You likely wouldn't want to show lots of features with complex geometies at lower zoom levels. Using the <code>scaleRange</code> option allows you to set the minimum and maximum zoom levels at which a layer is visible.</p>
+                        <p class="docs">You likely wouldn't want to show lots of features with complex geometies at lower zoom levels. Using the <code>scaleRange</code> option allows you to set the minimum and maximum zoom levels at which a layer is visible.</p>
                     </div>
                     <!--<div class="span8">
                         <h2>Simple, Powerful Styling</h2>

@@ -14,16 +14,8 @@
         <!-- Le styles -->
         <link href="../../docs-demo/css/bootstrap.css" rel="stylesheet">
         <link href="../../docs-demo/css/prettify.css" rel="stylesheet">
+        <link href="../../docs-demo/css/docs.css" rel="stylesheet">
         <link href="../../docs-demo/css/demo.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                padding-top: 60px;
-            }
-            .container-fluid > .sidebar {
-                position: fixed !important;
-                margin-top: 60px;
-            }
-        </style>
 
     </head>
 
@@ -55,7 +47,7 @@
             <div class="content">
                 <h1>ArcGIS Server</h1>
                 <h2>Light Rail Lines</h2>
-                <p>This example has a simple, single symbology and uses the "showAll" parameter to fetch all features at once since there are only a handful.</p>
+                <p class="docs">This example has a simple, single symbology and uses the <code>showAll</code> parameter to fetch all features at once since there are only a handful.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_light_rail = new gvector.AGS({
@@ -84,7 +76,7 @@
                 </div>
                 <hr>
                 <h2 id="districts">RTD Director Districts</h2>
-                <p>This example has features styled using the "unique" symbology type where values of a particular attribute ("DISTRICT" in this example) have a specific style. We also supply a "where" parameter to keep the feature count to a minimum for this demo.</p>
+                <p class="docs">This example has features styled using the <code>unique</code> symbology type where values of a particular attribute ("DISTRICT" in this example) have a specific style. We also supply a <code>where</code> parameter to keep the feature count to a minimum for this demo.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_director_districts = new gvector.AGS({
@@ -186,7 +178,7 @@
                 </div>
                 <hr>
                 <h2 id="rtd-buses">Live Bus Locations</h2>
-                <p>Here we're using the "dynamic" and "autoUpdate" options to refresh map data every 5 seconds. If a bus changes location or speed, the map marker moves and (potentially) changes color. We're using the range symbology type here where stopped buses (0 mph) are black, slow buses (1 - 20 mph) are orange and fast buses (21 - 100 mph) are green.</p>
+                <p class="docs">Here we're using the <code>dynamic</code> and <code>autoUpdate</code> options to refresh map data every 5 seconds. If a bus changes location or speed, the map marker moves and (potentially) changes color. We're using the range symbology type here where stopped buses (0 mph) are black, slow buses (1 - 20 mph) are orange and fast buses (21 - 100 mph) are green.</p>
                 <p>Unfortunately each bus updates their current location every few minutes, but if you wait around for a few seconds you should see a bus or two move and/or change speed.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
@@ -233,8 +225,8 @@
                 </div>
                 <hr>
                 <h2 id="charts-graphs">les personnes âgées</h2>
-                <p>This example has features styled using the "range" symbology type where values of a particular attribute ("MED_AGE" in this example) within a specific range have a specific style. Polygons with lighter shades have a population with a lower median age while the darker polygons have an older population.</p>
-                <p>Also, instead of a string-based "infoWindowTempate", we're using a function that is passed feature attributes and returns a string for populating the infoWindow. This way we can do more complex things with our attributes, like create charts.</p>
+                <p class="docs">This example has features styled using the <code>range</code> symbology type where values of a particular attribute ("MED_AGE" in this example) within a specific range have a specific style. Polygons with lighter shades have a population with a lower median age while the darker polygons have an older population.</p>
+                <p class="docs">Also, instead of a string-based <code>infoWindowTempate</code>, we're using a function that is passed feature attributes and returns a string for populating the infoWindow. This way we can do more complex things with our attributes, like create charts.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">ags_census = new gvector.AGS({

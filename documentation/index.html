@@ -14,43 +14,8 @@
         <!-- Le styles -->
         <link href="../docs-demo/css/bootstrap.css" rel="stylesheet">
         <link href="../docs-demo/css/prettify.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                padding-top: 60px;
-            }
-            h2 {
-                background-color: #E1E1E1;
-                -webkit-border-radius: 8px;
-                -moz-border-radius: 8px;
-                border-radius: 8px;
-                padding: 0 10px;
-                margin-bottom: 12px;
-            }
-            h2 small {
-                color: #5a5a5a;
-            }
-            .container-fluid > .sidebar {
-                position: fixed !important;
-                margin-top: 60px;
-            }
-            .docs code {
-                font-family: "Courier New", monospace;
-                background-color: inherit !important;
-                color: rgba(0, 0, 0, 0.75);
-                padding: 0 !important;
-            }
-            pre.docs {
-                overflow: auto;
-                white-space: pre;
-                word-wrap: normal;
-            }
-            table.docs {
-                border: 1px solid #ddd;
-            }
-            .docs td {
-                min-width: 120px;
-            }
-        </style>
+        <link href="../docs-demo/css/docs.css" rel="stylesheet">
+        <link href="../docs-demo/css/demo.css" rel="stylesheet">
 
     </head>
 
@@ -98,7 +63,7 @@
             <div class="content">
                 <h1>Classes</h1>
                 
-                <h2 id="docs-ags">gvector.AGS <small>ArcGIS Server</small></h2>
+                <h2 class="docs" id="docs-ags">gvector.AGS <small>ArcGIS Server</small></h2>
                 
                 <p>This class creates a layer that processes and displays features from an ArcGIS Server. You can also use this class to create a layer from any services that implement Esri's Geo REST specification, like <a href="http://www.arc2earth.com/">Arc2Earth</a>.</p>
                 
@@ -152,7 +117,7 @@
                     </tbody>
                 </table>
                 
-                <h2 id="docs-geoiq">gvector.GeoIQ <small>GeoIQ - Geocommons</small></h2>
+                <h2 class="docs" id="docs-geoiq">gvector.GeoIQ <small>GeoIQ - Geocommons</small></h2>
                 
                 <p>This class creates a layer that processes and displays features from a GeoIQ dataset.</p>
                                 
@@ -211,7 +176,7 @@
                     </tbody>
                 </table>
                 
-                <h2 id="docs-cartodb">gvector.CartoDB <small>CartoDB</small></h2>
+                <h2 class="docs" id="docs-cartodb">gvector.CartoDB <small>CartoDB</small></h2>
                 
                 <p>This class creates a layer that processes and displays features from a CartoDB table.</p>
                 
@@ -275,7 +240,7 @@
                 
                 <h1>Other Reference</h1>
                 
-                <h2 id="docs-symbology">Symbology</h2>
+                <h2 class="docs" id="docs-symbology">Symbology</h2>
                 
                 <p class="docs">Symbology for a layer can be defined a few different ways including <code>single</code>, <code>unique</code> and <code>range</code>. If no symbology is defined the default Google Maps vector styles will be used -- Sad, black lines with gray fill for paths and boring red markers.</p>
                 
@@ -362,7 +327,7 @@
     ]
 }</pre>
                 
-                <h2 id="docs-infowindow">InfoWindow Templates</h2>
+                <h2 class="docs" id="docs-infowindow">InfoWindow Templates</h2>
                 
                 <p class="docs">To create content to show InfoWindows when features are clicked we can use the <code>infoWindowTemplate</code> option. An infoWindowTemplate can be set two ways:</p>
                 
@@ -405,7 +370,7 @@
                 
                 <pre class="prettyprint docs">"&lt;h3&gt;State Road&lt;/h3&gt;Road Name: S Bemis St&lt;br /&gt;Speed Limit: 25&lt;br /&gt;"</pre>
                 
-                <h2 id="docs-dynamic">Dynamic Data</h2>
+                <h2 class="docs" id="docs-dynamic">Dynamic Data</h2>
                 
                 <p>Google Vector Layers makes it quite easy to visualize dynamic data in your mapping applications. To see the following options in action check out the <a href="../demos/arcgis-server/#rtd-buses">RTD Live Buses Demo</a>.</p>
                 

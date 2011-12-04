@@ -14,15 +14,8 @@
         <!-- Le styles -->
         <link href="../docs-demo/css/bootstrap.css" rel="stylesheet">
         <link href="../docs-demo/css/prettify.css" rel="stylesheet">
-        <style type="text/css">
-            body {
-                padding-top: 60px;
-            }
-            .container-fluid > .sidebar {
-                position: fixed !important;
-                margin-top: 60px;
-            }
-        </style>
+        <link href="../docs-demo/css/docs.css" rel="stylesheet">
+        <link href="../docs-demo/css/demo.css" rel="stylesheet">
 
     </head>
 
@@ -56,10 +49,10 @@
                 <h2>CartoDB</h2>
                 
                 <h3>Simplify</h3>
-                <p>Use PostGIS' <code>simplify</code> function to simplify complex geometries in your database. This is especially helpful at lower zoom levels where high numbers of vertices aren't necessary.</p>
+                <p class="docs">Use PostGIS' <code>simplify</code> function to simplify complex geometries in your database. This is especially helpful at lower zoom levels where high numbers of vertices aren't necessary.</p>
                 
                 <h3>the_geom</h3>
-                <p>When performing spatial functions like the simplify example above, be sure that the geometry returned is always in a field named <code>the_geom</code>. This is the field name that is necessary to create GeoJSON (what Google Vector Layers uses for geometry).</p>
+                <p class="docs">When performing spatial functions like the simplify example above, be sure that the geometry returned is always in a field named <code>the_geom</code>. This is the field name that is necessary to create GeoJSON (what Google Vector Layers uses for geometry).</p>
                 <footer> 	
                     <p>&copy; Jason Sanford - geojason.info 2011</p>
                 </footer>
