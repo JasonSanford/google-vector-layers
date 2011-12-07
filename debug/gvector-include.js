@@ -8,7 +8,6 @@
         
         'layer/Layer.js',
         'layer/AGS.js',
-        'layer/A2E.js',
         'layer/GeoIQ.js',
         'layer/CartoDB.js'
     ];
