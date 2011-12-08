@@ -307,8 +307,6 @@
                 
                 <p class="docs">The <code>range</code> type tests values to see if they are within a specified range and symbolizes them accordingly. This is helpful for datasets that have values with lots of individual values like population counts per county in the US or in this example, vehicle speeds.</p>
                 
-                <p>Check the <a href="../demos/arcgis-server/#rtd-buses">RTD buses example</a> on the <a href="../demos/arcgis-server/">ArcGIS Server demo page</a> and view source to see it in action.</p>
-                
                 <pre class="prettyprint docs">{
     type: "range", // Defines the symbology as a range type where values above a minimum and below a maximum value are symbolized the same way
     property: "SPEED", // The property (field, attribute) to use for defining range values and styles
@@ -371,9 +369,7 @@
                 <pre class="prettyprint docs">"&lt;h3&gt;State Road&lt;/h3&gt;Road Name: S Bemis St&lt;br /&gt;Speed Limit: 25&lt;br /&gt;"</pre>
                 
                 <h2 class="docs" id="docs-dynamic">Dynamic Data</h2>
-                
-                <p>Google Vector Layers makes it quite easy to visualize dynamic data in your mapping applications. To see the following options in action check out the <a href="../demos/arcgis-server/#rtd-buses">RTD Live Buses Demo</a>.</p>
-                
+                                
                 <p class="docs">To create a dynamic layer simply set the <code>dynamic</code> option to <code>true</code>. Using this option alone (without <code>autoUpdate</code> and <code>autoUpdateInterval</code>) will check for feature geometry and property changes when the map extent changes. If geometry changes are found the feature is altered on the map. If properties changes are found any InfoWindows associated with this feature are updated to reflect this change.</p>
                 
                 <h3>Auto-update</h3>
