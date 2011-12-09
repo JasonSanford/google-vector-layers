@@ -511,15 +511,19 @@
                     url: "http://ags2.dtsagile.com/ArcGIS/rest/services/LiveFeeds/WxStations/MapServer/0",
                     fields: "*",
                     uniqueField: "ObjectID",
+                    dynamic: true,
+                    autoUpdate: true,
+                    autoUpdateInterval: 60000,
                     infoWindowTemplate: function(properties) {
-                        var f = properties.TEMPERATURE * (9/5) + 32;
                         var html = '<div class="iw-content"><h3>' + properties.STATION_NAME + '</h3>';
-                        html += '<p><strong>Temp (f)</strong>: ' + f + '</p>'
-                        html += '<p><strong>Temp (c)</strong>: ' + properties.TEMPERATURE + '</p>'
-                        html += '</div>';
+                        var tempC = properties.TEMPERATURE;
+                        if (tempC) {
+                            var tempF = properties.TEMPERATURE * (9/5) + 32;
+                            html += '<p><strong>Temperature</strong>: ' + parseInt(tempF) + '&deg;F (' + tempC + '&deg;C)</p>'
+                            html += '</div>';
+                        }
                         return html;
                     },
-                    singleInfoWindow: true,
                     symbology: {
                         type: "range",
                         property: "TEMPERATURE",
