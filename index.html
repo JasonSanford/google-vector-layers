@@ -68,13 +68,12 @@
                 <hr>
                 <h1>Features</h1>
                 <div class="row">
-                    <div class="span6">
-                        <h2>Simple, Powerful Symbology</h2>
-                        <p>Creating effective map styling and symbology is key to getting your message accross to your users.</p>
-                        <p>With Google Vector Layers you can style your layers with a single symbology, a unique symbol for specific attribute values or set symbols to display if a feature's attributes are within a specific range.</p>
-                        <p>For details on symbology options <a href="documentation/#docs-symbology">check the documentation</a>.</p>
+                    <div class="span7">
+                        <h2>Multi-provider Support</h2>
+                        <p><img src="docs-demo/img/providers.png" class="sample-image" /> Google Vector Layers makes it easy to dynamically pull vector features from a number of different geo web service providers including <a href="http://www.esri.com/software/arcgis/arcgisserver/index.html">ArcGIS Server</a>, <a href="http://www.arc2earth.com">Arc2Earth</a>, <a href="http://cartodb.com">CartoDB</a> and <a href="http://geocommons.com">Geocommons</a>.</p>
+                        <p>If you're interested in, or know of any other providers for this library please <a href="mailto:jason@geojason.info">let me know</a>.</p>
                     </div>
-                    <div class="span10">
+                    <div class="span9">
                         <h2>Easy InfoWindow Templating</h2>
                         <p><img src="docs-demo/img/infowindow.png" class="sample-image" />The simplest way to describe features in Google Maps is by using the API's InfoWindow.</p>
                         <p class="docs">Templates can be in the form of a simple string with field names mustache-wrapped (<code>{driver_name}</code>), or a function that returns HTML content for the InfoWindow. The feature's properties are passed to this function so you can do things like analyze data or <a href="demos/arcgis-server#charts-graphs">show charts and graphs</a>.</p>
@@ -82,27 +81,24 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span11">
+                    <div class="span8">
                         <h2>Dynamic Data Support</h2>
                         <p><img src="docs-demo/img/dynamic.png" class="sample-image" />Google Vector Layers makes it easy to visualize live data in Google Maps. Just mark the layer as dynamic and auto-updating when you create it and set the interval for how often you'd like to check for updated features.</p>
-                        <p>It's also possible to only check for updated features when the map extent changes.</p>
+                        <!--<p>It's also possible to only check for updated features when the map extent changes.</p>-->
                         <p>For details on displaying dynamic data <a href="documentation/#docs-dynamic">check the documentation</a>.</p>
                     </div>
-                    <div class="span5">
-                        <h2>Scale Dependent Rendering</h2>
-                        <p class="docs">You likely wouldn't want to show lots of features with complex geometies at lower zoom levels. Using the <code>scaleRange</code> option allows you to set the minimum and maximum zoom levels at which a layer is visible.</p>
+                    <div class="span8">
+                        <h2>Simple, Powerful Symbology</h2>
+                        <p>Creating effective map styling and symbology is key to getting your message accross to your users.</p>
+                        <p>With Google Vector Layers you can style your layers with a single symbology, a unique symbol for specific attribute values or set symbols to display if a feature's attributes are within a specific range.</p>
+                        <p>For details on symbology options <a href="documentation/#docs-symbology">check the documentation</a>.</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span7">
-                        <h2>Multi-provider Support</h2>
-                        <p><img src="docs-demo/img/providers.png" class="sample-image" /> Google Vector Layers makes it easy to dynamically pull vector features from a number of different geo web service providers including <a href="http://www.esri.com/software/arcgis/arcgisserver/index.html">ArcGIS Server</a>, <a href="http://www.arc2earth.com">Arc2Earth</a>, <a href="http://cartodb.com">CartoDB</a> and <a href="http://geocommons.com">Geocommons</a>.</p>
-                        <p>If you're interested in, or know of any other providers for this library please <a href="mailto:jason@geojason.info">let me know</a>.</p>
+                    <div class="span8">
+                        <h2>Scale Dependent Rendering</h2>
+                        <p class="docs">You likely wouldn't want to show lots of features with complex geometies at lower zoom levels. Using the <code>scaleRange</code> option allows you to set the minimum and maximum zoom levels at which a layer is visible.</p>
                     </div>
-                    <!--<div class="span8">
-                        <h2>Simple, Powerful Styling</h2>
-                        <p></p>
-                    </div>-->
                 </div>
                 <footer> 	
                     <p>&copy; Jason Sanford - geojason.info 2011</p>
