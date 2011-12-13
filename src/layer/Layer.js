@@ -54,23 +54,19 @@ gvector.Layer = gvector.Class.extend({
     },
     
     _show: function() {
-        if (!this.options.showAll) {
-            this._addIdleListener();
-            if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
-                this._addZoomChangeListener();
+        this._addIdleListener();
+        if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+            this._addZoomChangeListener();
+        }
+        if (this.options.visibleAtScale) {
+            if (this.options.autoUpdate && this.options.autoUpdateInterval) {
+                var me = this;
+                this._autoUpdateInterval = setInterval(function() {
+                    me._getFeatures();
+                }, this.options.autoUpdateInterval);
             }
-            if (this.options.visibleAtScale) {
-                if (this.options.autoUpdate && this.options.autoUpdateInterval) {
-                    var me = this;
-                    this._autoUpdateInterval = setInterval(function() {
-                        me._getFeatures();
-                    }, this.options.autoUpdateInterval);
-                }
-                google.maps.event.trigger(this.options.map, "zoom_changed");
-                google.maps.event.trigger(this.options.map, "idle");
-            }
-        } else {
-            this._getFeatures();
+            google.maps.event.trigger(this.options.map, "zoom_changed");
+            google.maps.event.trigger(this.options.map, "idle");
         }
     },
     
@@ -86,6 +82,9 @@ gvector.Layer = gvector.Class.extend({
         }
         this._clearFeatures();
         this._lastQueriedBounds = null;
+        if (this._gotAll) {
+            this._gotAll = false;
+        }
     },
     
     //
@@ -172,7 +171,23 @@ gvector.Layer = gvector.Class.extend({
         //
         this._idleListener = google.maps.event.addListener(this.options.map, "idle", function() {
             if (me.options.visibleAtScale) {
-                me._getFeatures();
+                //
+                // Do they use the showAll parameter to load all features once?
+                //
+                if (me.options.showAll) {
+                    //
+                    // Have we already loaded these features
+                    //
+                    if (!me._gotAll) {
+                        //
+                        // Grab the features and note that we've already loaded them (no need to _getFeatures again
+                        //
+                        me._getFeatures();
+                        me._gotAll = true;
+                    }
+                } else {
+                    me._getFeatures();
+                }
             }
         });
     },

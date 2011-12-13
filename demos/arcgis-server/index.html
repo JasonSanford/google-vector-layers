@@ -83,7 +83,7 @@
     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
     fields: "OBJECTID,DISTRICT,URL,MAP",
     showAll: true,
-    scaleRange: [4, 14],
+    scaleRange: [8, 14],
     where: "DISTRICT+NOT+IN('I','J','K','L','M','N','O')",
     symbology: {
         type: "unique",
@@ -314,7 +314,7 @@
                 map3 = new google.maps.Map(document.getElementById("map-container-3"), {
                     center: new google.maps.LatLng(29.005243760843864, -82.10365950241086),
                     zoom: 6,
-                    minZoom: 6,
+                    minZoom: 4,
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     noClear: true
                 });
@@ -347,7 +347,7 @@
                     url: "http://maps.rtd-denver.com/ArcGIS/rest/services/DirectorDistricts/MapServer/1",
                     fields: "OBJECTID,DISTRICT,URL,MAP",
                     showAll: true,
-                    scaleRange: [4, 14],
+                    scaleRange: [8, 14],
                     where: "DISTRICT+NOT+IN('I','J','K','L','M','N','O')",
                     symbology: {
                         type: "unique",
