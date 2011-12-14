@@ -343,9 +343,9 @@
                 });
                 
                 map5 = new google.maps.Map(document.getElementById("map-container-5"), {
-                    center: new google.maps.LatLng(38.742931954586204, -104.8893040336609),
-                    zoom: 7,
-                    minZoom: 4,
+                    center: new google.maps.LatLng(39.69618575505994, -97.06703840866088),
+                    zoom: 4,
+                    minZoom: 3,
                     mapTypeId: google.maps.MapTypeId.TERRAIN,
                     noClear: true
                 });
@@ -578,7 +578,8 @@
                     fields: "*",
                     uniqueField: "OBJECTID",
                     where: "EVENT LIKE 'WINTER%'",
-                    scaleRange: [6, 15],
+                    scaleRange: [3, 15],
+                    showAll: true,
                     infoWindowTemplate: function(properties) {
                         var html = '<div class="iw-content"><h3>' + properties.EVENT.replace(/_/gi, " ").replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) + '</h3><table class="condensed-table">';
                         for (var prop in properties) {
