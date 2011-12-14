@@ -16,6 +16,10 @@ gvector.AGS = gvector.Layer.extend({
         // Extend Layer to create AGS
         gvector.Layer.prototype.initialize.call(this, options);
         
+        if (this.options.where) {
+            this.options.where = encodeURIComponent(this.options.where);
+        }
+        
         // _globalPointer is a string that points to a global function variable
         // Features returned from a JSONP request are passed to this function
         this._globalPointer = "AGS_" + Math.floor(Math.random() * 100000);
