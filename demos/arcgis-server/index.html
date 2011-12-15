@@ -266,7 +266,7 @@
                     </div>
                 </div>
                 <hr>
-                <h2 id="charts-graphs">Weather Stations</h2>
+                <h2 id="charts-graphs">Current Weather</h2>
                 <p class="docs">This example ...</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
@@ -371,7 +371,7 @@
                     fields: "OBJECTID,DISTRICT,URL,MAP",
                     showAll: true,
                     scaleRange: [8, 14],
-                    where: "DISTRICT+NOT+IN('I','J','K','L','M','N','O')",
+                    where: "DISTRICT NOT IN('I','J','K','L','M','N','O')",
                     symbology: {
                         type: "unique",
                         property: "DISTRICT",
@@ -534,9 +534,6 @@
                     url: "http://ags2.dtsagile.com/ArcGIS/rest/services/LiveFeeds/WxStations/MapServer/0",
                     fields: "*",
                     uniqueField: "ICAO",
-                    dynamic: true,
-                    autoUpdate: true,
-                    autoUpdateInterval: 60000,
                     infoWindowTemplate: function(properties) {
                         var html = '<div class="iw-content"><h3>' + properties.STATION_NAME + '</h3>';
                         var tempC = properties.TEMPERATURE;
