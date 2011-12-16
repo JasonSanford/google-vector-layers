@@ -75,7 +75,7 @@ gvector.GeoIQ = gvector.Layer.extend({
         
         // Check to see if the _lastQueriedBounds is the same as the new bounds
         // If true, don't bother querying again.
-        if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds)) {
+        if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds) && !this._autoUpdateInterval) {
             return;
         }
         
