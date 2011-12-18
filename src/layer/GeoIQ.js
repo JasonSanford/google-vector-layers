@@ -53,12 +53,8 @@ gvector.GeoIQ = gvector.Layer.extend({
                 "&intersect=full"; // Return features that intersect this bbox, not just fully contained
         }
         
-        // Dynamically load JSONP
-        var head = document.getElementsByTagName("head")[0];
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = url;
-        head.appendChild(script);
+        // JSONP request
+        this._makeJsonpRequest(url);
         
     },
     

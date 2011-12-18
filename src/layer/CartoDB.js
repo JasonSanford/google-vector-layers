@@ -66,12 +66,8 @@ gvector.CartoDB = gvector.Layer.extend({
             "&format=geojson" + // GeoJSON please
             "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
         
-        // Dynamically load JSONP
-        var head = document.getElementsByTagName("head")[0];
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = url;
-        head.appendChild(script);
+        // JSONP request
+        this._makeJsonpRequest(url);
     },
     
     _processFeatures: function(data) {

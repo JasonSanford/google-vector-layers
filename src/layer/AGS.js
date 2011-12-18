@@ -8,9 +8,27 @@ gvector.AGS = gvector.Layer.extend({
             }
         }
         
+        // _globalPointer is a string that points to a global function variable
+        // Features returned from a JSONP request are passed to this function
+        this._globalPointer = "AGS_" + Math.floor(Math.random() * 100000);
+        window[this._globalPointer] = this;
+        
         // If the url wasn't passed with a trailing /, add it.
         if (options.url.substr(options.url.length - 1, 1) !== "/") {
             options.url += "/";
+        }
+        
+        this._originalOptions = gvector.Util.extend({}, options);
+        
+        if (options.esriOptions) {
+            if (typeof options.esriOptions == "object") {
+                gvector.Util.extend(options, this._convertEsriOptions(options.esriOptions));
+            } else {
+                // Send to function that request JSON from server
+                // Use a callback to process returned JSON and send back to initialize layer with proper options
+                this._getEsriOptions();
+                return; // Get out of here until we have proper JSON
+            }
         }
         
         // Extend Layer to create AGS
@@ -20,14 +38,8 @@ gvector.AGS = gvector.Layer.extend({
             this.options.where = encodeURIComponent(this.options.where);
         }
         
-        // _globalPointer is a string that points to a global function variable
-        // Features returned from a JSONP request are passed to this function
-        this._globalPointer = "AGS_" + Math.floor(Math.random() * 100000);
-        window[this._globalPointer] = this;
-        
         // Create an array to hold the features
         this._vectors = [];
-        
         
         if (this.options.map) {
             if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
@@ -41,10 +53,57 @@ gvector.AGS = gvector.Layer.extend({
     
     options: {
         where: "1=1",
-        url: null
+        url: null,
+        useEsriOptions: false
     },
     
     _requiredParams: ["url"],
+    
+    _convertEsriOptions: function(esriOptions) {
+        var gvectorOptions = {};
+        
+        // options.scaleRange
+        var minScale = this._scaleToLevel(esriOptions.minScale);
+        var maxScale = this._scaleToLevel(esriOptions.maxScale);
+        if (maxScale == 0) {
+            maxScale = 20;
+        }
+        gvectorOptions.scaleRange = [minScale, maxScale];
+        
+        // options.symbology
+        
+        
+        // TODO: options.infoWindowTemplate
+        
+        return gvectorOptions;
+    },
+    
+    _getEsriOptions: function() {
+        this._makeJsonpRequest(this._originalOptions.url + "?f=json&callback=" + this._globalPointer + "._processEsriOptions");
+    },
+    
+    _processEsriOptions: function(data) {
+        var options = this._originalOptions;
+        options.esriOptions = data;
+        this.initialize(options);
+    },
+    
+    _scaleToLevel: function(scale) {
+        var agsScales = [591657527.591555, 295828763.795777, 147914381.897889, 73957190.948944, 36978595.474472, 18489297.737236, 9244648.868618, 4622324.434309, 2311162.217155, 1155581.108577, 577790.554289, 288895.277144, 144447.638572, 72223.819286, 36111.909643, 18055.954822, 9027.977411, 4513.988705, 2256.994353, 1128.497176, 564.248588, 282.124294];
+        if (scale == 0) {
+            return 0;
+        }
+        var level = 0;
+        for (var i = 0; i < agsScales.length - 1; i++) {
+            var cs = agsScales[i];
+            var ns = agsScales[i+1];
+            if ((scale >= cs) && (scale < ns)) {
+                level = i;
+                break;
+            }
+        }
+        return level;
+    },
     
     _getFeatures: function() {
         // If we don't have a uniqueField value it's hard to tell if new features are duplicates so clear them all
@@ -67,12 +126,8 @@ gvector.AGS = gvector.Layer.extend({
             "&geometry=" + this._buildBoundsString(this.options.map.getBounds()); // Build envelope geometry
         }
         
-        // Dynamically load JSONP
-        var head = document.getElementsByTagName("head")[0];
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = url;
-        head.appendChild(script);
+        // JSONP request
+        this._makeJsonpRequest(url);
     },
     
     _processFeatures: function(data) {
