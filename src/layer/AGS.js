@@ -63,7 +63,7 @@ gvector.AGS = gvector.Layer.extend({
         var gvectorOptions = {};
         
         // Check to see if minScale and maxScale are present, if so conver to Google Vector Layers format
-        if (esriOptions.minScale == undefined || esriOptions.maxScale == undefined) {
+        if (!(esriOptions.minScale == undefined || esriOptions.maxScale == undefined)) {
             var minScale = this._scaleToLevel(esriOptions.minScale);
             var maxScale = this._scaleToLevel(esriOptions.maxScale);
             if (maxScale == 0) {
