@@ -47,7 +47,8 @@
             <div class="content">
                 <h1>GeoIQ</h1>
                 <h2>Ski Areas</h2>
-                <p>This demo ...</p>
+                <p class="docs">This simple demo shows ski areas throughout the US. We've defined a <code>scaleRange</code> so we don't show too many markers at lower zoom levels.</p>
+                <p class="docs">A very simple <code>infoWindowTemplate</code> has also been provided as well as a single <code>symbology</code> type that shows a custom marker.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">geoiq_ski_areas = new gvector.GeoIQ({
@@ -72,9 +73,13 @@
                         </div>
                     </div>
                 </div>
+                
                 <hr>
+                
                 <h2>US FOSS4G Registrants</h2>
-                <p>This demo ...</p>
+                <p class="docs">This demo shows how to use a <code>range</code> symbology type to symbolize more FOSS4G registrants with a darker shade of blue.</p>
+                <p class="docs">We're also using the <code>showAll</code> parameter to fetch all features at once, since we're initially zoomed out to a level where we can see almost the entire dataset. There's no sense in re-fetching this (quite large) dataset more than once.</p>
+                <p>Keep in mind that it could take a few seconds to load this dataset due to its large size.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">geoiq_foss4g_reg = new gvector.GeoIQ({
@@ -140,11 +145,69 @@
                         </div>
                     </div>
                 </div>
+                
+                <hr>
+                
                 <h2>Mecklenburg County Parks</h2>
-                <p>This demo ...</p>
+                <p class="docs">This example has features styled using the <code>unique</code> symbology type where values of a particular attribute ("prktype" in this example) have a specific style.</p>
+                <p class="docs">We're also using a function based <code>infoWindowTemplate</code> to format our data so it's a little easier to read - In this case convert attributes to Proper Case instead of UPPER CASE.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">geoiq_parks = new gvector.GeoIQ({
+    dataset: 181235,
+    uniqueField: "prkid",
+    infoWindowTemplate: function(properties) {
+        var properCase = function(s) {
+            return s.replace(/_/gi, " ").replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        };
+        var html = '&lt;div class="iw-content"&gt;&lt;h3&gt;' + properCase(properties.name) + '&lt;/h3&gt;&lt;table class="condensed-table"&gt;';
+        html += '&lt;tr&gt;&lt;th&gt;Address&lt;/th&gt;&lt;td&gt;' + properCase(properties.prkaddr) + '&lt;/td&gt;&lt;/tr&gt;';
+        html += '&lt;tr&gt;&lt;th&gt;Size&lt;/th&gt;&lt;td&gt;' + properties.prksize + ' acres&lt;/td&gt;&lt;/tr&gt;';
+        return html += '&lt;/table&gt;&lt;/div&gt;';
+    },
+    symbology: {
+        type: "unique",
+        property: "prktype",
+        values: [
+            {
+                value: "REGIONAL PARK",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/park.png"
+                }
+            },
+            {
+                value: "NEIGHBORHOOD PARK",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/park.png"
+                }
+            },
+            {
+                value: "COMMUNITY PARK",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/park.png"
+                }
+            },
+            {
+                value: "NATURE PRESERVE",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/nature-preserve.png"
+                }
+            },
+            {
+                value: "RECREATION CENTER",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/recreation-center.png"
+                }
+            },
+            {
+                value: "GOLF COURSE",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/golf.png"
+                }
+            }
+        ]
+    }
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-3" class="map">
@@ -154,7 +217,7 @@
                         </div>
                     </div>
                 </div>
-                <hr>
+                
                 <footer> 	
                     <p>&copy; Jason Sanford - geojason.info 2011</p>
                 </footer>
@@ -264,7 +327,15 @@
                 geoiq_parks = new gvector.GeoIQ({
                     dataset: 181235,
                     uniqueField: "prkid",
-                    infoWindowTemplate: '{name}',
+                    infoWindowTemplate: function(properties) {
+                        var properCase = function(s) {
+                            return s.replace(/_/gi, " ").replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+                        };
+                        var html = '<div class="iw-content"><h3>' + properCase(properties.name) + '</h3><table class="condensed-table">';
+                        html += '<tr><th>Address</th><td>' + properCase(properties.prkaddr) + '</td></tr>';
+                        html += '<tr><th>Size</th><td>' + properties.prksize + ' acres</td></tr>';
+                        return html += '</table></div>';
+                    },
                     symbology: {
                         type: "unique",
                         property: "prktype",

@@ -321,7 +321,9 @@
                         </div>
                     </div>
                 </div>
+                
                 <hr>
+                
                 <h2>Winter Weather</h2>
                 <p class="docs">This example pulls from an ArcGIS Server instance that produces weather warnings and watches. Here we're using the <code>where</code> parameter to only show winter weather related watches and warnings (<code>"EVENT LIKE 'WINTER%'"</code>).</p>
                 <p class="docs">Again, this demo uses a function based <code>infoWindowTemplate</code>. In this case the function iterates through each property in properties and formats each to Proper Case for better looking output and skips properties that we don't want to display ("FIPS", "OBJECTID", "EVENT", "SHAPE.area", "SHAPE_Length").</p>
@@ -368,11 +370,66 @@
                         </div>
                     </div>
                 </div>
+                
                 <hr>
+                
                 <h2>Live Vehicle Locations</h2>
+                <p class="docs">Here we're using the <code>dynamic</code> and <code>autoUpdate</code> options to refresh map data every 5 seconds. If a vehicle changes location and/or attributes are updated (speed), then the map marker moves and the infoWindow content changes.</p>
+                <p class="docs">We're also using the <code>unique</code> symbology type to show snow plows with a snowflake marker. You'll probably need to zoom out and pan around a bit to find a vehicle. Arapahoe County is quite large.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">ags_vehicles = new gvector.AGS({
+    url: "http://gis.co.arapahoe.co.us/ArcGIS/rest/services/VehicleService/MapServer/4",
+    fields: "*",
+    uniqueField: "title",
+    dynamic: true,
+    autoUpdate: true,
+    autoUpdateInterval: 5000,
+    symbology: {
+        type: "unique",
+        property: "vgroup",
+        values: [
+            {
+                value: "Plows",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/plow.png"
+                }
+            },
+            {
+                value: "Pickup",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/truck.png"
+                }
+            },
+            {
+                value: "PatchTrk",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/truck.png"
+                }
+            },
+            {
+                value: "Broom",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/truck.png"
+                }
+            },
+            {
+                value: "Grader",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/truck.png"
+                }
+            },
+            {
+                value: "SUV",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/truck.png"
+                }
+            }
+        ]
+    },
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{vgroup}&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Speed&lt;/th&gt;&lt;td&gt;{speed} mph&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Last GPS Lock&lt;/th&gt;&lt;td&gt;{local_time}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Altitude&lt;/th&gt;&lt;td&gt;{altitude} ft.&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-6" class="map">
