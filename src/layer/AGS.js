@@ -62,16 +62,20 @@ gvector.AGS = gvector.Layer.extend({
     _convertEsriOptions: function(esriOptions) {
         var gvectorOptions = {};
         
-        // options.scaleRange
-        var minScale = this._scaleToLevel(esriOptions.minScale);
-        var maxScale = this._scaleToLevel(esriOptions.maxScale);
-        if (maxScale == 0) {
-            maxScale = 20;
+        // Check to see if minScale and maxScale are present, if so conver to Google Vector Layers format
+        if (esriOptions.minScale == undefined || esriOptions.maxScale == undefined) {
+            var minScale = this._scaleToLevel(esriOptions.minScale);
+            var maxScale = this._scaleToLevel(esriOptions.maxScale);
+            if (maxScale == 0) {
+                maxScale = 20;
+            }
+            gvectorOptions.scaleRange = [minScale, maxScale];
         }
-        gvectorOptions.scaleRange = [minScale, maxScale];
         
-        // options.symbology
-        gvectorOptions.symbology = this._renderOptionsToSymbology(esriOptions.drawingInfo.renderer);
+        // Check to see if drawingInfo and rendere are present, if so convert to Google Vector Layers format
+        if (esriOptions.drawingInfo && esriOptions.drawingInfo.renderer) {
+            gvectorOptions.symbology = this._renderOptionsToSymbology(esriOptions.drawingInfo.renderer);
+        }
         
         // TODO: options.infoWindowTemplate
         
@@ -155,7 +159,7 @@ gvector.AGS = gvector.Layer.extend({
             case "esriSMS":
             case "esriPMS":
                 //TODO marker symbologys have an url prop as well but requires extra hops to server for all icons
-                var url = "data:image/gif;base64," + symbology.imageData;
+                var url = "data:image/gif;base64," + symbol.imageData;
                 vectorOptions.icon = url;
                 break;
         
