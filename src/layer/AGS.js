@@ -71,7 +71,7 @@ gvector.AGS = gvector.Layer.extend({
         gvectorOptions.scaleRange = [minScale, maxScale];
         
         // options.symbology
-        
+        gvectorOptions.symbology = this._renderOptionsToSymbology(esriOptions.drawingInfo.renderer);
         
         // TODO: options.infoWindowTemplate
         
@@ -103,6 +103,110 @@ gvector.AGS = gvector.Layer.extend({
             }
         }
         return level;
+    },
+    
+    _renderOptionsToSymbology: function(renderOptions) {
+        symbology = {};
+        switch (renderOptions.type) {
+            case "simple":
+                symbology.type = "single";
+                symbology.vectorOptions = this._parseSymbology(renderOptions.symbol);
+                break;
+                
+            case "uniqueValue":
+                symbology.type = "unique";
+                symbology.property = renderOptions.field1; //only support single field uniqueValues rends, rarely see multis anyway
+                var values = [];
+                for (var i = 0; i < renderOptions.uniqueValueInfos.length; i++) {
+                    var uvi = renderOptions.uniqueValueInfos[i];
+                    var value = {};
+                    value.value = uvi.value;
+                    value.vectorOptions = this._parseSymbology(uvi.symbol);
+                    value.label = uvi.label; //not in gvector spec yet but useful
+                    values.push(value);                    
+                }
+                symbology.values = values;
+                break;
+                
+            case "classBreaks":
+                symbology.type = "range";
+                symbology.property = rend.field; 
+                var ranges = [];
+                var cbrk = renderOptions.minValue;
+                for (var i = 0; i < renderOptions.classBreakInfos.length; i++)
+                {
+                    var cbi = renderOptions.classBreakInfos[i];
+                    var brk = {};
+                    brk.range = [cbrk, cbi.classMaxValue];
+                    cbrk = cbi.classMaxValue;  //advance
+                    brk.vectorOptions = this._parseSymbology(cbi.symbol);
+                    brk.label = cbi.label; //not in gvector spec yet but useful
+                    ranges.push(brk);                                
+                }
+                symbology.ranges = ranges;                
+                break;
+        }        
+        return symbology;
+    },
+    
+    _parseSymbology: function(symbol) {
+        var vectorOptions = {};
+        switch (symbol.type) {
+            case "esriSMS":
+            case "esriPMS":
+                //TODO marker symbologys have an url prop as well but requires extra hops to server for all icons
+                var url = "data:image/gif;base64," + symbology.imageData;
+                vectorOptions.icon = url;
+                break;
+        
+            case "esriSLS":
+                //we can only do solid lines in GM (true in latest build?)
+                vectorOptions.strokeWeight = symbol.width;
+                vectorOptions.strokeColor = this._parseColor(symbol.color);
+                vectorOptions.strokeOpacity = this._parseAlpha(symbol.color[3]);
+                break;
+            
+            case "esriSFS":
+                //solid or hollow only
+                if (symbol.outline) {                    
+                    vectorOptions.strokeWeight = symbol.outline.width;
+                    vectorOptions.strokeColor = this._parseColor(symbol.outline.color);
+                    vectorOptions.strokeOpacity = this._parseAlpha(symbol.outline.color[3]);
+                } else {
+                    vectorOptions.strokeWeight = 0;
+                    vectorOptions.strokeColor = "#000000";
+                    vectorOptions.strokeOpacity = 0.0;
+                }
+                if (symbol.style != "esriSFSNull") {
+                    vectorOptions.fillColor = this._parseColor(symbol.color);
+                    vectorOptions.fillOpacity = this._parseAlpha(symbol.color[3]);                
+                } else {
+                    vectorOptions.fillColor = "#000000";
+                    vectorOptions.fillOpacity = 0.0;                
+                }
+                break; 
+        }
+        return vectorOptions;
+    },
+    
+    _parseColor: function(color) {
+        red = this._normalize(color[0]);
+        green = this._normalize(color[1]);
+        blue = this._normalize(color[2]);    
+        return '#' + this._pad(red.toString(16)) + this._pad(green.toString(16)) + this._pad(blue.toString(16));
+    },
+    
+    _normalize: function(color) {
+        return (color < 1.0 && color > 0.0) ? Math.floor(color * 255) : color;
+    },
+    
+    _pad: function(s) {
+        return s.length > 1 ? s.toUpperCase() : "0" + s.toUpperCase();
+    },
+    
+    _parseAlpha: function(a) {
+        // 0-255 -> 0-1.0
+        return (a / 255);
     },
     
     _getFeatures: function() {
