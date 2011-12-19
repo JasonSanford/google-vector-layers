@@ -97,7 +97,7 @@ gvector.AGS = gvector.Layer.extend({
         for (var i = 0; i < agsScales.length - 1; i++) {
             var cs = agsScales[i];
             var ns = agsScales[i+1];
-            if ((scale >= cs) && (scale < ns)) {
+            if ((scale <= cs) && (scale > ns)) {
                 level = i;
                 break;
             }

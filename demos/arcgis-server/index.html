@@ -266,7 +266,7 @@
                     </div>
                 </div>
                 <hr>
-                <h2 id="charts-graphs">Current Weather</h2>
+                <h2>Current Weather</h2>
                 <p class="docs">This example shows live weather data and symbolizes markers based on temerature with the <code>range</code> symbology type. Blue markers are at or below freezing. Green markers indicate moderate temperatures and warmer stations have red markers. You might need to pan and zoom around a bit to see temperature variance.</p>
                 <p class="docs">We're also using a function based <code>infoWindowTemplate</code> to convert Celcius readings to Farenheit.</p>
                 <div class="row demo">
@@ -322,7 +322,7 @@
                     </div>
                 </div>
                 <hr>
-                <h2 id="charts-graphs">Winter Weather</h2>
+                <h2>Winter Weather</h2>
                 <p class="docs">This example pulls from an ArcGIS Server instance that produces weather warnings and watches. Here we're using the <code>where</code> parameter to only show winter weather related watches and warnings (<code>"EVENT LIKE 'WINTER%'"</code>).</p>
                 <p class="docs">Again, this demo uses a function based <code>infoWindowTemplate</code>. In this case the function iterates through each property in properties and formats each to Proper Case for better looking output and skips properties that we don't want to display ("FIPS", "OBJECTID", "EVENT", "SHAPE.area", "SHAPE_Length").</p>
                 <p>Note that this demo might appear to be non-functional if there are no current winter weather warnings. I'll try to remember to change this demo to show thurerstorm warnings when the weather warms up.</p>
@@ -364,20 +364,6 @@
                         <div id="map-container-5" class="map">
                             <div class="layer-buttons">
                                 <div class="row layer-button-row"><a href="javascript:ags_winter.setMap(map5);" class="btn success">Layer On</a> <a href="javascript:ags_winter.setMap(null);" class="btn danger">Layer Off</a></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-                <h2 id="charts-graphs">Arc2Earth Light Rail Lines</h2>
-                <div class="row demo">
-                    <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
-                    </div>
-                    <div class="span10 height-controlled">
-                        <div id="map-container-6" class="map">
-                            <div class="layer-buttons">
-                                <div class="row layer-button-row"><a href="javascript:ags_a2e_light_rail_lines.setMap(map6);" class="btn success">Layer On</a> <a href="javascript:ags_a2e_light_rail_lines.setMap(null);" class="btn danger">Layer Off</a></div>
                             </div>
                         </div>
                     </div>
@@ -696,11 +682,6 @@
                             strokeColor: "#666"
                         }
                     }
-                });
-                
-                ags_a2e_light_rail_lines = new gvector.AGS({
-                    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447511/FeatureServer/0",
-                    esriOptions: true
                 });
                 
             });
