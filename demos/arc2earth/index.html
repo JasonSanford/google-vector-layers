@@ -50,9 +50,26 @@
                 <p>Since Arc2Earth implements Esri's Geo REST specification it's very easy to create layers from an Arc2Earth instance.</p>
                 
                 <h2>Light Rail Lines/Stations</h2>
+                <p class="docs">This layer shows two layers from Arc2Earth Sync. Read below the demo for more information about Arc2Earth Sync.</p>
+                <p class="docs">For both of these layers we're using the <code>esriOptions</code> option. When set to <code>true</code> the ArcGIS Server instance is queried to set other options like <code>scaleRange</code> and <code>symbology</code>. This can be particularly helpful if you've spent a lot of time styling your layers in ArcMap and don't want to replicate with Google's vector configurations.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">ags_a2e_light_rail_lines = new gvector.AGS({
+    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447511/FeatureServer/0",
+    esriOptions: true,
+    showAll: true,
+    where: "ROUTE != '101'",
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{ROUTE}&lt;/h3&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});
+
+ags_a2e_light_rail_stations = new gvector.AGS({
+    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447610/FeatureServer/0",
+    esriOptions: true,
+    uniqueField: "global_fid",
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{NAME}&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Address&lt;/th&gt;&lt;td&gt;{ADDRESS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Parking Spaces&lt;/th&gt;&lt;td&gt;{AUTOS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Bike Racks&lt;/th&gt;&lt;td&gt;{RACKS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Bike Lockers&lt;/th&gt;&lt;td&gt;{LOCKERS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Shelters&lt;/th&gt;&lt;td&gt;{SHELTERS}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-1" class="map">
@@ -63,6 +80,21 @@
                         </div>
                     </div>
                 </div>
+                
+                <hr>
+                
+                <h2>Arc2Earth Sync</h2>
+                
+                <p>The demo above shows two Arc2Earth Sync layers using Google Fusion Tables as the backend datastore. The online layers and the Fusion Tables are automatically synchronized with a local ArcGIS cache so all renderer, symbology, layer definitions and edits are updated online when you make changes from ArcMap (and vice versa). Arc2Earth Sync is an easy way for ArcGIS users to maintain online feature services directly from their desktop.</p>
+                
+                <p>Here's how the live layers look in ArcMap:</p>
+                
+                <p><img src="http://dl.dropbox.com/u/2240880/screens/sync/DenverLightRail.png" width=400 /></p>
+                
+                <p>Also, since Sync implements the Open Geospatial REST spec (ArcGIS Server), you can also view and edit your tables from ArcGIS.com apps and apis. Here's the <a href="http://www.arcgis.com/home/webmap/viewer.html?webmap=77a4e93e02634830a69ba92fea186cc8">same map</a> in ArcGIS.com.</p>
+                
+                <p>If you want to help beta test Arc2Earth Sync, <a href="http://www.arc2earth.com/services/arc2earth-sync-beta/">fill out this form here</a>.</p>
+                
                 <footer> 	
                     <p>&copy; Jason Sanford - geojason.info 2011</p>
                 </footer>
@@ -93,14 +125,16 @@
                     esriOptions: true,
                     showAll: true,
                     where: "ROUTE != '101'",
-                    infoWindowTemplate: "{ROUTE}"
+                    infoWindowTemplate: '<div class="iw-content"><h3>{ROUTE}</h3></div>',
+                    singleInfoWindow: true
                 });
                 
                 ags_a2e_light_rail_stations = new gvector.AGS({
                     url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447610/FeatureServer/0",
                     esriOptions: true,
                     uniqueField: "global_fid",
-                    infoWindowTemplate: '<div class="iw-content"><h3>{NAME}</h3><table class="condensed-table"><tr><th>Address</th><td>{ADDRESS}</td></tr><tr><th># Parking Spaces</th><td>{AUTOS}</td></tr><tr><th># Bike Racks</th><td>{RACKS}</td></tr><tr><th># Bike Lockers</th><td>{LOCKERS}</td></tr><tr><th># Shelters</th><td>{SHELTERS}</td></tr></table></div>'
+                    infoWindowTemplate: '<div class="iw-content"><h3>{NAME}</h3><table class="condensed-table"><tr><th>Address</th><td>{ADDRESS}</td></tr><tr><th># Parking Spaces</th><td>{AUTOS}</td></tr><tr><th># Bike Racks</th><td>{RACKS}</td></tr><tr><th># Bike Lockers</th><td>{LOCKERS}</td></tr><tr><th># Shelters</th><td>{SHELTERS}</td></tr></table></div>',
+                    singleInfoWindow: true
                 });
                 
             });
