@@ -1,3 +1,6 @@
+/**
+ * @preserve Using portions of Leaflet code (https://github.com/CloudMade/Leaflet)
+ */
 (function() {
     
     var scripts = [

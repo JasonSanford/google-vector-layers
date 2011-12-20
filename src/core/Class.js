@@ -2,6 +2,10 @@
  * Class powers the OOP facilities of the library.
  */
 
+/**
+ * @preserve Using portions of Leaflet code (https://github.com/CloudMade/Leaflet)
+ */
+
 gvector.Class = function() {}; 
 
 gvector.Class.extend = function(/*Object*/ props) /*-> Class*/ {
