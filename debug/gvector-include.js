@@ -12,7 +12,8 @@
         'layer/Layer.js',
         'layer/AGS.js',
         'layer/GeoIQ.js',
-        'layer/CartoDB.js'
+        'layer/CartoDB.js',
+        'layer/PRWSF.js'
     ];
     
     function getSrcUrl() {
