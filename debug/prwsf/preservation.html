@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Google Vector Layers Debug - Jason Sanford</title>
+        <meta name="description" content="Display vector data from ArcGIS Server, GeoIQ, Geocommons, Arc2Earth, CartoDB and others in Google Maps">
+        <meta name="author" content="Jason Sanford">
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
+        <script src="../gvector-include.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        var map;
+        var layer_loaded = false;
+        
+        var preservation_layer = new gvector.PRWSF({
+            url: "http://gis.drcog.org/REST",
+            geotable: "mountain_backdrop_preservation_area",
+            fields: "gid",
+            uniqueField: "gid",
+            srid: 2232,
+            showAll: true,
+            symbology: {
+                type: "single",
+                vectorOptions: {
+                    fillColor: "#2f4a00",
+                    fillOpacity: 0.4,
+                    strokeWeight: 1.8,
+                    strokeColor: "#2f4a00",
+                    strokeOpacity: 1
+                }
+            }
+        });
+        
+        $(document).ready(function() {
+            
+            map = new google.maps.Map(document.getElementById("map-container"), {
+                center: new google.maps.LatLng(39.73216911989915, -105.07053553237914),
+                zoom: 10,
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+            });
+            
+            google.maps.event.addListener(map, "tilesloaded", function() {
+                if (!layer_loaded) {
+                    preservation_layer.setMap(map);
+                    layer_loaded = true;
+                }
+            });
+            
+        });
+        </script>
+
+        <style type="text/css">
+            #map-container {
+                width: 500px;
+                height: 500px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <div id="map-container"></div>
+    </body>
+</html>

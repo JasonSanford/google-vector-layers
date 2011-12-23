@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Google Vector Layers Debug - Jason Sanford</title>
+        <meta name="description" content="Display vector data from ArcGIS Server, GeoIQ, Geocommons, Arc2Earth, CartoDB and others in Google Maps">
+        <meta name="author" content="Jason Sanford">
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
+        <script src="../gvector-include.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        var map;
+        var layer_loaded = false;
+        
+        var stations_layer = new gvector.PRWSF({
+            url: "http://gis.drcog.org/REST",
+            geotable: "rtd_lightrailstations",
+            fields: "gid,name,address",
+            uniqueField: "gid",
+            srid: 2232,
+            infoWindowTemplate: '<h3>{name}</h3>',
+            singleInfoWindow: true,
+            symbology: {
+                type: "single",
+                vectorOptions: {
+                    icon: "../../docs-demo/img/markers/train.png"
+                }
+            }
+        });
+        
+        $(document).ready(function() {
+            
+            map = new google.maps.Map(document.getElementById("map-container"), {
+                center: new google.maps.LatLng(39.74154151936245, -104.99968229904174),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            
+            google.maps.event.addListener(map, "tilesloaded", function() {
+                if (!layer_loaded) {
+                    stations_layer.setMap(map);
+                    layer_loaded = true;
+                }
+            });
+            
+        });
+        </script>
+
+        <style type="text/css">
+            #map-container {
+                width: 500px;
+                height: 500px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <div id="map-container"></div>
+    </body>
+</html>

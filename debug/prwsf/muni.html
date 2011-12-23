@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Google Vector Layers Debug - Jason Sanford</title>
+        <meta name="description" content="Display vector data from ArcGIS Server, GeoIQ, Geocommons, Arc2Earth, CartoDB and others in Google Maps">
+        <meta name="author" content="Jason Sanford">
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
+        <script src="../gvector-include.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        var map;
+        var layer_loaded = false;
+        
+        var muni_layer = new gvector.PRWSF({
+            url: "http://gis.drcog.org/REST",
+            geotable: "muni",
+            fields: "gid,city_name",
+            uniqueField: "gid",
+            srid: 2232,
+            symbology: {
+                type: "unique",
+                property: "city_name",
+                values: [
+                    {
+                        value: "DENVER",
+                        vectorOptions: {
+                            fillColor: "#6600FF",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }, {
+                        value: "LITTLETON",
+                        vectorOptions: {
+                            fillColor: "#660066",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }, {
+                        value: "LAKEWOOD",
+                        vectorOptions: {
+                            fillColor: "#FF9900",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }, {
+                        value: "WHEAT RIDGE",
+                        vectorOptions: {
+                            fillColor: "#00FFFF",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }, {
+                        value: "COMMERCE CITY",
+                        vectorOptions: {
+                            fillColor: "#FFFF00",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }, {
+                        value: "AURORA",
+                        vectorOptions: {
+                            fillColor: "#003333",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }, {
+                        value: "GLENDALE",
+                        vectorOptions: {
+                            fillColor: "#ff7800",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }, {
+                        value: "ENGLEWOOD",
+                        vectorOptions: {
+                            fillColor: "#46461f",
+                            fillOpacity: 0.6,
+                            strokeColor: "#666666",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 1
+                        }
+                    }// I didn't feel like creating a bunch more styles, you get the point.
+                ]
+            },
+            infoWindowTemplate: '<h3>{city_name}</h3>',
+            singleInfoWindow: true
+        });
+        
+        $(document).ready(function() {
+            
+            map = new google.maps.Map(document.getElementById("map-container"), {
+                center: new google.maps.LatLng(39.74154151936245, -104.99968229904174),
+                zoom: 12,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            
+            google.maps.event.addListener(map, "tilesloaded", function() {
+                if (!layer_loaded) {
+                    muni_layer.setMap(map);
+                    layer_loaded = true;
+                }
+            });
+            
+        });
+        </script>
+
+        <style type="text/css">
+            #map-container {
+                width: 500px;
+                height: 500px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <div id="map-container"></div>
+    </body>
+</html>
