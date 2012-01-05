@@ -371,9 +371,7 @@
                 <h2 class="docs" id="docs-dynamic">Dynamic Data</h2>
                                 
                 <p class="docs">To create a dynamic layer simply set the <code>dynamic</code> option to <code>true</code>. Using this option alone (without <code>autoUpdate</code> and <code>autoUpdateInterval</code>) will check for feature geometry and property changes when the map extent changes. If geometry changes are found the feature is altered on the map. If properties changes are found any InfoWindows associated with this feature are updated to reflect this change.</p>
-                
-                <p>Check out the <a href="../demos/arcgis-server/#dynamic-autoupdate">Live Vehicle Locations demo</a> on the ArcGIS Serve demo page to see dynamic, auto-updating data.</p>
-                                
+                                                
                 <h3>Auto-update</h3>
                 
                 <p class="docs">Using the <code>autoUpdate</code> and <code>autoUpdateInterval</code> options we can set a layer to automatically fetch new features every x seconds, even when the map extent hasn't changed. Set the <code>autoUpdate</code> option to <code>true</code> and <code>autoUpdateInterval</code> to the amount of time (in milliseconds) for how often you want features fetched. To create a dynamic layer that auto-updates every 5 seconds you might create your layer like:</p>
