@@ -1,0 +1,5 @@
+# Changes to dist/gvector.js
+
+## 1.0.1
+
+Assign proper content type for encoded images. Was hard-coded to image/gif.
