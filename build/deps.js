@@ -19,6 +19,13 @@ var deps = {
         deps: ['Layer']
     },
     
+    A2E: {
+        src: ['layer/AGS.js'],
+        desc: 'The ArcGIS Server layer.',
+        heading: 'ArcGIS Server',
+        deps: ['Layer', 'AGS']
+    },
+    
     GeoIQ: {
         src: ['layer/GeoIQ.js'],
         desc: 'The GeoIQ layer.',
