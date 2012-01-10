@@ -266,16 +266,24 @@
                     </div>
                 </div>
                 <hr>
-                <h2>Intersection Traffic Control</h2>
-                <p class="docs">This example ...</p>
+                <h2 id="esri-options">San Francisco 311 Incidents</h2>
+                <p class="docs">This example makes use of the <code>esriOptions</code> parameter which, when used with an ArcGIS Server Feature Service, uses <code>symbology</code> and <code>scaleRange</code> options from ArcGIS Server.</p>
+                <p>This lets your write less code and use the symbology and scale dependent rendering you've spent many hours developing with ArcGIS Desktop.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">ags_311 = new gvector.AGS({
+    url: "http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/SanFrancisco/311Incidents/FeatureServer/0",
+    fields: "*",
+    uniqueField: "objectid",
+    esriOptions: true,
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{address}&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Date/Time&lt;/th&gt;&lt;td&gt;{req_date} {req_time}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Request Type&lt;/th&gt;&lt;td&gt;{req_type}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-4" class="map">
                             <div class="layer-buttons">
-                                <div class="row layer-button-row"><a href="javascript:ags_intersections.setMap(map4);" class="btn success">Layer On</a> <a href="javascript:ags_intersections.setMap(null);" class="btn danger">Layer Off</a></div>
+                                <div class="row layer-button-row"><a href="javascript:ags_311.setMap(map4);" class="btn success">Layer On</a> <a href="javascript:ags_311.setMap(null);" class="btn danger">Layer Off</a></div>
                             </div>
                         </div>
                     </div>
@@ -340,11 +348,10 @@
         <script src="../../docs-demo/js/jquery-1.5.2.min.js" type="text/javascript"></script>
         <script src="../../docs-demo/js/docs-demos.js" type="text/javascript"></script>
         <script src="../../docs-demo/js/bootstrap-dropdown.js" type="text/javascript"></script>
-        <!--<script src="../../dist/gvector.js" type="text/javascript"></script>-->
-        <script src="../../debug/gvector-include.js" type="text/javascript"></script>
+        <script src="../../dist/gvector.js" type="text/javascript"></script>
         <script type="text/javascript">
             var map1, map2, map3, map4, map5;
-            var ags_light_rail, ags_districts, ags_census, ags_intersections, ags_winter;
+            var ags_light_rail, ags_districts, ags_census, ags_intersections, ags_winter, ags_311;
             $(document).ready(function() {
             
                 map1 = new google.maps.Map(document.getElementById("map-container-1"), {
@@ -370,8 +377,9 @@
                 });
                 
                 map4 = new google.maps.Map(document.getElementById("map-container-4"), {
-                    center: new google.maps.LatLng(35.1870, -80.8251),
-                    zoom: 17,
+                    center: new google.maps.LatLng(37.7737, -122.4189),
+                    zoom: 15,
+                    minZoom: 14,
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     noClear: true
                 });
@@ -564,48 +572,13 @@
                     singleInfoWindow: true
                 });
                 
-                ags_intersections = new gvector.AGS({
-                    url: "http://maps.ci.charlotte.nc.us/ArcGIS/rest/services/WEB/BaseMap/MapServer/1",
+                ags_311 = new gvector.AGS({
+                    url: "http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/SanFrancisco/311Incidents/FeatureServer/0",
                     fields: "*",
-                    //scaleRange: [15, 20],
-                    uniqueField: "OBJECTID",
-                    where: "ControlType='5'",
-                    /*infoWindowTemplate: function(properties) {
-                        var html = '<div class="iw-content"><h3>' + properties.STATION_NAME + '</h3>';
-                        var tempC = properties.TEMPERATURE;
-                        if (tempC) {
-                            var tempF = properties.TEMPERATURE * (9/5) + 32;
-                            html += '<p><strong>Temperature</strong>: ' + parseInt(tempF) + '&deg;F (' + tempC + '&deg;C)</p>';
-                        }
-                        html += '</div>';
-                        return html;
-                    },
-                    singleInfoWindow: true,
-                    symbology: {
-                        type: "range",
-                        property: "TEMPERATURE",
-                        ranges: [
-                            {
-                                range: [-50, 0],
-                                vectorOptions: {
-                                    icon: "../../docs-demo/img/markers/cold.png"
-                                }
-                            },
-                            {
-                                range: [0.000001, 14.9999999],
-                                vectorOptions: {
-                                    icon: "../../docs-demo/img/markers/moderate.png"
-                                }
-                            },
-                            {
-                                range: [15, 60],
-                                vectorOptions: {
-                                    icon: "../../docs-demo/img/markers/hot.png"
-                                }
-                            }
-                        ]
-                    }*/
-                    esriOptions: true
+                    uniqueField: "objectid",
+                    esriOptions: true,
+                    infoWindowTemplate: '<div class="iw-content"><h3>{address}</h3><table class="condensed-table"><tr><th>Date/Time</th><td>{req_date} {req_time}</td></tr><tr><th>Request Type</th><td>{req_type}</td></tr></table></div>',
+                    singleInfoWindow: true
                 });
                 
                 ags_winter = new gvector.AGS({
