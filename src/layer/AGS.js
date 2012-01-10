@@ -159,7 +159,7 @@ gvector.AGS = gvector.Layer.extend({
             case "esriSMS":
             case "esriPMS":
                 //TODO marker symbologys have an url prop as well but requires extra hops to server for all icons
-                var url = "data:image/gif;base64," + symbol.imageData;
+                var url = "data:" + symbol.contentType + ";base64," + symbol.imageData;
                 vectorOptions.icon = url;
                 break;
         
