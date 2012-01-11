@@ -70,12 +70,13 @@ gvector.A2E = gvector.AGS.extend({
             origin: "pubsub.pubnub.com"
         });
         
+        var me = this;
+        
         this.pubNub.subscribe({
             channel: this.options.esriOptions.editFeedInfo.pubnubChannel,
             callback: function(message) {
-                console.log("PubNub Update!");
-                console.log(message);
-                alert("Someone made an edit to the map at ArcGIS.com<br />PubNub is amazing!");
+                //console.log(message);
+                me._getFeatures();
             },
             error: function() {
                 console.log("There was a pubnub error");
