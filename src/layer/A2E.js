@@ -49,6 +49,38 @@ gvector.A2E = gvector.AGS.extend({
             }
             this._show();
         }
+        
+        if (this.options.autoUpdate && this.options.esriOptions.editFeedInfo) {
+            this._makeJsonpRequest("http://cdn.pubnub.com/pubnub-3.1.min.js");
+            var me = this;
+            this._pubNubScriptLoaderInterval = setInterval(function() {
+                if (window.PUBNUB) {
+                    me._pubNubScriptLoaded();
+                }
+            }, 200);
+        }
+    },
+    
+    _pubNubScriptLoaded: function() {
+        clearInterval(this._pubNubScriptLoaderInterval);
+        //console.log("PubNumb Script has loaded");
+        this.pubNub = PUBNUB.init({
+            subscribe_key: this.options.esriOptions.editFeedInfo.pubnubSubscribeKey,
+            ssl: false,
+            origin: "pubsub.pubnub.com"
+        });
+        
+        this.pubNub.subscribe({
+            channel: this.options.esriOptions.editFeedInfo.pubnubChannel,
+            callback: function(message) {
+                console.log("PubNub Update!");
+                console.log(message);
+                alert("Someone made an edit to the map at ArcGIS.com<br />PubNub is amazing!");
+            },
+            error: function() {
+                console.log("There was a pubnub error");
+            }
+        });
     }
     
 });
