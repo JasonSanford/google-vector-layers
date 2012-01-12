@@ -288,7 +288,7 @@ gvector.Layer = gvector.Class.extend({
             if (feature.iwContent != previousContent) {
                 feature.infoWindow.setContent(feature.iwContent);
             }
-        } else if (this.infoWindow) {
+        } else if (this.infoWindow && this.infoWindow.get("associatedFeature") == feature) {
             if (feature.iwContent != previousContent) {
                 this.infoWindow.setContent(feature.iwContent);
             }
