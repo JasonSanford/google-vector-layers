@@ -20,7 +20,7 @@ var deps = {
     },
     
     A2E: {
-        src: ['layer/AGS.js'],
+        src: ['layer/A2E.js'],
         desc: 'The ArcGIS Server layer.',
         heading: 'ArcGIS Server',
         deps: ['Layer', 'AGS']
