@@ -21,8 +21,8 @@ var deps = {
     
     A2E: {
         src: ['layer/A2E.js'],
-        desc: 'The ArcGIS Server layer.',
-        heading: 'ArcGIS Server',
+        desc: 'The Arc2Earth layer.',
+        heading: 'Arc2Earth',
         deps: ['Layer', 'AGS']
     },
     
