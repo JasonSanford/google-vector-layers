@@ -50,8 +50,14 @@ gvector.A2E = gvector.AGS.extend({
             this._show();
         }
         
+        //
+        // Check for an autoUpdate option and pubnub info to pull live updates
+        //
         if (this.options.autoUpdate && this.options.esriOptions.editFeedInfo) {
+            //Load the pubnub JavaScript API
             this._makeJsonpRequest("http://cdn.pubnub.com/pubnub-3.1.min.js");
+            
+            // Keep checking to see when the library successfully loaded
             var me = this;
             this._pubNubScriptLoaderInterval = setInterval(function() {
                 if (window.PUBNUB) {
@@ -62,8 +68,10 @@ gvector.A2E = gvector.AGS.extend({
     },
     
     _pubNubScriptLoaded: function() {
+        // Stop checking for the pubnub script
         clearInterval(this._pubNubScriptLoaderInterval);
-        //console.log("PubNumb Script has loaded");
+        
+        // Initialize pubnub script
         this.pubNub = PUBNUB.init({
             subscribe_key: this.options.esriOptions.editFeedInfo.pubnubSubscribeKey,
             ssl: false,
@@ -72,14 +80,14 @@ gvector.A2E = gvector.AGS.extend({
         
         var me = this;
         
+        // Subscribe to changes
         this.pubNub.subscribe({
             channel: this.options.esriOptions.editFeedInfo.pubnubChannel,
             callback: function(message) {
-                //console.log(message);
                 me._getFeatures();
             },
             error: function() {
-                console.log("There was a pubnub error");
+                
             }
         });
     }
