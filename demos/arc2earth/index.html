@@ -84,7 +84,16 @@ a2e_light_rail_stations = new gvector.A2E({
                 <hr>
                 
                 <h2>VGI</h2>
-                <p class="docs"></p>
+                <p class="docs">This example shows an Arc2Earth Sync layer that is updated in near-real time. To accomplish this we set the <code>dynamic</code> and <code>autoUpdate</code> parameters to <code>true</code>.</p>
+                <p>To see this in action you should:</p>
+                <ol class="docs">
+                    <li>Turn the layer below on</li>
+                    <li>Open up a new browser window and view <a target="_blank" href="https://www.arcgis.com/home/webmap/viewer.html?webmap=e1cdc4855ea54edf8ff9451e32fff5cb">this ArcGIS.com map</a></li>
+                    <li>Be sure you can see both the ArcGIS.com map and the map below</li>
+                    <li>Make an edit the the ArcGIS.com map</li>
+                    <li>Watch the feature update live (&lt;1 sec) in the map below</li>
+                </ol>
+                <p>Changing the feature's type (Sewer Issue, Tree Issue, etc) should change symbology and geometry changes (moving the point) should change the same feature's location below.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
                         <pre class="prettyprint">a2e_vgi = new gvector.A2E({
