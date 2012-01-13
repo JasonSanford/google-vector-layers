@@ -54,7 +54,22 @@
                 <p class="docs">For both of these layers we're using the <code>esriOptions</code> option. When set to <code>true</code> the ArcGIS Server instance is queried to set other options like <code>scaleRange</code> and <code>symbology</code>. This can be particularly helpful if you've spent a lot of time styling your layers in ArcMap and don't want to replicate with Google's vector configurations.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">a2e_light_rail_lines = new gvector.A2E({
+    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447511/FeatureServer/0",
+    esriOptions: true,
+    showAll: true,
+    where: "ROUTE != '101'",
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{ROUTE}&lt;/h3&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});
+
+a2e_light_rail_stations = new gvector.A2E({
+    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447610/FeatureServer/0",
+    esriOptions: true,
+    uniqueField: "global_fid",
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{NAME}&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Address&lt;/th&gt;&lt;td&gt;{ADDRESS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Parking Spaces&lt;/th&gt;&lt;td&gt;{AUTOS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Bike Racks&lt;/th&gt;&lt;td&gt;{RACKS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Bike Lockers&lt;/th&gt;&lt;td&gt;{LOCKERS}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;# Shelters&lt;/th&gt;&lt;td&gt;{SHELTERS}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-1" class="map">
@@ -72,7 +87,15 @@
                 <p class="docs"></p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">a2e_vgi = new gvector.A2E({
+    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447544/FeatureServer/0",
+    esriOptions: true,
+    uniqueField: "global_fid",
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{Name}&lt;/h3&gt;&lt;/div&gt;',
+    singleInfoWindow: true,
+    dynamic: true,
+    autoUpdate: true
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-2" class="map">
@@ -107,8 +130,7 @@
         <script src="../../docs-demo/js/jquery-1.5.2.min.js" type="text/javascript"></script>
         <script src="../../docs-demo/js/docs-demos.js" type="text/javascript"></script>
         <script src="../../docs-demo/js/bootstrap-dropdown.js" type="text/javascript"></script>
-        <!--<script src="../../dist/gvector.js" type="text/javascript"></script>-->
-        <script src="../../debug/gvector-include.js" type="text/javascript"></script>
+        <script src="../../dist/gvector.js" type="text/javascript"></script>
         <script type="text/javascript">
             var map1, map2;
             var a2e_light_rail_lines, a2e_light_rail_stations, a2e_vgi;
