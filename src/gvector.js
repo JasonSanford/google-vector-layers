@@ -8,9 +8,9 @@
 
 (function (root) {
     root.gvector = {
-        VERSION: '1.0.0',
+        VERSION: '1.1.0',
 
-        ROOT_URL: (function () {
+        /*ROOT_URL: (function () {
             var scripts = document.getElementsByTagName('script'),
                 gvectorRe = /^(.*\/)gvector\-?([\w\-]*)\.js.*$/;
 
@@ -26,7 +26,7 @@
                 }
             }
             return '../../dist/';
-        }()),
+        }()),*/
 
         noConflict: function () {
             root.gvector = this._originalgvector;
