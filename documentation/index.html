@@ -20,7 +20,7 @@
     </head>
 
     <body>
-        <a href="https://github.com/JasonSanford/google-vector-layers"><img style="position: fixed; top: 0; right: 0; border: 0; z-index: 10001;" src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
+        <a href="https://github.com/JasonSanford/google-vector-layers"><img style="position: fixed; top: 0; right: 0; border: 0; z-index: 10001;" src="../docs-demo/img/github-fork.png" alt="Fork me on GitHub"></a>
         <div class="topbar" data-dropdown="dropdown">
             <div class="topbar-inner">
                 <div class="container-fluid">
@@ -38,6 +38,7 @@
                             </ul>
                         </li>
                         <li><a href="../tips-tricks">Tips + Tricks</a></li>
+                        <li><a href="../download">Download</a></li>
                     </ul>
                 </div>
             </div>
@@ -49,6 +50,7 @@
                     <h5>Classes</h5>
                     <ul>
                         <li><a href="#docs-ags">gvector.AGS</a></li>
+                        <li><a href="#docs-a2e">gvector.A2E</a></li>
                         <li><a href="#docs-geoiq">gvector.GeoIQ</a></li>
                         <li><a href="#docs-cartodb">gvector.CartoDB</a></li>
                     </ul>
@@ -62,6 +64,8 @@
             </div>
             <div class="content">
                 <h1>Classes</h1>
+                
+                <!-- ArcGIS Server -->
                 
                 <h2 class="docs" id="docs-ags">gvector.AGS <small>ArcGIS Server</small></h2>
                 
@@ -103,6 +107,7 @@
                         <tr><td><code>showAll</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>If true, all features will be fetched and shown once, not after a map extent change. This is helpful for layers with only a handful of features.</td></tr>
                         <tr><td><code>fields</code></td><td><code>String</code></td><td><code>null</code></td><td>A list of comma separated fields to be returned with the features. For example <code>"OBJECTID,OWNER_NAME"</code> returns two fields and <code>"*"</code> returns all fields.</td></tr>
                         <tr><td><code>uniqueField</code></td><td><code>String</code></td><td><code>null</code></td><td>A field in the returned data that can be considered unique. This isn't required but is very helpful in determining which features are already on the map when the map extent changes.</td></tr>
+                        <tr><td><code>esriOptions</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to request <code>scaleRange</code> and <code>symbology</code> settings from the ArcGIS Server back-end. This can help a lot of you've spent a lot of time on symbolizing things in ArcGIS Desktop.</td></tr>
                     </tbody>
                 </table>
                 
@@ -112,10 +117,74 @@
                         <tr><th>Method</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map.</td></tr>
+                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map. Remove the layer by passing <code>null</code>.</td></tr>
                         <tr><td><code>getMap()</code></td><td>Gets the map (if any) that the layer has been added to.</td></tr>
                     </tbody>
                 </table>
+                
+                <!-- End ArcGIS Server -->
+                
+                <!-- Arc2Earth -->
+                
+                <h2 class="docs" id="docs-a2e">gvector.A2E <small>Arc2Earth</small></h2>
+                                
+                <p>This class creates a layer that processes and displays features from an Arc2Earth Sync instance.</p>
+                
+                <h3>Usage Example</h3>
+                <pre class="prettyprint docs">var myA2ELayer = new gvector.A2E({
+    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447544/FeatureServer/0",
+    esriOptions: true,
+    uniqueField: "global_fid",
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{Name}&lt;/h3&gt;&lt;/div&gt;',
+    singleInfoWindow: true,
+    dynamic: true,
+    autoUpdate: true
+});</pre>
+                <h3>Constructor</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Constructor</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>gvector.A2E( &lt;<a href="#docs-a2e-options">A2E options</a>&gt; options )</code></td><td>Instantiates an A2E layer with an object literal with A2E options described below.</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3 id="docs-ags-options">Options</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Option</th><th>Type</th><th>Default Value</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>url</code></td><td><code>String</code></td><td><code>null</code></td><td><strong>Required</strong> -  A url for a specific layer in an ArcGIS Server service.</td></tr>
+                        <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
+                        <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
+                        <tr><td><code>dynamic</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not the layer contains dynamic data. If true, feature geometry and attributes will be checked for changes after extent change and/or when a <a href="http://www.pubnub.com/">PubNub</a> message is sent to the client.</td></tr>
+                        <tr><td><code>autoUpdate</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to auto-update a dynamic layer. If true, feature geometry and attributes will be updated in near real-time by subscribing to <a href="http://www.pubnub.com/">PubNub events</a>.</td></tr>
+                        <tr><td><code>infoWindowTemplate</code></td><td><code>String|Function</code></td><td><code>null</code></td><td>A template for creating the content of a <a href="http://maps.googleapis.com/">Google Maps InfoWindow</a> when a feature is clicked. For details check the <a href="#docs-infowindow">InfoWindow Template documentation</a>.</td></tr>
+                        <tr><td><code>singleInfoWindow</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to show a single InfoWindow for a layer when features are clicked. This keeps the map from getting cluttered when multiple features are clicked.</td></tr>
+                        <tr><td><code>symbology</code></td><td><code>Object <a href="#docs-symbology">symbology options</a></code></td><td><code>null</code></td><td>The symbology options for the layer. Features can be rendered with a single symbology or can also be symbolized based on an attribute using unique values or a value range. For details check the <a href="#docs-symbology">symbology options documentation</a>.</td></tr>
+                        <tr><td><code>showAll</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>If true, all features will be fetched and shown once, not after a map extent change. This is helpful for layers with only a handful of features.</td></tr>
+                        <tr><td><code>fields</code></td><td><code>String</code></td><td><code>null</code></td><td>A list of comma separated fields to be returned with the features. For example <code>"OBJECTID,OWNER_NAME"</code> returns two fields and <code>"*"</code> returns all fields.</td></tr>
+                        <tr><td><code>uniqueField</code></td><td><code>String</code></td><td><code>null</code></td><td>A field in the returned data that can be considered unique. This isn't required but is very helpful in determining which features are already on the map when the map extent changes.</td></tr>
+                        <tr><td><code>esriOptions</code></td><td><code>Boolean</code></td><td><code>false</code></td><td>Whether or not to request <code>scaleRange</code> and <code>symbology</code> settings from the Arc2Earth Sync back-end. Layers loaded from ArcGIS Desktop into Arc2Earth Sync will retain <code>scaleRange</code> and <code>symbology</code> settings from ArcGIS Desktop.</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3>Methods</h3>
+                <table class="docs condensed-table zebra-striped">
+                    <thead>
+                        <tr><th>Method</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map. Remove the layer by passing <code>null</code>.</td></tr>
+                        <tr><td><code>getMap()</code></td><td>Gets the map (if any) that the layer has been added to.</td></tr>
+                    </tbody>
+                </table>
+                
+                <!-- End Arc2Earth -->
+                
+                <!-- GeoIQ -->
                 
                 <h2 class="docs" id="docs-geoiq">gvector.GeoIQ <small>GeoIQ - Geocommons</small></h2>
                 
@@ -171,10 +240,14 @@
                         <tr><th>Method</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map.</td></tr>
+                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map. Remove the layer by passing <code>null</code>.</td></tr>
                         <tr><td><code>getMap()</code></td><td>Gets the map (if any) that the layer has been added to.</td></tr>
                     </tbody>
                 </table>
+                
+                <!-- End GeoIQ -->
+                
+                <!-- CartoDB -->
                 
                 <h2 class="docs" id="docs-cartodb">gvector.CartoDB <small>CartoDB</small></h2>
                 
@@ -231,10 +304,12 @@
                         <tr><th>Method</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map.</td></tr>
+                        <tr><td><code>setMap( &lt;google.maps.Map&gt; Map )</code></td><td>Adds the layer to a map. Remove the layer by passing <code>null</code>.</td></tr>
                         <tr><td><code>getMap()</code></td><td>Gets the map (if any) that the layer has been added to.</td></tr>
                     </tbody>
                 </table>
+                
+                <!-- End CartoDB -->
                 
                 <hr>
                 
@@ -371,7 +446,7 @@
                 <h2 class="docs" id="docs-dynamic">Dynamic Data</h2>
                                 
                 <p class="docs">To create a dynamic layer simply set the <code>dynamic</code> option to <code>true</code>. Using this option alone (without <code>autoUpdate</code> and <code>autoUpdateInterval</code>) will check for feature geometry and property changes when the map extent changes. If geometry changes are found the feature is altered on the map. If properties changes are found any InfoWindows associated with this feature are updated to reflect this change.</p>
-                                
+                                                
                 <h3>Auto-update</h3>
                 
                 <p class="docs">Using the <code>autoUpdate</code> and <code>autoUpdateInterval</code> options we can set a layer to automatically fetch new features every x seconds, even when the map extent hasn't changed. Set the <code>autoUpdate</code> option to <code>true</code> and <code>autoUpdateInterval</code> to the amount of time (in milliseconds) for how often you want features fetched. To create a dynamic layer that auto-updates every 5 seconds you might create your layer like:</p>
@@ -385,8 +460,24 @@
     autoUpdateInterval: 5000
 });</pre>
                 
+                <h3>Arc2Earth</h3>
+                                
+                <p class="docs">Auto-updating works slightly different with Arc2Earth layers. Since update messages are almost immediately sent to the client using <a href="http://pubnub.com/">PubNub</a>, only the <code>dynamic</code> and <code>autoUpdate</code> parameters must be set (both to <code>true</code>). This eliminates the need for constant polling, thus reducing the load on the server.</p>
+                
+                <p>An auto-updating Arc2Earth layer might look something like:</p>
+                
+                <pre class="prettyprint docs">myA2ELayer = new gvector.A2E({
+    url: "http://sync.arc2earth.com/6442491/ArcGIS/rest/services/tfs/2447544/FeatureServer/0",
+    esriOptions: true,
+    uniqueField: "global_fid",
+    popupTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;{Name}&lt;/h3&gt;&lt;/div&gt;',
+    singlePopup: true,
+    dynamic: true,
+    autoUpdate: true
+});</pre>
+                
                 <footer>
-                    <p>&copy; Jason Sanford - geojason.info 2011</p>
+                    <p>&copy; Jason Sanford - geojason.info 2012</p>
                 </footer>
                 
             </div>

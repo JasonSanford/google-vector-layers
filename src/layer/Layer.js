@@ -284,8 +284,14 @@ gvector.Layer = gvector.Class.extend({
         //
         // If the feature's InfoWindow already exists and the previous content is differentt than the current content, set the content
         //
-        if (feature.infoWindow && !(feature.iwContent == previousContent)) {
-            feature.infoWindow.setContent(feature.iwContent);
+        if (feature.infoWindow) {
+            if (feature.iwContent != previousContent) {
+                feature.infoWindow.setContent(feature.iwContent);
+            }
+        } else if (this.infoWindow && this.infoWindow.get("associatedFeature") == feature) {
+            if (feature.iwContent != previousContent) {
+                this.infoWindow.setContent(feature.iwContent);
+            }
         }
     },
     

@@ -29,7 +29,7 @@
                         <li><a href="../">Home</a></li>
                         <li><a href="../documentation">Documentation</a></li>
                         <li class="dropdown">
-                            <a href="demos" class="dropdown-toggle">Demos</a>
+                            <a href="../demos" class="dropdown-toggle">Demos</a>
                             <ul class="dropdown-menu">
                                 <li><a href="../demos/arcgis-server">ArcGIS Server</a></li>
                                 <li><a href="../demos/arc2earth">Arc2Earth</a></li>
@@ -37,8 +37,8 @@
                                 <li><a href="../demos/geoiq">GeoIQ</a></li>
                             </ul>
                         </li>
-                        <li class="active"><a href="./">Tips + Tricks</a></li>
-                        <li><a href="../download">Download</a></li>
+                        <li><a href="../tips-tricks">Tips + Tricks</a></li>
+                        <li class="active"><a href="./">Download</a></li>
                     </ul>
                 </div>
             </div>
@@ -46,14 +46,17 @@
 
         <div class="container">
             <div class="content">
-                <h1>Tips &amp; Tricks</h1>
-                <h2>CartoDB</h2>
-                
-                <h3>Simplify</h3>
-                <p class="docs">Use PostGIS' <code>simplify</code> function to simplify complex geometries in your database. This is especially helpful at lower zoom levels where high numbers of vertices aren't necessary.</p>
-                
-                <h3>the_geom</h3>
-                <p class="docs">When performing spatial functions like the simplify example above, be sure that the geometry returned is always in a field named <code>the_geom</code>. This is the field name that is necessary to create GeoJSON (what Google Vector Layers uses for geometry).</p>
+                <h1>Downloads</h1>
+                <p>It's suggested that you download the latest version, but pervious versions are also provided. Check the <a href="https://github.com/JasonSanford/google-vector-layers/blob/master/CHANGELOG">Changelog</a> to see release notes.</p>
+                <h2>Current Version</h2>
+                <p>
+                    <a class="btn large primary" href="https://github.com/JasonSanford/google-vector-layers/zipball/v1.1.0">gvector-1.1.0.zip</a>
+                </p>
+                <hr>
+                <h2>Previous Versions</h2>
+                <p>
+                    <a class="btn" href="https://github.com/JasonSanford/google-vector-layers/zipball/v1.0.0">gvector-1.0.0.zip</a>
+                </p>
                 <footer> 	
                     <p>&copy; Jason Sanford - geojason.info 2012</p>
                 </footer>

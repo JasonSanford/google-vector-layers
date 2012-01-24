@@ -159,8 +159,11 @@ gvector.AGS = gvector.Layer.extend({
             case "esriSMS":
             case "esriPMS":
                 //TODO marker symbologys have an url prop as well but requires extra hops to server for all icons
-                var url = "data:image/gif;base64," + symbol.imageData;
-                vectorOptions.icon = url;
+                var url = "data:" + symbol.contentType + ";base64," + symbol.imageData;
+                vectorOptions.icon = new google.maps.MarkerImage(url,
+                    null /* size */,
+                    null /* origin */,
+                    new google.maps.Point(symbol.width / 2, symbol.height / 2) /* anchor */);
                 break;
         
             case "esriSLS":
@@ -250,7 +253,7 @@ gvector.AGS = gvector.Layer.extend({
         
         // Check to see if the _lastQueriedBounds is the same as the new bounds
         // If true, don't bother querying again.
-        if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds) && !this._autoUpdateInterval) {
+        if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds) && !this.options.autoUpdate) {
             return;
         }
         

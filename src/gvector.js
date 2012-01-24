@@ -8,25 +8,7 @@
 
 (function (root) {
     root.gvector = {
-        VERSION: '1.0.0',
-
-        ROOT_URL: (function () {
-            var scripts = document.getElementsByTagName('script'),
-                gvectorRe = /^(.*\/)gvector\-?([\w\-]*)\.js.*$/;
-
-            var i, len, src, matches;
-
-            for (i = 0, len = scripts.length; i < len; i++) {
-                src = scripts[i].src;
-                matches = src.match(gvectorRe);
-
-                if (matches) {
-                    if (matches[2] === 'include') { break; }
-                    return matches[1];
-                }
-            }
-            return '../../dist/';
-        }()),
+        VERSION: '1.1.0',
 
         noConflict: function () {
             root.gvector = this._originalgvector;
