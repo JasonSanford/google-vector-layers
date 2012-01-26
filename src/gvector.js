@@ -1,5 +1,5 @@
 /**
- * @preserve Copyright (c) 2011, Jason Sanford
+ * @preserve Copyright (c) 2012, Jason Sanford
  * Google Vector Layers is a library for showing geometry objects
  * from multiple geoweb services with the Google Maps API
  */
@@ -8,7 +8,7 @@
 
 (function (root) {
     root.gvector = {
-        VERSION: '1.1.0',
+        VERSION: '1.2.0',
 
         noConflict: function () {
             root.gvector = this._originalgvector;

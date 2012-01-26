@@ -1,9 +1,9 @@
 /*
- Copyright (c) 2011, Jason Sanford
+ Copyright (c) 2012, Jason Sanford
  Google Vector Layers is a library for showing geometry objects
  from multiple geoweb services with the Google Maps API
 */
-(function(a){a.gvector={VERSION:"1.1.0",noConflict:function(){a.gvector=this._originalgvector;return this},_originalgvector:a.gvector}})(this);/*
+(function(a){a.gvector={VERSION:"1.2.0",noConflict:function(){a.gvector=this._originalgvector;return this},_originalgvector:a.gvector}})(this);/*
  Using portions of Leaflet code (https://github.com/CloudMade/Leaflet)
 */
 gvector.Util={extend:function(a){for(var b=Array.prototype.slice.call(arguments,1),d=0,c=b.length,e;d<c;d++){e=b[d]||{};for(var f in e)e.hasOwnProperty(f)&&(a[f]=e[f])}return a},setOptions:function(a,b){a.options=gvector.Util.extend({},a.options,b)}};/*

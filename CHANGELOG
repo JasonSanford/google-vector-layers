@@ -4,6 +4,9 @@
 
 Assign proper content type for encoded images. Was hard-coded to image/gif.
 New Arc2Earth layer (gvector.A2E) extends AGS uses Arc2Earth sync as back-end. Near real-time feature updates.
-Documenting esriOptions parameter for gvector.AGS and gvector.A2E
 Fixing bug where dynamic layers with the singleInfoWindow parameter set to true, any feature property update triggers a content change on the open InfoWindow, even if that feature hasn't changed
 Fixing bug where marker icons from ArcGIS Server back-ends weren't centered properly over the point
+
+## 1.2.0
+
+New PostGIS RESTful Web Service Framework layer (gvector.PRWSF)
