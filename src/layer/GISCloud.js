@@ -38,19 +38,14 @@ gvector.GISCloud = gvector.Layer.extend({
     _requiredParams: ["mapID", "layerID"],
     
     _getFeatures: function() {
-        // If we don't have a uniqueField value it's hard to tell if new features are duplicates so clear them all
-        if (!this.options.uniqueField) {
-            this._clearFeatures();
-        }
         
-        //http://api.giscloud.com/1/maps/895/layers/3823/features.json?geometry=geojson&epsg=4326&bounds=-73.4765,41.8940,-73.081,42.0492
         // Build URL
         var url = "http://api.giscloud.com/1/maps/" + this.options.mapID + // GISCloud Map ID
             "/layers/" + this.options.layerID + 
             "/features.json?" + // JSON please
             "geometry=geojson" + // Return GeoJSON formatted data
             "&epsg=4326" + // Using Lat Lng for bounding box units
-            "&callback=" + this._globalPointer + "._processFeatures" + // Need this for JSONP
+            "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
         if (!this.options.showAll) {
             url += "&bounds=" + this._buildBoundsString(this.options.map.getBounds()); // Build bbox geometry
         }
@@ -68,7 +63,6 @@ gvector.GISCloud = gvector.Layer.extend({
         if (!this.options.map) {
             return;
         }
-        data = JSON.parse(data);
         var bounds = this.options.map.getBounds();
         
         // Check to see if the _lastQueriedBounds is the same as the new bounds
@@ -81,23 +75,23 @@ gvector.GISCloud = gvector.Layer.extend({
         // to query the layer again if someone simply turns a layer on/off
         this._lastQueriedBounds = bounds;
     
-        // If "data.features" exists and there's more than one feature in the array
-        if (data && data.features && data.features.length) {
+        // If "data.data" exists and there's more than one feature in the array
+        if (data && data.data && data.data.length) {
             
-            // Loop through the return features
-            for (var i = 0; i < data.features.length; i++) {
+            // Loop through the returned features
+            for (var i = 0; i < data.data.length; i++) {
             
                 // All objects are assumed to be false until proven true (remember COPS?)
                 var onMap = false;
             
                 // If we have a "uniqueField" for this layer
-                if (this.options.uniqueField) {
+                //if (this.options.uniqueField) {
                     
                     // Loop through all of the features currently on the map
                     for (var i2 = 0; i2 < this._vectors.length; i2++) {
                     
                         // Does the "uniqueField" property for this feature match the feature on the map
-                        if (data.features[i].properties[this.options.uniqueField] == this._vectors[i2].properties[this.options.uniqueField]) {
+                        if (data.data[i].__id == this._vectors[i2].__id) {
                             
                             // The feature is already on the map
                             onMap = true;
@@ -106,20 +100,20 @@ gvector.GISCloud = gvector.Layer.extend({
                             if (this.options.dynamic) {
                             
                                 // The feature's geometry might have changed, let's check.
-                                if (this._getGeometryChanged(this._vectors[i2].geometry, data.features[i].geometry)) {
+                                if (this._getGeometryChanged(this._vectors[i2].__geometry, data.data[i].__geometry)) {
                                     
                                     // Check to see if it's a point feature, these are the only ones we're updating for now
-                                    if (!isNaN(data.features[i].geometry.coordinates[0]) && !isNaN(data.features[i].geometry.coordinates[1])) {
-                                        this._vectors[i2].geometry = data.features[i].geometry;
-                                        this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].geometry.coordinates[1], this._vectors[i2].geometry.coordinates[0]));
+                                    if (!isNaN(data.data[i].__geometry.coordinates[0]) && !isNaN(data.data[i].__geometry.coordinates[1])) {
+                                        this._vectors[i2].__geometry = data.data[i].__geometry;
+                                        this._vectors[i2].vector.setPosition(new google.maps.LatLng(this._vectors[i2].__geometry.coordinates[1], this._vectors[i2].__geometry.coordinates[0]));
                                     }
                                     
                                 }
                                 
-                                var propertiesChanged = this._getPropertiesChanged(this._vectors[i2].properties, data.features[i].properties);
+                                var propertiesChanged = this._getPropertiesChanged(this._vectors[i2].data, data.data[i].data);
                                 
                                 if (propertiesChanged) {
-                                    this._vectors[i2].properties = data.features[i].properties;
+                                    this._vectors[i2].data = data.data[i].data;
                                     if (this.options.infoWindowTemplate) {
                                         this._setInfoWindowContent(this._vectors[i2]);
                                     }
@@ -140,31 +134,31 @@ gvector.GISCloud = gvector.Layer.extend({
                         
                     }
                     
-                }
+                //}
                 
-                // If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
-                if (!onMap || !this.options.uniqueField) {
+                // If the feature isn't already or the map
+                if (!onMap) {
                     
                     // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-                    var vector_or_vectors = this._geoJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
-                    data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
+                    var vector_or_vectors = this._geoJsonGeometryToGoogle(data.data[i].__geometry, this._getFeatureVectorOptions(data.data[i]));
+                    data.data[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                     
                     // Show the vector or vectors on the map
-                    if (data.features[i].vector) {
-                        data.features[i].vector.setMap(this.options.map);
-                    } else if (data.features[i].vectors && data.features[i].vectors.length) {
-                        for (var i3 = 0; i3 < data.features[i].vectors.length; i3++) {
-                            data.features[i].vectors[i3].setMap(this.options.map);
+                    if (data.data[i].vector) {
+                        data.data[i].vector.setMap(this.options.map);
+                    } else if (data.data[i].vectors && data.data[i].vectors.length) {
+                        for (var i3 = 0; i3 < data.data[i].vectors.length; i3++) {
+                            data.data[i].vectors[i3].setMap(this.options.map);
                         }
                     }
                     
                     // Store the vector in an array so we can remove it later
-                    this._vectors.push(data.features[i]);
+                    this._vectors.push(data.data[i]);
                     
                     if (this.options.infoWindowTemplate) {
                         
                         var me = this;
-                        var feature = data.features[i];
+                        var feature = data.data[i];
                         
                         this._setInfoWindowContent(feature);
                         
