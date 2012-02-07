@@ -59,13 +59,63 @@
                     <div class="span10 height-controlled">
                         <div id="map-container-1" class="map">
                             <div class="layer-buttons">
-                                <div class="row layer-button-row"><a href="javascript:giscloud_.setMap(map1);" class="btn success">Layer On</a> <a href="javascript:giscloud_.setMap(null);" class="btn danger">Layer Off</a></div>
+                                <div class="row layer-button-row"><a href="javascript:giscloud_sewer_line.setMap(map1);" class="btn success">Sewer Line On</a> <a href="javascript:giscloud_sewer_line.setMap(null);" class="btn danger">Sewer Line Off</a></div>
+                                <div class="row layer-button-row" style="float: right;"><a href="javascript:giscloud_sewer_man_hole.setMap(map1);" class="btn success">Man Hole On</a> <a href="javascript:giscloud_sewer_man_hole.setMap(null);" class="btn danger">Man Hole Off</a></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <hr>
+
+                <h2>Blah</h2>
+                <p class="docs"></p>
+                <div class="row demo">
+                    <div class="span6 height-controlled">
+                        <pre class="prettyprint"></pre>
+                    </div>
+                    <div class="span10 height-controlled">
+                        <div id="map-container-2" class="map">
+                            <div class="layer-buttons">
+                                <div class="row layer-button-row"><a href="javascript:giscloud_.setMap(map2);" class="btn success">Layer On</a> <a href="javascript:giscloud_.setMap(null);" class="btn danger">Layer Off</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+
+                <h2>Blah</h2>
+                <p class="docs"></p>
+                <div class="row demo">
+                    <div class="span6 height-controlled">
+                        <pre class="prettyprint"></pre>
+                    </div>
+                    <div class="span10 height-controlled">
+                        <div id="map-container-3" class="map">
+                            <div class="layer-buttons">
+                                <div class="row layer-button-row"><a href="javascript:giscloud_.setMap(map3);" class="btn success">Layer On</a> <a href="javascript:giscloud_.setMap(null);" class="btn danger">Layer Off</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+
+                <h2>Blah</h2>
+                <p class="docs"></p>
+                <div class="row demo">
+                    <div class="span6 height-controlled">
+                        <pre class="prettyprint"></pre>
+                    </div>
+                    <div class="span10 height-controlled">
+                        <div id="map-container-4" class="map">
+                            <div class="layer-buttons">
+                                <div class="row layer-button-row"><a href="javascript:giscloud_.setMap(map4);" class="btn success">Layer On</a> <a href="javascript:giscloud_.setMap(null);" class="btn danger">Layer Off</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         
                 <footer> 	
                     <p>&copy; Jason Sanford - geojason.info 2012</p>
@@ -84,15 +134,23 @@
             $(document).ready(function() {
             
                 map1 = new google.maps.Map(document.getElementById("map-container-1"), {
-                    center: new google.maps.LatLng(41.8940,-73.081),
-                    zoom: 10,
+                    center: new google.maps.LatLng(35.05642206622684, -80.66948943389895),
+                    zoom: 16,
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     noClear: true
                 });
                 
-                giscloud_ = new gvector.GISCloud({
-                    mapID: 895,
-                    layerID: 3823,
+                giscloud_sewer_line = new gvector.GISCloud({
+                    mapID: 27322,
+                    layerID: 117755,
+                    symbology: {
+                        type: "single",
+                        vectorOptions: {
+                            strokeWeight: 4,
+                            strokeColor: "#46461f",
+                            strokeOpacity: 0.8
+                        }
+                    },
                     infoWindowTemplate: function(properties) {
                         var html = '';
                         for(var prop in properties) {
