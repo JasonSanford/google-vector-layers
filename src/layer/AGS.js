@@ -51,6 +51,8 @@ gvector.AGS = gvector.Layer.extend({
         }
     },
     
+    LAYER_TYPE: "AGS",
+    
     options: {
         where: "1=1",
         url: null,

@@ -30,6 +30,8 @@ gvector.GeoIQ = gvector.Layer.extend({
         }
     },
     
+    LAYER_TYPE: "GeoIQ",
+    
     options: {
         dataset: null
     },
@@ -56,7 +58,7 @@ gvector.GeoIQ = gvector.Layer.extend({
         // JSONP request
         this._makeJsonpRequest(url);
         
-    },
+    }/*,
     
     _processFeatures: function(data) {
         //
@@ -188,6 +190,6 @@ gvector.GeoIQ = gvector.Layer.extend({
             
         }
     
-    }
+    }*/
     
 });
