@@ -45,5 +45,12 @@ var deps = {
         desc: 'The PostGIS RESTful Web Service Framework layer.',
         heading: 'PostGIS RESTful Web Service Framework',
         deps: ['Layer']
+    },
+    
+    GISCloud: {
+        src: ['layer/GISCloud.js'],
+        desc: 'The GIS Cloud Layer',
+        heading: 'GIS Cloud',
+        deps: ['Layer']
     }
 };

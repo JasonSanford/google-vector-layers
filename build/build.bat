@@ -9,4 +9,5 @@ java -jar ../lib/closure-compiler/compiler.jar ^
 --js ../src/layer/GeoIQ.js ^
 --js ../src/layer/CartoDB.js ^
 --js ../src/layer/PRWSF.js ^
+--js ../src/layer/GISCloud.js ^
 --js_output_file ../dist/gvector.js

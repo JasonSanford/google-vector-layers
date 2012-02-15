@@ -692,6 +692,7 @@ gvector.Layer = gvector.Class.extend({
         }
         
         // If necessary, convert data to make it look like a GeoJSON FeatureCollection
+        // PRWSF returns GeoJSON, but not in a FeatureCollection. Make it one.
         if (this instanceof gvector.PRWSF) {
             data.features = data.rows;
             delete data.rows;
@@ -706,6 +707,19 @@ gvector.Layer = gvector.Class.extend({
                     }
                 }
                 delete data.features[i].row;
+            }
+        }
+        // GISCloud returns GeoJSON, but not in a FeatureCollection. Make it one.
+        if (this instanceof gvector.GISCloud) {
+            data.features = data.data;
+            delete data.data;
+            for (var i = 0, len = data.features.length; i < len; i++) {
+                data.features[i].type = "Feature"; // Not really necessary, but let's follow the GeoJSON spec for a Feature
+                data.features[i].properties = data.features[i].data;
+                data.features[i].properties.id = data.features[i].__id;
+                delete data.features[i].data;
+                data.features[i].geometry = data.features[i].__geometry;
+                delete data.features[i].__geometry;
             }
         }
         
@@ -778,7 +792,7 @@ gvector.Layer = gvector.Class.extend({
                 // If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
                 if (!onMap || !this.options.uniqueField) {
                     
-                    if (this instanceof gvector.CartoDB || this instanceof gvector.GeoIQ || this instanceof gvector.PRWSF) {
+                    if (this instanceof gvector.CartoDB || this instanceof gvector.GeoIQ || this instanceof gvector.PRWSF || this instanceof gvector.GISCloud) {
                         // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
                         var vector_or_vectors = this._geoJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                         data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
