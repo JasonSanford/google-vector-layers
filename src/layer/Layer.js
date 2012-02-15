@@ -239,12 +239,19 @@ gvector.Layer = gvector.Class.extend({
         //
         // Store previous InfoWindow content so we can check to see if it changed. If it didn't no sense changing the content as this has an ugly flashing effect.
         //
-        var previousContent = feature.iwContent
+        var previousContent = feature.iwContent;
         
         //
-        // Esri calls them attributes. GeoJSON calls them properties.
+        // Ok, let's just pick a name for this please.
         //
-        var atts = feature.attributes || feature.properties
+        var atts;
+        if (feature.attributes) {
+            atts = feature.attributes; // Esri
+        } else if (feature.properties) {
+            atts = feature.properties; // GeoJSON
+        } else if (feature.data) {
+            atts = feature.data; // GIS Cloud
+        }
         
         var iwContent;
         

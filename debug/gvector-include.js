@@ -15,7 +15,8 @@
         'layer/A2E.js',
         'layer/GeoIQ.js',
         'layer/CartoDB.js',
-        'layer/PRWSF.js'
+        'layer/PRWSF.js',
+        'layer/GISCloud.js'
     ];
     
     function getSrcUrl() {
