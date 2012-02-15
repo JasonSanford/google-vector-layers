@@ -53,7 +53,7 @@ gvector.GISCloud = gvector.Layer.extend({
         // JSONP request
         this._makeJsonpRequest(url);
         
-    },
+    }/*,
     
     _processFeatures: function(data) {
         //
@@ -184,6 +184,6 @@ gvector.GISCloud = gvector.Layer.extend({
             
         }
     
-    }
+    }*/
     
 });

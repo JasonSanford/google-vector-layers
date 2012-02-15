@@ -687,12 +687,12 @@ gvector.Layer = gvector.Class.extend({
         this._lastQueriedBounds = bounds;
         
         // GeoIQ layers return JSON string-wrapped, so JSON.parse it
-        if (this.LAYER_TYPE == "GeoIQ") {
+        if (this instanceof gvector.GeoIQ) {
              data = JSON.parse(data);
         }
         
         // If necessary, convert data to make it look like a GeoJSON FeatureCollection
-        if (this.LAYER_TYPE == "PRWSF") {
+        if (this instanceof gvector.PRWSF) {
             data.features = data.rows;
             delete data.rows;
             for (var i = 0, len = data.features.length; i < len; i++) {
@@ -716,7 +716,7 @@ gvector.Layer = gvector.Class.extend({
             for (var i = 0; i < data.features.length; i++) {
             
                 // if AGS layer type assigned "attributes" to "properties" to keep everything looking like GeoJSON Features
-                if (this.LAYER_TYPE == "AGS" || this.LAYER_TYPE == "A2E") {
+                if (this instanceof gvector.AGS || this instanceof gvector.A2E) {
                     data.features[i].properties = data.features[i].attributes;
                     delete data.features[i].attributes;
                 }
@@ -778,11 +778,11 @@ gvector.Layer = gvector.Class.extend({
                 // If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
                 if (!onMap || !this.options.uniqueField) {
                     
-                    if (this.LAYER_TYPE == "CartoDB" || this.LAYER_TYPE == "GeoIQ" || this.LAYER_TYPE == "PRWSF") {
+                    if (this instanceof gvector.CartoDB || this instanceof gvector.GeoIQ || this instanceof gvector.PRWSF) {
                         // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
                         var vector_or_vectors = this._geoJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                         data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
-                    } else if (this.LAYER_TYPE == "AGS" || this.LAYER_TYPE == "A2E") {
+                    } else if (this instanceof gvector.AGS || this instanceof gvector.A2E) {
                         // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
                         var vector_or_vectors = this._esriJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                         data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;

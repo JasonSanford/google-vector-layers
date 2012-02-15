@@ -30,8 +30,6 @@ gvector.CartoDB = gvector.Layer.extend({
         }
     },
     
-    LAYER_TYPE: "CartoDB",
-    
     options: {
         version: 1,
         user: null,

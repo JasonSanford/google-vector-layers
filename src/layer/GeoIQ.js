@@ -30,8 +30,6 @@ gvector.GeoIQ = gvector.Layer.extend({
         }
     },
     
-    LAYER_TYPE: "GeoIQ",
-    
     options: {
         dataset: null
     },

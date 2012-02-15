@@ -35,8 +35,6 @@ gvector.PRWSF = gvector.Layer.extend({
         }
     },
     
-    LAYER_TYPE: "PRWSF",
-    
     options: {
         geotable: null,
         srid: null,
