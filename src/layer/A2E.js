@@ -67,6 +67,8 @@ gvector.A2E = gvector.AGS.extend({
         }
     },
     
+    LAYER_TYPE: "A2E",
+    
     _pubNubScriptLoaded: function() {
         // Stop checking for the pubnub script
         clearInterval(this._pubNubScriptLoaderInterval);
