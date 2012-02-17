@@ -291,6 +291,7 @@
                     <tbody>
                         <tr><td><code>user</code></td><td><code>String</code></td><td><code>null</code></td><td><strong>Required</strong> -  The CartoDB user that owns the table to be displayed. For example a CartoDB map viewed via a URL like <code>http://geojason.cartodb.com/map</code>, "geojason" is the CartoDB user.</td></tr>
                         <tr><td><code>table</code></td><td><code>String</code></td><td><code>null</code></td><td><strong>Required</strong> -  The CartoDB table name for the data to be displayed.</td></tr>
+                        <tr><td><code>version</code></td><td><code>String|Number</code></td><td><code>1</code></td><td>The CartoDB API version.</td></tr>
                         <tr><td><code>where</code></td><td><code>String</code></td><td><code>null</code></td><td>Any additional SQL query(ies) to further filter the returned features.</td></tr>
                         <tr><td><code>map</code></td><td><code>Object <a href="http://maps.googleapis.com/">google.maps.Map object</a></code></td><td><code>null</code></td><td>The Google Maps API <code>Map</code> object where the layer will be added. The layer can be added to the map later with the <code>setMap</code> method.</td></tr>
                         <tr><td><code>scaleRange</code></td><td><code>Array</code></td><td><code>null</code></td><td>An array with two number values that represent the minimum and maximum scales the layer is visible. For example: <code>[14, 17]</code></td></tr>
