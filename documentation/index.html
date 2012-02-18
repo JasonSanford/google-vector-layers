@@ -409,8 +409,17 @@
                 
                 <h3>Usage Example</h3>
                 <pre class="prettyprint docs">var myGisCloudLayer = new gvector.GISCloud({
-    foo: bar,
-    bam: baz
+    mapID: 27322,
+    layerID: 117755,
+    symbology: {
+        type: "single",
+        vectorOptions: {
+            strokeWeight: 4,
+            strokeColor: "#46461f",
+            strokeOpacity: 0.8
+        }
+    },
+    scaleRange: [13, 18]
 });</pre>
                 <h3>Constructor</h3>
                 <table class="docs condensed-table zebra-striped">
