@@ -1,4 +1,4 @@
-gvector.CartoDB = gvector.Layer.extend({
+gvector.CartoDB = gvector.GeoJSONLayer.extend({
     initialize: function(options) {
         
         // Check for required parameters

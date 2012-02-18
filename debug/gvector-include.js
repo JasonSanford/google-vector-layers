@@ -10,6 +10,8 @@
         'core/Class.js',
         
         'layer/Layer.js',
+        'layer/GeoJSONLayer.js',
+        'layer/EsriJSONLayer.js',
         
         'layer/AGS.js',
         'layer/A2E.js',

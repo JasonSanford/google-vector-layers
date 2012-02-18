@@ -1,4 +1,4 @@
-gvector.AGS = gvector.Layer.extend({
+gvector.AGS = gvector.EsriJSONLayer.extend({
     initialize: function(options) {
         
         // Check for required parameters

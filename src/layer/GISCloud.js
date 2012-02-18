@@ -1,4 +1,4 @@
-gvector.GISCloud = gvector.Layer.extend({
+gvector.GISCloud = gvector.GeoJSONLayer.extend({
     initialize: function(options) {
         
         // Check for required parameters

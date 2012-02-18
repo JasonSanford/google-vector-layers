@@ -489,175 +489,6 @@ gvector.Layer = gvector.Class.extend({
         return changed;
     },
     
-    //
-    // Turn EsriJSON into Google Maps API vectors
-    //
-    _esriJsonGeometryToGoogle: function(geometry, opts) {
-        //
-        // Create a variable for a single vector and for multi part vectors. The Google Maps API has no real support for these so we keep them in an array.
-        //
-        var vector, vectors;
-        
-        if (geometry.x && geometry.y) {
-            //
-            // A Point
-            //
-            opts.position = new google.maps.LatLng(geometry.y, geometry.x);
-            vector = new google.maps.Marker(opts);
-        } else if (geometry.points) {
-            //
-            // A MultiPoint
-            //
-            vectors = [];
-            for (var i = 0, len = geometry.points.length; i < len; i++) {
-                opts.position = new google.maps.LatLng(geometry.points[i].y, geometry.points[i].x);
-                vectors.push(new google.maps.Marker(opts));
-            }
-        } else if (geometry.paths) {
-            if (geometry.paths.length > 1) {
-                //
-                // A MultiLineString
-                //
-                vectors = [];
-                for (var i = 0, len = geometry.paths.length; i < len; i++) {
-                    var path = [];
-                    for (var i2 = 0, len2 = geometry.paths[i].length; i2 < len2; i2++) {
-                        path.push(new google.maps.LatLng(geometry.paths[i][i2][1], geometry.paths[i][i2][0]));
-                    }
-                    opts.path = path
-                    vectors.push(new google.maps.Polyline(opts));
-                }
-            } else {
-                //
-                // A LineString
-                //
-                var path = [];
-                for (var i = 0, len = geometry.paths[0].length; i < len; i++) {
-                    path.push(new google.maps.LatLng(geometry.paths[0][i][1], geometry.paths[0][i][0]));
-                }
-                opts.path = path;
-                vector = new google.maps.Polyline(opts);
-            }
-        } else if (geometry.rings) {
-            if (geometry.rings.length > 1) {
-                //
-                // A MultiPolygon
-                //
-                vectors = [];
-                for (var i = 0, len = geometry.rings.length; i < len; i++) {
-                    var paths = [];
-                    var path = [];
-                    for (var i2 = 0, len2 = geometry.rings[i].length; i2 < len2; i2++) {
-                        path.push(new google.maps.LatLng(geometry.rings[i][i2][1], geometry.rings[i][i2][0]));
-                    }
-                    paths.push(path);
-                    opts.paths = paths;
-                    vectors.push(new google.maps.Polygon(opts));
-                }
-            } else {
-                //
-                // A Polygon
-                //
-                var paths = [];
-                var path = [];
-                for (var i = 0, len = geometry.rings[0].length; i < len; i++) {
-                    path.push(new google.maps.LatLng(geometry.rings[0][i][1], geometry.rings[0][i][0]));
-                }
-                paths.push(path);
-                opts.paths = paths;
-                vector = new google.maps.Polygon(opts);
-            }
-        }
-        return vector || vectors;
-    },
-    
-    //
-    // Convert GeoJSON to Google Maps API vectors using portions of https://github.com/JasonSanford/GeoJSON-to-Google-Maps
-    //
-    _geoJsonGeometryToGoogle: function(geometry, opts) {
-        //
-        // Create a variable for a single vector and for multi part vectors. The Google Maps API has no real support for these so we keep them in an array.
-        //
-        var vector, vectors;
-        
-        switch (geometry.type) {
-            case "Point":
-                opts.position = new google.maps.LatLng(geometry.coordinates[1], geometry.coordinates[0]);
-                vector = new google.maps.Marker(opts);
-                break;
-            
-            case "MultiPoint":
-                vectors = [];
-                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
-                    opts.position = new google.maps.LatLng(geometry.coordinates[i][1], geometry.coordinates[i][0]);
-                    vectors.push(new google.maps.Marker(opts));
-                }
-                break;
-                        
-            case "LineString":
-                var path = [];
-                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
-                    var ll = new google.maps.LatLng(geometry.coordinates[i][1], geometry.coordinates[i][0]);
-                    path.push(ll);
-                }
-                opts.path = path;
-                vector = new google.maps.Polyline(opts);
-                break;
-            
-            case "MultiLineString":
-                vectors = [];
-                for (var i = 0, len = geometry.coordinates.length; i < len; i++){
-                    var path = [];
-                    for (var i2 = 0, len2 = geometry.coordinates[i].length; i2 < len2; i2++){
-                        var coord = geometry.coordinates[i][i2];
-                        var ll = new google.maps.LatLng(coord[1], coord[0]);
-                        path.push(ll);
-                    }
-                    opts.path = path;
-                    vectors.push(new google.maps.Polyline(opts));
-                }
-                break;
-                
-            case "Polygon":
-                var paths = [];
-                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
-                    var path = [];
-                    for (var i2 = 0, len2 = geometry.coordinates[i].length; i2 < len2; i2++) {
-                            var ll = new google.maps.LatLng(geometry.coordinates[i][i2][1], geometry.coordinates[i][i2][0]);
-                        path.push(ll);
-                    }
-                    paths.push(path);
-                }
-                opts.paths = paths;
-                vector = new google.maps.Polygon(opts);
-                break;
-            
-            case "MultiPolygon":
-                vectors = [];
-                for (var i = 0, len = geometry.coordinates.length; i < len; i++) {
-                    paths = [];
-                    for (var i2 = 0, len2 = geometry.coordinates[i].length; i2 < len2; i2++) {
-                        var path = [];
-                        for (var i3 = 0, len3 = geometry.coordinates[i][i2].length; i3 < len3; i3++) {
-                            path.push(new google.maps.LatLng(geometry.coordinates[i][i2][i3][1], geometry.coordinates[i][i2][i3][0]));
-                        }
-                        paths.push(path);
-                    }
-                    opts.paths = paths;
-                    vectors.push(new google.maps.Polygon(opts));
-                }
-                break;
-                
-            case "GeometryCollection":
-                vectors = [];
-                for (var i = 0, len = geometry.geometries.length; i < len; i++) {
-                    vectors.push(this._geoJsonGeometryToGoogle(geometry.geometries[i], opts));
-                }
-                break;
-        }
-        return vector || vectors;
-    },
-    
     _makeJsonpRequest: function(url) {
         var head = document.getElementsByTagName("head")[0];
         var script = document.createElement("script");
@@ -730,7 +561,7 @@ gvector.Layer = gvector.Class.extend({
             for (var i = 0; i < data.features.length; i++) {
             
                 // if AGS layer type assigned "attributes" to "properties" to keep everything looking like GeoJSON Features
-                if (this instanceof gvector.AGS || this instanceof gvector.A2E) {
+                if (this instanceof gvector.EsriJSONLayer) {
                     data.features[i].properties = data.features[i].attributes;
                     delete data.features[i].attributes;
                 }
@@ -792,11 +623,11 @@ gvector.Layer = gvector.Class.extend({
                 // If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
                 if (!onMap || !this.options.uniqueField) {
                     
-                    if (this instanceof gvector.CartoDB || this instanceof gvector.GeoIQ || this instanceof gvector.PRWSF || this instanceof gvector.GISCloud) {
+                    if (this instanceof gvector.GeoJSONLayer) {
                         // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
                         var vector_or_vectors = this._geoJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                         data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
-                    } else if (this instanceof gvector.AGS || this instanceof gvector.A2E) {
+                    } else if (this instanceof gvector.EsriJSONLayer) {
                         // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
                         var vector_or_vectors = this._esriJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
                         data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;

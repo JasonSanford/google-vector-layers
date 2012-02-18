@@ -1,4 +1,4 @@
-gvector.PRWSF = gvector.Layer.extend({
+gvector.PRWSF = gvector.GeoJSONLayer.extend({
     initialize: function(options) {
         
         // Check for required parameters
