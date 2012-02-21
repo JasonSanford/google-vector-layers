@@ -1,4 +1,4 @@
-gvector.GeoIQ = gvector.GeoJSONLayer.extend({
+gvector.GISCloud = gvector.GeoJSONLayer.extend({
     initialize: function(options) {
         
         // Check for required parameters
@@ -8,12 +8,12 @@ gvector.GeoIQ = gvector.GeoJSONLayer.extend({
             }
         }
         
-        // Extend Layer to create GeoIQ
+        // Extend Layer to create GISCloud
         gvector.Layer.prototype.initialize.call(this, options);
         
         // _globalPointer is a string that points to a global function variable
         // Features returned from a JSONP request are passed to this function
-        this._globalPointer = "GeoIQ_" + Math.floor(Math.random() * 100000);
+        this._globalPointer = "GISCloud_" + Math.floor(Math.random() * 100000);
         window[this._globalPointer] = this;
         
         // Create an array to hold the features
@@ -31,26 +31,27 @@ gvector.GeoIQ = gvector.GeoJSONLayer.extend({
     },
     
     options: {
-        dataset: null
+        mapID: null,
+        layerID: null,
+        uniqueField: "id"
     },
     
-    _requiredParams: ["dataset"],
+    _requiredParams: ["mapID", "layerID"],
     
     _getFeatures: function() {
-        // If we don't have a uniqueField value it's hard to tell if new features are duplicates so clear them all
-        if (!this.options.uniqueField) {
-            this._clearFeatures();
-        }
         
         // Build URL
-        var url = "http://geocommons.com/datasets/" + this.options.dataset + // Geocommons dataset ID
+        var url = "http://api.giscloud.com/1/maps/" + this.options.mapID + // GISCloud Map ID
+            "/layers/" + this.options.layerID + 
             "/features.json?" + // JSON please
-            "geojson=1" + // Return GeoJSON formatted data
-            "&callback=" + this._globalPointer + "._processFeatures" + // Need this for JSONP
-            "&limit=999"; // Don't limit our results
+            "geometry=geojson" + // Return GeoJSON formatted data
+            "&epsg=4326" + // Using Lat Lng for bounding box units
+            "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
         if (!this.options.showAll) {
-            url += "&bbox=" + this._buildBoundsString(this.options.map.getBounds()) + // Build bbox geometry
-                "&intersect=full"; // Return features that intersect this bbox, not just fully contained
+            url += "&bounds=" + this._buildBoundsString(this.options.map.getBounds()); // Build bbox geometry
+        }
+        if (this.options.where) {
+            url += "&where=" + encodeURIComponent(this.options.where);
         }
         
         // JSONP request
