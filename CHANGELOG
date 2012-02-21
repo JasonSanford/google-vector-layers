@@ -11,3 +11,4 @@
 - New GIS Cloud layer (gvector.GISCloud)
 - DRYing up the code. Moved _processFeatures from individual layers into Layer.js
 - Creating two super-layers from which all other layers extend from: GeoJSONLayer and EsriJSONLayer
+- Fixed issue where any property change would trigger a symbology change in dynamic, styled layers. We now check to see if the symbology property has changed.
