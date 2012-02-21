@@ -51,10 +51,61 @@
                 <h1>GIS Cloud</h1>
                 
                 <h2>Sewer Network</h2>
-                <p class="docs"></p>
+                <p>This demo shows a point an a line table from <a href="http://giscloud.com">GIS Cloud</a>, sewer lines and man holes. The man holes are displayed using a simple symbology while the sewer lines use the range symbology. Pipes up to 8" in diameter are shown with a thinner green line, while larger pipes are shown with a thicker orange line. The largest trunk lines ( &gt;= 48" ) are shown as a thick black line.</p>
+                <p class="docs">We're also using the <code>singleInfoWindow</code> option here so that only one InfoWindow is shown for each layer. This keeps the map from getting cluttered when selecting lots of features.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">giscloud_sewer_line = new gvector.GISCloud({
+    mapID: 27322,
+    layerID: 117755,
+    scaleRange: [15, 20],
+    symbology: {
+        type: "range",
+        property: "pipe_dia",
+        ranges: [
+            {
+                range: [0, 8],
+                vectorOptions: {
+                    strokeWeight: 4,
+                    strokeColor: "#46461f",
+                    strokeOpacity: 0.8
+                }
+            },
+            {
+                range: [8.00001, 47.9999],
+                vectorOptions: {
+                    strokeWeight: 7,
+                    strokeColor: "#ff7800",
+                    strokeOpacity: 0.8
+                }
+            },
+            {
+                range: [48, 100],
+                vectorOptions: {
+                    strokeWeight: 10,
+                    strokeColor: "#000000",
+                    strokeOpacity: 1
+                }
+            }
+        ]
+    },
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;Sewer Line&lt;/h3&gt;&lt;table class="condensed-table zebra-striped bordered-table"&gt;&lt;tr&gt;&lt;th&gt;Diameter&lt;/th&gt;&lt;td&gt;{pipe_dia} in.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Material&lt;/th&gt;&lt;td&gt;{pipe_mat}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Flows To&lt;/th&gt;&lt;td&gt;{wwtp} WWTP&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});
+
+giscloud_man_hole = new gvector.GISCloud({
+    mapID: 27322,
+    layerID: 117756,
+    scaleRange: [16, 20],
+    symbology: {
+        type: "single",
+        vectorOptions: {
+            icon: new google.maps.MarkerImage("../../docs-demo/img/markers/manhole.png", new google.maps.Size(16, 16), new google.maps.Point(0, 0), new google.maps.Point(8, 8))
+        }
+    },
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;Man Hole&lt;/h3&gt;&lt;table class="condensed-table zebra-striped bordered-table"&gt;&lt;tr&gt;&lt;th&gt;Diameter&lt;/th&gt;&lt;td&gt;{mh_dia} ft.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Depth&lt;/th&gt;&lt;td&gt;{mh_depth} ft.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Address&lt;/th&gt;&lt;td&gt;{street_add}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;th&gt;Flows To&lt;/th&gt;&lt;td&gt;{wwtp} WWTP&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-1" class="map">
@@ -69,10 +120,53 @@
                 <hr>
 
                 <h2>Flood Zones</h2>
-                <p class="docs"></p>
+                <p class="docs">This demo uses the <code>unique</code> symbology type to show different classes of flood zones in varying shades of green.</p>
+                <p class="docs">We're also using the <code>scaleRange</code> parameter to make sure we don't show this layer above zoom level 14, which would return too much data with each map pan or zoom.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">giscloud_flood_zones = new gvector.GISCloud({
+    mapID: 28792,
+    layerID: 121087,
+    scaleRange: [14, 20],
+    symbology: {
+        type: "unique",
+        property: "label",
+        values: [
+            {
+                value: "AE",
+                vectorOptions: {
+                    fillColor: "#2f952f",
+                    fillOpacity: 0.6,
+                    strokeWeight: 1,
+                    strokeColor: "#fff",
+                    strokeOpacity: 0
+                }
+            },
+            {
+                value: "AE-FW",
+                vectorOptions: {
+                    fillColor: "#004a00",
+                    fillOpacity: 0.6,
+                    strokeWeight: 1,
+                    strokeColor: "#fff",
+                    strokeOpacity: 0
+                }
+            },
+            {
+                value: "0.2% Annual Chance",
+                vectorOptions: {
+                    fillColor: "#aaff7a",
+                    fillOpacity: 0.6,
+                    strokeWeight: 1,
+                    strokeColor: "#fff",
+                    strokeOpacity: 0
+                }
+            }
+        ],
+    },
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;Flood Zone&lt;/h3&gt;&lt;table class="condensed-table"&gt;&lt;tr&gt;&lt;th&gt;Type&lt;/th&gt;&lt;td&gt;{label}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;',
+    singleInfoWindow: true
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-2" class="map">
@@ -86,10 +180,27 @@
                 <hr>
 
                 <h2>Elementary Schools</h2>
-                <p class="docs"></p>
+                <p class="docs">This demo uses the <code>showAll</code> parameter since there are a manageable number of schools that we can show all at once.</p>
+                <p class="docs">We're also using the <code>where</code> parameter to show only elementary schools (<code>type = 'Elementary'</code>).</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">giscloud_elementary_schools = new gvector.GISCloud({
+    mapID: 29104,
+    layerID: 121819,
+    where: "type = 'Elementary'",
+    showAll: true,
+    infoWindowTemplate: function(properties) {
+        return '&lt;div class="iw-content"&gt;&lt;h3&gt;' + properties.name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) + ' ' + properties.type + '&lt;/h3&gt;&lt;h4&gt;' + properties.address + '&lt;/h4&gt;&lt;/div&gt;';
+    },
+    singleInfoWindow: true,
+    scaleRange: [11, 20],
+    symbology: {
+        type: "single",
+        vectorOptions: {
+            icon: "../../docs-demo/img/markers/school.png"
+        }
+    }
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-3" class="map">
@@ -103,10 +214,23 @@
                 <hr>
 
                 <h2>Bus Stops</h2>
-                <p class="docs"></p>
+                <p class="docs">This demo shows bus stops in Mecklenburg County, NC. We're using a simple <code>infoWindowTemplate</code> to report the stop id, address, etc. when a feature is clicked.</p>
+                <p class="docs">Again, we're using the <code>scaleRange</code> parameter to keep from loading large amounts of data (and cluttering the map) at higher zoom levels.</p>
                 <div class="row demo">
                     <div class="span6 height-controlled">
-                        <pre class="prettyprint"></pre>
+                        <pre class="prettyprint">giscloud_bus_stops = new gvector.GISCloud({
+    mapID: 29158,
+    layerID: 121929,
+    infoWindowTemplate: '&lt;div class="iw-content"&gt;&lt;h3&gt;Stop ID - {stopid}&lt;/h3&gt;&lt;h4&gt;{stopdesc}&lt;/h4&gt;&lt;h4&gt;Routes - {routes}&lt;/h4&gt;&lt;/div&gt;',
+    singleInfoWindow: true,
+    scaleRange: [14, 20],
+    symbology: {
+        type: "single",
+        vectorOptions: {
+            icon: new google.maps.MarkerImage("../../docs-demo/img/markers/bus.png", new google.maps.Size(17, 19), null, new google.maps.Point(0, 19))
+        }
+    }
+});</pre>
                     </div>
                     <div class="span10 height-controlled">
                         <div id="map-container-4" class="map">
