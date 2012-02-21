@@ -50,6 +50,9 @@ gvector.GISCloud = gvector.GeoJSONLayer.extend({
         if (!this.options.showAll) {
             url += "&bounds=" + this._buildBoundsString(this.options.map.getBounds()); // Build bbox geometry
         }
+        if (this.options.where) {
+            url += "&where=" + encodeURIComponent(this.options.where);
+        }
         
         // JSONP request
         this._makeJsonpRequest(url);
