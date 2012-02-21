@@ -3,7 +3,7 @@
  Google Vector Layers is a library for showing geometry objects
  from multiple geoweb services with the Google Maps API
 */
-(function(a){a.gvector={VERSION:"1.2.0",noConflict:function(){a.gvector=this._originalgvector;return this},_originalgvector:a.gvector}})(this);/*
+(function(a){a.gvector={VERSION:"1.3.0",noConflict:function(){a.gvector=this._originalgvector;return this},_originalgvector:a.gvector}})(this);/*
  Using portions of Leaflet code (https://github.com/CloudMade/Leaflet)
 */
 gvector.Util={extend:function(a){for(var b=Array.prototype.slice.call(arguments,1),d=0,e=b.length,c;d<e;d++){c=b[d]||{};for(var f in c)c.hasOwnProperty(f)&&(a[f]=c[f])}return a},setOptions:function(a,b){a.options=gvector.Util.extend({},a.options,b)}};/*
