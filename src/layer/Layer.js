@@ -456,6 +456,13 @@ gvector.Layer = gvector.Class.extend({
     },
     
     //
+    // Check to see if a particular property changed
+    //
+    _getPropertyChanged: function(oldAtts, newAtts, property) {
+        return !(oldAtts[property] == newAtts[property]);
+    },
+    
+    //
     // Check to see if the geometry has changed
     //
     _getGeometryChanged: function(oldGeom, newGeom) {
@@ -597,11 +604,12 @@ gvector.Layer = gvector.Class.extend({
                                 var propertiesChanged = this._getPropertiesChanged(this._vectors[i2].properties, data.features[i].properties);
                                 
                                 if (propertiesChanged) {
+                                    var symbologyPropertyChanged = this._getPropertyChanged(this._vectors[i2].properties, data.features[i].properties, this.options.symbology.property);
                                     this._vectors[i2].properties = data.features[i].properties;
                                     if (this.options.infoWindowTemplate) {
                                         this._setInfoWindowContent(this._vectors[i2]);
                                     }
-                                    if (this.options.symbology && this.options.symbology.type != "single") {
+                                    if (this.options.symbology && this.options.symbology.type != "single" && symbologyPropertyChanged) {
                                         if (this._vectors[i2].vector) {
                                             this._vectors[i2].vector.setOptions(this._getFeatureVectorOptions(this._vectors[i2]));
                                         } else if (this._vectors[i2].vectors) {
