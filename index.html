@@ -12,7 +12,8 @@
         <![endif]-->
 
         <!-- Le styles -->
-        <link href="docs-demo/css/bootstrap.css" rel="stylesheet">
+        <link href="docs-demo/css/bootstrap.min.css" rel="stylesheet">
+        <link href="docs-demo/css/bootstrap-responsive.min.css" rel="stylesheet">
         <link href="docs-demo/css/prettify.css" rel="stylesheet">
         <link href="docs-demo/css/docs.css" rel="stylesheet">
         <link href="docs-demo/css/demo.css" rel="stylesheet">
@@ -21,15 +22,15 @@
 
     <body>
         <a href="https://github.com/JasonSanford/google-vector-layers"><img style="position: fixed; top: 0; right: 0; border: 0; z-index: 10001;" src="docs-demo/img/github-fork.png" alt="Fork me on GitHub"></a>
-        <div class="topbar" data-dropdown="dropdown">
-            <div class="topbar-inner">
+        <div class="navbar navbar-fixed-top" data-dropdown="dropdown">
+            <div class="navbar-inner">
                 <div class="container-fluid">
                     <a class="brand" href="./">Google Vector Layers</a>
                     <ul class="nav">
                         <li class="active"><a href="./">Home</a></li>
                         <li><a href="documentation">Documentation</a></li>
-                        <li class="dropdown">
-                            <a href="demos" class="dropdown-toggle">Demos</a>
+                        <li class="dropdown" id="demos">
+                            <a href="#demos" class="dropdown-toggle" data-toggle="dropdown">Demos<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="demos/arcgis-server">ArcGIS Server</a></li>
                                 <li><a href="demos/arc2earth">Arc2Earth</a></li>
@@ -50,34 +51,34 @@
             <div class="content">
                 <h1>Google Vector Layers</h1>
                 <div class="row">
-                    <div class="span5">
+                    <div class="span4">
                         <h2>What?</h2>
                         <p>Google Vector Layers allows you to easily add one or more vector layers from a number of different geo web services to a Google Maps API based application.</p>
                         <p>Currently there's support for ArcGIS Server, Arc2Earth, GeoIQ, CartoDB and GIS Cloud with <a href="https://github.com/JasonSanford/google-vector-layers/issues/16">more planned</a>.</p>
                         <p>Check the <a href="demos">demos</a> to see the library in action.</p>
                     </div>
-                    <div class="span6">
+                    <div class="span4">
                         <h2>How?</h2>
                         <p>Google Vector Layers works by listening to map events (pan and zoom) and then fetching features within the map bounds after each event. This method works great for data sets with lots of features that you want to interact with, but not load all at once.</p>
                         <p>Sound Chatty? Only have a handful of features? You can also load all of the data once, without listening to map pan and zoom events.</p>
                     </div>
-                    <div class="span5">
+                    <div class="span4">
                         <h2>Help</h2>
                         <p>This is an open source project so enhancements and patches are encouraged.</p>
                         <p>So <a href="https://github.com/JasonSanford/google-vector-layers">grab the code</a>, <a href="https://github.com/JasonSanford/google-vector-layers/issues">report bugs</a> and <a href="mailto:jason@geojason.info">let me know what you think</a>.</p>
                         <p>There's also a <a href="http://groups.google.com/group/google-vector-layers">Google Vector Layers group</a> if you're interested in joining.</p>
-                        <p><a class="btn primary" href="https://github.com/JasonSanford/google-vector-layers">Google Vector Layers on GitHub &raquo;</a></p>
+                        <p><a class="btn btn-primary" href="https://github.com/JasonSanford/google-vector-layers">Google Vector Layers on GitHub &raquo;</a></p>
                     </div>
                 </div>
                 <hr>
                 <h1>Features</h1>
                 <div class="row">
-                    <div class="span7">
+                    <div class="span6">
                         <h2>Multi-provider Support</h2>
                         <p><img src="docs-demo/img/providers.png" class="sample-image" /> Google Vector Layers makes it easy to dynamically pull vector features from a number of different geo web service providers including <a href="http://www.esri.com/software/arcgis/arcgisserver/index.html">ArcGIS Server</a>, <a href="http://www.arc2earth.com">Arc2Earth</a>, <a href="http://cartodb.com">CartoDB</a> and <a href="http://geocommons.com">Geocommons</a>.</p>
                         <p>If you're interested in, or know of any other providers for this library please <a href="mailto:jason@geojason.info">let me know</a>.</p>
                     </div>
-                    <div class="span9">
+                    <div class="span6">
                         <h2>Easy InfoWindow Templating</h2>
                         <p><img src="docs-demo/img/infowindow.png" class="sample-image" />The simplest way to describe features in Google Maps is by using the API's InfoWindow.</p>
                         <p class="docs">Templates can be in the form of a simple string with field names mustache-wrapped (<code>{driver_name}</code>), or a function that returns HTML content for the InfoWindow. The feature's properties are passed to this function so you can do things like analyze data or <a href="demos/arcgis-server#charts-graphs">show charts and graphs</a>.</p>
@@ -85,12 +86,12 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span8">
+                    <div class="span6">
                         <h2>Dynamic Data Support</h2>
                         <p><img src="docs-demo/img/dynamic.png" class="sample-image" />Google Vector Layers makes it easy to visualize live data in Google Maps. Just mark the layer as dynamic and auto-updating when you create it and set the interval for how often you'd like to check for updated features.</p>
                         <p>For details on displaying dynamic data <a href="documentation/#docs-dynamic">check the documentation</a>.</p>
                     </div>
-                    <div class="span8">
+                    <div class="span6">
                         <h2>Simple, Powerful Symbology</h2>
                         <p>Creating effective map styling and symbology is key to getting your message across to your users.</p>
                         <p>With Google Vector Layers you can style your layers with a single symbology, a unique symbol for specific attribute values or set symbols to display if a feature's attributes are within a specific range.</p>
@@ -98,7 +99,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span8">
+                    <div class="span6">
                         <h2>Scale Dependent Rendering</h2>
                         <p class="docs">You likely wouldn't want to show lots of features with complex geometries at lower zoom levels. Using the <code>scaleRange</code> option allows you to set the minimum and maximum zoom levels at which a layer is visible.</p>
                     </div>
@@ -109,7 +110,7 @@
             </div>
         </div>
         <script src="docs-demo/js/prettify.js" type="text/javascript"></script>
-        <script src="docs-demo/js/jquery-1.5.2.min.js" type="text/javascript"></script>
+        <script src="docs-demo/js/jquery-1.7.1.min.js" type="text/javascript"></script>
         <script src="docs-demo/js/docs-demos.js" type="text/javascript"></script>
         <script src="docs-demo/js/bootstrap-dropdown.js" type="text/javascript"></script>
     </body>

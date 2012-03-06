@@ -23,3 +23,9 @@ table.docs {
 .docs td {
     min-width: 120px;
 }
+h1 {
+    margin-bottom: 18px !important;
+}
+.margin-left {
+    margin-left: 240px;
+}
