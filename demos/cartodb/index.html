@@ -226,7 +226,10 @@ cartodb_man_hole = new gvector.CartoDB({
                     singleInfoWindow: true,
                     events: {
                         mouseover: function(vector, event) {
-                            console.log('you mousevered a line')
+                            console.log('you mousevered a line');
+                            vector.setOptions({
+                                strokeWeight: 1
+                            })
                         },
                         mouseout: function(vector, event) {
                             console.log('you mouseouted a line')

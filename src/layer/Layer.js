@@ -685,12 +685,12 @@ gvector.Layer = gvector.Class.extend({
                                 (function(_event) {
                                     if (feature.vector) {
                                         google.maps.event.addListener(feature.vector, _event, function(evt) {
-                                            me.options.events[_event](feature, evt);
+                                            me.options.events[_event](feature.vector, evt);
                                         });
                                     } else if (feature.vectors) {
                                         for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
                                             google.maps.event.addListener(feature.vectors[i3], _event, function(evt) {
-                                                me.options.events[_event](feature, evt);
+                                                me.options.events[_event](feature.vectors[i3], evt);
                                             });
                                         }
                                     }
