@@ -177,7 +177,7 @@ cartodb_man_hole = new gvector.CartoDB({
         <script src="../../docs-demo/js/jquery-1.5.2.min.js" type="text/javascript"></script>
         <script src="../../docs-demo/js/docs-demos.js" type="text/javascript"></script>
         <script src="../../docs-demo/js/bootstrap-dropdown.js" type="text/javascript"></script>
-        <script src="../../dist/gvector.js" type="text/javascript"></script>
+        <script src="../../debug/gvector-include.js" type="text/javascript"></script>
         <script type="text/javascript">
             var map1, map2;
             var cartodb_sewer_line, cartodb_man_hole, cartodb_flood_zones;
@@ -223,7 +223,15 @@ cartodb_man_hole = new gvector.CartoDB({
                         ]
                     },
                     infoWindowTemplate: '<div class="iw-content"><h3>Sewer Line</h3><table class="condensed-table"><tr><th>Diameter</th><td>{pipe_dia} in.</td></tr><tr><th>Material</th><td>{pipe_mat}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>',
-                    singleInfoWindow: true
+                    singleInfoWindow: true,
+                    events: {
+                        mouseover: function(vector, event) {
+                            console.log('you mousevered a line')
+                        },
+                        mouseout: function(vector, event) {
+                            console.log('you mouseouted a line')
+                        }
+                    }
                 });
                 
                 cartodb_man_hole = new gvector.CartoDB({
@@ -237,7 +245,15 @@ cartodb_man_hole = new gvector.CartoDB({
                         }
                     },
                     infoWindowTemplate: '<div class="iw-content"><h3>Man Hole</h3><table class="condensed-table"><tr><th>Diameter</th><td>{mh_dia} ft.</td></tr><tr><th>Depth</th><td>{mh_depth} ft.</td></tr><tr><th>Address</th><td>{street_add}</td></tr><tr><th>Flows To</th><td>{wwtp} WWTP</td></tr></table></div>',
-                    singleInfoWindow: true
+                    singleInfoWindow: true,
+                    events: {
+                        mouseover: function(vector, event) {
+                            console.log('you mousevered a marker')
+                        },
+                        mouseout: function(vector, event) {
+                            console.log('you mouseouted a marker')
+                        }
+                    }
                 });
                 
                 cartodb_flood_zones = new gvector.CartoDB({

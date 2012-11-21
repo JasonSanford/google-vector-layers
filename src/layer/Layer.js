@@ -675,6 +675,29 @@ gvector.Layer = gvector.Class.extend({
                         }(feature));
                         
                     }
+
+                    if (this.options.events) {
+                        var me = this,
+                            feature = data.features[i];
+                        (function(feature) {
+                            for (_event in me.options.events) {
+                                // TODO: Create whitelist of events (leave out "tripleclick")
+                                (function(_event) {
+                                    if (feature.vector) {
+                                        google.maps.event.addListener(feature.vector, _event, function(evt) {
+                                            me.options.events[_event](feature, evt);
+                                        });
+                                    } else if (feature.vectors) {
+                                        for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
+                                            google.maps.event.addListener(feature.vectors[i3], _event, function(evt) {
+                                                me.options.events[_event](feature, evt);
+                                            });
+                                        }
+                                    }
+                                }(_event));
+                            }
+                        }(feature));
+                    }
                 
                 }
                 
