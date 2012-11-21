@@ -631,13 +631,14 @@ gvector.Layer = gvector.Class.extend({
                 // If the feature isn't already or the map OR the "uniqueField" attribute doesn't exist
                 if (!onMap || !this.options.uniqueField) {
                     
+                    data.features[i].original_options = this._getFeatureVectorOptions(data.features[i]);
                     if (this instanceof gvector.GeoJSONLayer) {
                         // Convert GeoJSON to Google Maps vector (Point, Polyline, Polygon)
-                        var vector_or_vectors = this._geoJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
+                        var vector_or_vectors = this._geoJsonGeometryToGoogle(data.features[i].geometry, data.features[i].original_options);
                         data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                     } else if (this instanceof gvector.EsriJSONLayer) {
                         // Convert Esri JSON to Google Maps vector (Point, Polyline, Polygon)
-                        var vector_or_vectors = this._esriJsonGeometryToGoogle(data.features[i].geometry, this._getFeatureVectorOptions(data.features[i]));
+                        var vector_or_vectors = this._esriJsonGeometryToGoogle(data.features[i].geometry, data.features[i].original_options);
                         data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
                     }
                     
